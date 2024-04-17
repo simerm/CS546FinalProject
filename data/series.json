@@ -1,0 +1,74 @@
+[
+    {
+        "seriesId": "SonnyAngelVegetables",
+        "seriesName": "Vegetable",
+        "figurineTypes": [
+            {
+                "modelName": "Carrot",
+                "rare": false,
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Carrot.png"
+            },
+            {
+                "modelName": "Garlic",
+                "rare": false,
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Garlic.png"
+            },
+            {
+                "modelName": "Tomato",
+                "rare": false,
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Tomato.png"
+            },
+            {
+                "modelName": "Zucchini",
+                "rare": false,
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Zucchini.png"
+            },
+            {
+                "modelName": "Shiitake Mushroom",
+                "rare": true,
+                "image_url": "https://i.ebayimg.com/images/g/RW8AAOSweKda41Co/s-l1200.webp"
+            }
+        ]
+    },
+    {
+        "seriesId": "Smiski1",
+        "seriesName": "Smiski 1",
+        "figurineTypes": [
+            {
+                "modelName": "Hugging Knees",
+                "rare": false,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_01.png"
+            },
+            {
+                "modelName": "Sitting",
+                "rare": false,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_02.png"
+            },
+            {
+                "modelName": "Looking Back",
+                "rare": false,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_03.png" 
+            },
+            {
+                "modelName": "Lounging",
+                "rare": false,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_04.png"
+            },
+            {
+                "modelName": "Hiding",
+                "rare": false,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_05.png"
+            },
+            {
+                "modelName": "Peeking",
+                "rare": false,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_06.png"
+            },
+            {
+                "modelName": "Scream",
+                "rare": true,
+                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_02.png"
+            }
+        ]
+    }
+]
