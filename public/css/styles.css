@@ -53,18 +53,22 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 40px;
+    /* padding: 40px; */
     /* max-width: 400px; */
     margin: 0 auto;
     display: flex;
-    flex-direction: column; 
+    flex-direction: row; 
+    justify-content: space-between;
     /* align-items: center; */
 }
 
-.profileDetails h2, .profileDetails h3 {
+.profileDetails h3 {
     text-align: center;
     margin:0px;
     margin-top: 10px;
+}
+.profileDetails h2 {
+    margin-bottom: -8px; 
 }
 .profileDetails p{
     margin:0px;
@@ -82,4 +86,29 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin: 0 auto;
+}
+
+.left{
+    background-color: #34495e;
+    /* flex: 1; */
+    padding:40px;
+    border-top-left-radius: 8px; /* Round the top-left corner */
+    border-bottom-left-radius: 8px;
+    color:white;
+}
+.right{
+    padding:20px;
+}
+
+.locationDiv {
+    display: flex;
+    align-items: end; 
+    margin-top:0;
+}
+
+.locationPicture {
+    width: 20px; 
+    height: 20px;
+    margin-right: 2px; 
+    margin-left: -5px; 
 }

@@ -2,22 +2,30 @@
 <div class="profile">
 
     <div class="profileDetails">
-        <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
-        <h2>Firstname Lastname</h2>
-        <h3>Username</h3>
-        <div class="divider"></div>
-        <p>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <div class="divider"></div>
-        <p>Location: New York City, USA</p>
-        <div class="divider"></div>
-        <p>Favorite Figurine: Pikachu</p>
+        <div class="left">
+            <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+            <h3>Username</h3>
+        </div>
+        <div class="right">
+            <h2>Firstname Lastname</h2>
+            <div class="locationDiv">
+                <img src="/public/location.png" class="locationPicture">
+                <p>New York City, USA</p>
+            </div>
+            
+            <div class="divider"></div>
+            <p>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Favorite Figurine: Pikachu</p>
+        </div>
+        
         {{!-- put badges elsewhere --}}
         {{!-- <p>Badges: Full series collection</p> --}}
         {{!-- <button id="edit-button">Edit Profile</button> --}}
     </div>
-    <div class="badges">
+
+    {{!-- <div class="badges">
         My Badges
-    </div>
+    </div> --}}
     {{!-- <div class="editPicture">
         <label for="pictureUpload">Edit Profile Picture</label>
         <input type="file" id="pictureUpload">
