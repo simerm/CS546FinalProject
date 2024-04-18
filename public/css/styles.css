@@ -2,7 +2,7 @@
     background-color: #34495e;
     display: flex;
     flex-direction: row;
-    height: 70px;
+    height: 80px;
     align-items: center;
     justify-content: space-between;
 }
@@ -10,8 +10,9 @@
 .navbar a {
     color: white;
     text-align: center;
-    padding: 26px 35px;
+    padding: 30px 35px;
     text-decoration: none;
+    font-size: 18px;
 }
 
 .navbar a:hover {
@@ -27,6 +28,7 @@ body {
 h1 {
     text-align: center;
     margin-bottom: 40px;
+    margin-top:50px;
 }
 
 .profile-picture {
