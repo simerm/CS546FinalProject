@@ -1,10 +1,10 @@
 [
    {
         "figurineName": "Smiski",
-        "seriesId": ["Smiski1"]
+        "seriesId": ["Smiski1", "SmiskiBed", "SmiskiMuseum"]
     },
     {
         "figurineName": "Sonny Angel",
-        "seriesId": ["SonnyAngelVegetables"]
+        "seriesId": ["SonnyAngelVegetables", "SonnyAngelMarine", "SonnyAngelFlower"]
     }
 ]
