@@ -229,7 +229,7 @@
     },
     {
         "seriesId": "Smiski1",
-        "seriesName": "Smiski 1",
+        "seriesName": "Series 1",
         "figurineTypes": [
             {
                 "modelName": "Hugging Knees",
@@ -264,7 +264,89 @@
             {
                 "modelName": "Scream",
                 "rare": true,
-                "image_url": "https://smiski.com/wp-content/uploads/2016/03/s1_02.png"
+                "image_url": "https://i.ebayimg.com/images/g/htoAAOSwYbhk8BLy/s-l1200.webp"
+            }
+        ]
+    },
+    {
+        "seriesId": "SmiskiBed",
+        "seriesName": "Bed",
+        "figurineTypes": [
+            {
+                "modelName": "Before Rest",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2019/07/img_bed_products_01.png"
+            },
+            {
+                "modelName": "Sleepy",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2019/07/img_bed_products_02.png"
+            },
+            {
+                "modelName": "Co-Sleeping",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2019/07/img_bed_products_03.png"
+            },
+            {
+                "modelName": "Reading",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2019/07/img_bed_products_04.png"
+            },
+            {
+                "modelName": "At Sleep",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2019/07/img_bed_products_05.png"
+            },
+            {
+                "modelName": "Fussing",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2019/07/img_bed_products_06.png"
+            },
+            {
+                "modelName": "Crescent",
+                "rare": true,
+                "image_url": "https://i.ebayimg.com/images/g/lYIAAOSw~8plscO0/s-l1200.webp"
+            }
+        ]
+    },
+    {
+        "seriesId": "SmiskiBath",
+        "seriesName": "Museum",
+        "figurineTypes": [
+            {
+                "modelName": "The Source",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_01.png"
+            },
+            {
+                "modelName": "Fuzin & Raijin",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_02.png"
+            },
+            {
+                "modelName": "Bacchus",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_03.png"
+            },
+            {
+                "modelName": "Vela'zquez",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_04.png"
+            },
+            {
+                "modelName": "Dali",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_05.png"
+            },
+            {
+                "modelName": "Pearl Earring",
+                "rare": false,
+                "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_06.png"
+            },
+            {
+                "modelName": "Tutankhamen",
+                "rare": true,
+                "image_url": "https://i.ebayimg.com/images/g/PtIAAOSwMxJk~2U0/s-l1200.webp"
             }
         ]
     }
