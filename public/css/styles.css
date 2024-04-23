@@ -23,6 +23,7 @@
 body {
     margin: 0px;
     padding: 0px;
+    font-family: "Ubuntu", sans-serif;
 }
 
 h1 {
@@ -229,4 +230,106 @@ h1 {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.badgeForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.badgelabel{
+    margin-bottom: 10px;
+}
+
+.badgeName{
+    margin-bottom: 20px;
+    height: 15px;
+    width:250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding:15px;
+    font-size: 14px;
+
+}
+
+.badgeSubmit{
+    margin-bottom: 20px;
+    width:100px;
+    border-radius: 8px;
+    background-color: #34495e; 
+    color:white;
+    padding:5px 10px;
+    font-size: 14px;
+
+}
+
+.badgeClose{
+    width:70px;
+    border-radius: 8px;
+    border: 1px solid #34495e;
+    color:#34495e;
+    padding:5px 10px;
+    background-color: white;
+    
+}
+
+.closeButton{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.clientError{
+    margin-bottom: 20px;
+    color: red;
+}
+
+
+
+.wishForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.wishLabel{
+    margin-bottom: 10px;
+}
+
+.wishName{
+    margin-bottom: 20px;
+    height: 15px;
+    width:250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding:15px;
+    font-size: 14px;
+
+}
+
+.wishSubmit{
+    margin-bottom: 20px;
+    width:100px;
+    border-radius: 8px;
+    background-color: #34495e; 
+    color:white;
+    padding:5px 10px;
+    font-size: 14px;
+
+}
+
+.wishClose{
+    width:70px;
+    border-radius: 8px;
+    border: 1px solid #34495e;
+    color:#34495e;
+    padding:5px 10px;
+    background-color: white;
+    
+}
+
+.wishclientError{
+    margin-bottom: 20px;
+    color: red;
 }
