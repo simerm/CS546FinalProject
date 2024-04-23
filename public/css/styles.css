@@ -55,9 +55,7 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* padding: 40px; */
-    /* max-width: 400px; */
-    /* margin: 0 auto; */
+   
     display: flex;
     flex-direction: row; 
     justify-content: space-between;
@@ -122,4 +120,27 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
+}
+
+.addWish {
+    background-color: #34495e; 
+    border: none;
+    color: white; 
+    padding: 10px 20px; 
+    text-align: center; 
+    font-size: 14px; 
+    margin: 4px ; 
+    border-radius: 8px;
+}
+
+
+.addBadge {
+    background-color: #34495e; 
+    border: none;
+    color: white; 
+    padding: 10px 20px; 
+    text-align: center; 
+    font-size: 14px; 
+    margin: 4px ; 
+    border-radius: 8px;
 }
