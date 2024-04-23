@@ -26,14 +26,23 @@
                 <h2>My Badges</h2>
                 <button class="addBadge" id="addBadge">Add Badge</button>
             </div>
-            <div clas="badgeNames">
-                <p>You don't have any badges currently.</p>
-                <p>You don't have any badges currently.</p>
-                <p>You don't have any badges currently.</p>
-                <p>You don't have any badges currently.</p>
-                <p>You don't have any badges currently.</p>
-                <p>You don't have any badges currently.</p>
-                <p>You don't have any badges currently.</p>
+
+            <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
+            <div class="overlay" id="overlay"></div>
+            <div class="form-popup" id="formPopup">
+                <h3>Add New Badge</h3>
+                <form class="badgeForm" method="POST" >
+                    <label for="badgeName">Badge Name:</label>
+                    <input type="text" id="badgeName" name="badgeName">
+                    <button type="submit">Submit</button>
+                </form>
+                <button onclick="closeForm()">Close</button>
             </div>
 
 
