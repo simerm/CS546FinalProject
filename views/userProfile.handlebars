@@ -37,9 +37,9 @@
             <div class="overlay" id="overlay"></div>
             <div class="form-popup" id="formPopup">
                 <h3>Add New Badge</h3>
-                <form class="badgeForm" method="POST" >
+                <form class="badgeForm" action='/badge' method="POST" >
                     <label for="badgeName">Badge Name:</label>
-                    <input type="text" id="badgeName" name="badgeName">
+                    <input type="text" id="badgeName" name="badgeName" placeholder="Enter Badge Name">
                     <button type="submit">Submit</button>
                 </form>
                 <button onclick="closeForm()">Close</button>
@@ -56,6 +56,15 @@
 
 
             <p>You don't have any wishes currently.</p>
+            <div class="wish-form-popup" id="wishformPopup">
+                <h3>Add New Wish</h3>
+                <form class="wishForm" action='/wishlist'method="POST" >
+                    <label for="wishName">Item:</label>
+                    <input type="text" id="wishName" name="wishName" placeholder="Enter Wish Name">
+                    <button type="submit">Submit</button>
+                </form>
+                <button onclick="closeWishForm()">Close</button>
+            </div>
         </div>
 
     </div>
