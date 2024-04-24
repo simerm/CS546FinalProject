@@ -14,5 +14,5 @@ const getCollectionFn = (collection) => {
 };
 
 /* Now, you can list your collections here: */
-export const posts = getCollectionFn('figurines');
+export const figurines = getCollectionFn('figurines');
 
