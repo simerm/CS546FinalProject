@@ -1,0 +1,45 @@
+<h1>Register Page</h1>
+<form action="/register" method="POST" name="signup-form" id="signup-form">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName">
+
+    <br><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName">
+
+    <br><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username">
+    
+    <br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password">
+    
+    <br><br>
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword">
+    
+    <br><br>
+
+    <label for="role">Role:</label>
+    <select id="role" name="role">
+        <div id="error"></div>
+        <option value="User">User</option>
+        <option value="business">Business</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit" id="submitButton" name="submitButton">Submit</button>
+    <p>Already have an account? <a href="/login">Click here to log-in</a></p>
+    <script src="/public/js/client_side_validation.js"></script>
+</form>
+{{#if error_msg}}
+  <p class="error">
+      {{error_msg}}
+  </p>
+{{/if}}
