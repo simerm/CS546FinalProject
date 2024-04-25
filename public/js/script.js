@@ -1,22 +1,22 @@
-const addBadgeBtn = document.getElementById('addBadge');
-const formPopup = document.getElementById('formPopup');
+// const addBadgeBtn = document.getElementById('addBadge');
+// const formPopup = document.getElementById('formPopup');
 const overlay = document.getElementById('overlay');
 
-function openForm() {
-    formPopup.style.display = 'block';
-    overlay.style.display = 'block';
-    document.getElementById('badgeName').value = ''
-    let error = document.getElementById('clientError')
-    error.innerHTML = ""
+// function openForm() {
+//     formPopup.style.display = 'block';
+//     overlay.style.display = 'block';
+//     document.getElementById('badgeName').value = ''
+//     let error = document.getElementById('clientError')
+//     error.innerHTML = ""
 
-}
+// }
 
-function closeForm() {
-    formPopup.style.display = 'none';
-    overlay.style.display = 'none';
-}
+// function closeForm() {
+//     formPopup.style.display = 'none';
+//     overlay.style.display = 'none';
+// }
 
-addBadgeBtn.addEventListener('click', openForm);
+// addBadgeBtn.addEventListener('click', openForm);
 
 const addWishBtn = document.getElementById('addWish');
 const wishFormPopup = document.getElementById('wishformPopup');
