@@ -47,7 +47,7 @@ export const series = [
             {
                 "modelName": "Bok Choy",
                 "rare": false,
-                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/BokChoy.pngp"
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/BokChoy.png"
             },
             {
                 "modelName": "Corn",
@@ -194,9 +194,9 @@ export const series = [
                 "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/LilyBell.png"
             },
             {
-                "modelName": "Hydrangea",
+                "modelName": "Hybrangea",
                 "rare": false,
-                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Hydrangea.png"
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Hybrangea.png"
             },
             {
                 "modelName": "Pansy",
@@ -204,9 +204,9 @@ export const series = [
                 "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Pansy.png"
             },
             {
-                "modelName": "Carnation",
+                "modelName": "Carnarion",
                 "rare": false,
-                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Carnation.png"
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Carnarion.png"
             },
             {
                 "modelName": "Acorn",
