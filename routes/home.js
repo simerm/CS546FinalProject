@@ -194,6 +194,7 @@ router
             username: user.username,
             role: user.role
           }
+          return res.redirect('/profile')
           //CHANGE WHAT HAPPENS WHEN LOGIN
           // if (user.role === 'admin') {
           //   return res.redirect('/admin');
