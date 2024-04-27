@@ -50,7 +50,12 @@ export const registerUser = async (
     lastName: lastName,
     username: username,
     password: hashedPassword,
-    role: role
+    role: role,
+    figurineList: [],
+    favFigure: {
+      figureName: "",
+      figureId: ""
+    }
   }
   const userCollection= await users();
   let insertedUser = await userCollection.insertOne(newUser);
@@ -88,5 +93,7 @@ export const loginUser = async (username, password) => {
       lastName: user.lastName,
       username: user.username,
       role: user.role,
+      figurineList: user.figurineList,
+      favFigure: user.favFigure
     };
 };
