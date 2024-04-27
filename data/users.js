@@ -63,35 +63,30 @@ export const registerUser = async (
 };
 
 export const loginUser = async (username, password) => {
-  let userCollection= await users();
-  let findusername= await userCollection.findOne({ username: username});
-  //check username
-  if(username.length<6){
-    throw { code: 400, error: "Username has to be at least 6 characters" };
+  if (!username || typeof username !== "string" || username.trim() === "" || username.length < 5 || username.length > 10 || username.match(/[^a-zA-Z]/)) {
+    throw "You must provide a valid username";
   }
-  //check password
-  if (!password.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[^\s]{10,}$/)){
-    throw { code: 400, error: "Invalid password." };
+
+  if (!password || typeof password !== "string" || password.trim() === "" || password.length < 8 || password.length > 20 || !password.match(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/)) {
+    throw "You must provide a valid password";
   }
-  //check if username compares in system
-  if(!findusername){
-    throw {
-      code: 400, error:
-        "Either the username or password is invalid"
-    }
+
+  const userCollection = await users();
+  const user = await userCollection.findOne({ username: { $regex: new RegExp(`^${username}$`, "i") } });
+  if (!user) {
+    throw "Either the username or password is invalid";
   }
-  //check if password is in system
-  let unhash = await bcrypt.compare(password, findusername.password);
-  if (!unhash) {
-    throw {
-      code: 400, error:
-        "Either username or password is invalid"
-    }}
-    const noPass = {
-      firstName: findusername.firstName,
-      lastName: findusername.lastName,
-      username:findusername.username,
-      role: findusername.role
-    }
-    return noPass;
+
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (!passwordMatch) {
+    throw "Either the username or password is invalid";
+  }
+
+    return {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      role: user.role,
+    };
 };

@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="divider"></div>
-                <p>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Bio: Am I logged in? {{loggedIn}}</p>  
                 <p>Favorite Figurine: Pikachu</p>
             </div>
 
@@ -28,31 +28,6 @@
             </div>
 
             <p>You don't have any badges currently.</p>
-            <p>You don't have any badges currently.</p>
-            <p>You don't have any badges currently.</p>
-            <p>You don't have any badges currently.</p>
-            <p>You don't have any badges currently.</p>
-            <p>You don't have any badges currently.</p>
-            <p>You don't have any badges currently.</p>
-            <div class="overlay" id="overlay"></div>
-            <div class="form-popup" id="formPopup">
-                <h3>Add New Badge</h3>
-                <div class="clientError" id="clientError"></div>
-
-                <form id="badgeForm" class="badgeForm" action='/badge' method="POST">
-                    <label class="badgelabel" for="badgeName">Badge Name:</label>
-                    <input class="badgeName" type="text" id="badgeName" name="badgeName" placeholder="Enter Badge Name">
-                    <div class="closeButton">
-                        <button class="badgeSubmit" type="submit">Submit</button>
-                    </div>
-                </form>
-                <div class="closeButton">
-                    <button class="badgeClose" onclick="closeForm()">Close</button>
-                </div>
-
-            </div>
-
-
         </div>
 
         <div class="wishlist">

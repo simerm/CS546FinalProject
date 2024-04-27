@@ -27,10 +27,16 @@ router
 router
   .route('/register')
   .get(async (req, res) => {
-    return res.render('register', {title: "Register Page"});
+    try {
+      res.render('register');
+    } catch (e) {
+      res.status(500).json({error: e});
+    }
   })
   .post(async (req, res) => {
     try {
+      console.log(`POST request to /register`);
+      console.log("Request body:", req.body);
       const {firstName, 
         lastName,
         username,
@@ -51,11 +57,18 @@ router
 router
   .route('/login')
   .get(async (req, res) => {
-    return res.render('login', {title: "Login Page"});
+    try {
+      res.render('login', {title: "Login Page"});
+    } catch (e) {
+      res.status(500).json({error: e});
+    }
   })
   .post(async (req, res) => {
     try {
-      let {username, password} = req.body;
+      let { username, password } = req.body;
+      if (!username || !password) {
+        return res.status(400).render('login', { error: 'You must provide both username and password.' });
+      }
       req.session.user = await loginUser(username, password);
       res.cookie('AuthenticationState', 'authenticated');
       if (req.session.user.role === "user") {
@@ -93,7 +106,8 @@ router.route('/user').get(async (req, res) => {
     lastName: req.session.user.lastName, 
     username: req.session.user.username, 
     password: req.session.user.password,
-    role: req.session.user.role});
+    role: req.session.user.role,
+    loggedIn: true});
 });
 
 router.route('/business').get(async (req, res) => {
@@ -102,6 +116,19 @@ router.route('/business').get(async (req, res) => {
     username: req.session.user.username, 
     password: req.session.user.password,
     role: req.session.user.role});
+});
+
+router.route('/logout').get(async (req, res) => {
+  try {
+    if (req.session.user) {
+      req.session.destroy();
+      res.render('logout');
+    } else {
+      res.redirect('/login');
+    }
+  } catch (e) {
+    res.status(500).json({error: e});
+  }
 });
 
 
