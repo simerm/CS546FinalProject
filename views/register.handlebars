@@ -1,0 +1,43 @@
+
+<h1>Sign Up</h1>
+{{#if error}}
+<p class="error">{{error}}</p>
+{{/if}}
+<div id = "clientError"></div>
+<div class="display">
+<form id="signup-form" name="signup-form" action="/register" method="POST">
+    <div>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName">
+    </div>
+    <div>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName">
+    </div>
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+    </div>
+    <div>
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword">
+    </div>
+    
+    <div>
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit" id="submitButton" name="submitButton">Submit</button>
+    </div>
+</form>
+
+<a href="/login">Already have an account? Click here to log-in</a>
+</div>
