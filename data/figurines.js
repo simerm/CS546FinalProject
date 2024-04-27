@@ -1,4 +1,4 @@
-[
+export const figurines = [
    {
         "figurineName": "Smiski",
         "seriesId": ["Smiski1", "SmiskiBed", "SmiskiMuseum"]

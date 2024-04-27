@@ -1,0 +1,19 @@
+<h1>The General Collections</h1>
+<div id="collection" class="collection">
+    {{#each figurineInfo}} {{!-- access to each figurine/key --}}
+        {{#each this}}
+            <h5>{{figurineName}}</h5>
+            {{#each figurineTypes}}
+                <div class="card" style="width: 18rem;">
+                    <img src={{this.image_url}} class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.modelName}}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">An item</li>
+                    </ul>
+                </div>
+            {{/each}}
+        {{/each}}
+    {{/each}}
+</div>

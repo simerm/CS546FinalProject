@@ -1,5 +1,6 @@
-[
+export const series = [
     {
+        "figurineName": "Sonny Angel",
         "seriesId": "SonnyAngelVegetables",
         "seriesName": "Vegetable",
         "figurineTypes": [
@@ -76,6 +77,7 @@
         ]
     },
     {
+        "figurineName": "Sonny Angel",
         "seriesId": "SonnyAngelMarine",
         "seriesName": "Marine",
         "figurineTypes": [
@@ -152,6 +154,7 @@
         ]
     },
     {
+        "figurineName": "Sonny Angel",
         "seriesId": "SonnyAngelFlower",
         "seriesName": "Flower",
         "figurineTypes": [
@@ -228,6 +231,7 @@
         ]
     },
     {
+        "figurineName": "Smiski",
         "seriesId": "Smiski1",
         "seriesName": "Series 1",
         "figurineTypes": [
@@ -269,6 +273,7 @@
         ]
     },
     {
+        "figurineName": "Smiski",
         "seriesId": "SmiskiBed",
         "seriesName": "Bed",
         "figurineTypes": [
@@ -310,6 +315,7 @@
         ]
     },
     {
+        "figurineName": "Smiski",
         "seriesId": "SmiskiMuseum",
         "seriesName": "Museum",
         "figurineTypes": [
