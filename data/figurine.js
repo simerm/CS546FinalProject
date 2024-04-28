@@ -2,6 +2,7 @@
 import bcrypt, { compare } from 'bcrypt'
 const saltRounds = 16
 import { users } from '../config/mongoCollections.js';
+import { store } from '../config/mongoCollections.js';
 
 export const registerUser = async (
   firstName,
@@ -90,7 +91,7 @@ export const registerUser = async (
   const currentDate = new Date();
 
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1; 
+  const month = currentDate.getMonth() + 1;
   const day = currentDate.getDate();
   const date = `${year}/${month}/${day}`
   let newUser = {
@@ -102,7 +103,7 @@ export const registerUser = async (
     badges: [],
     wishlist: [],
     favoriteFigurine: "",
-    dateCreated:date
+    dateCreated: date
   }
 
   const newInsertInformation = await userCollection.insertOne(newUser);
@@ -159,16 +160,79 @@ export const loginUser = async (username, password) => {
 
   const userCollection = await users();
   const u = await userCollection.findOne({ username: username });
-  if (!u) throw "Either the username or password is invalid"
-  let compare = await bcrypt.compare(password, u.password);
-  if (!compare) {
-    throw "Either the username or password is invalid"
+  const storeCollection = await store();
+  const b = await storeCollection.findOne({ username: username });
+  if (!b && !u) throw "Either the username or password is invalid"
+  let role = ""
+  if (b) {
+    let compare = await bcrypt.compare(password, b.password);
+    if (!compare) {
+      throw "Either the username or password is invalid"
+    }
+    role = "business"
+    return {
+      storeName: b.storeName,
+      phoneNumber: b.phoneNumber,
+      businessId: b.id,
+      street: b.street,
+      city: b.city,
+      state: b.state,
+      zipcode: b.zipcode,
+      username: username,
+      figurineStock: b.figurineStock,
+      role: role
+
+    }
   }
+  else if (u) {
+    let compare = await bcrypt.compare(password, u.password);
+    if (!compare) {
+      throw "Either the username or password is invalid"
+    }
+    role = "personal"
+  }
+
   return {
     firstName: u.firstName,
     lastName: u.lastName,
     username: username,
-    role: u.role
+    role: role
   }
+
+};
+
+export const registerBusiness = async (
+  name, phoneNumber, id, street, city, state, zipcode, username, password
+) => {
+  // if (!username || !password || !name || !phoneNumber || !id || !street || !city || !state || !zipcode ) {
+  //   throw "Must provide all parameters"
+  // }
+
+  const storeCollection = await store();
+  username = username.toLowerCase()
+  const u = await storeCollection.findOne({ username: username });
+  if (u) throw 'username already exists';
+  const c = await storeCollection.findOne({ businessId: id });
+  if (c) throw 'business id already exists';
+
+
+  const hash = await bcrypt.hash(password, saltRounds);
+
+  let newUser = {
+    storeName: name,
+    phoneNumber: phoneNumber,
+    businessId: id,
+    street: street,
+    city: city,
+    state: state,
+    zipcode: zipcode,
+    username: username,
+    password: hash,
+    figurineStock: []
+  }
+
+  const newInsertInformation = await storeCollection.insertOne(newUser);
+  if (!newInsertInformation.insertedId) throw 'Insert failed!';
+  return { signupCompleted: true }
 
 };
