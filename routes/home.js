@@ -97,8 +97,8 @@ router
       }
   
       
-      if (role !== "admin" && role !== "user") {
-        return res.status(400).render('register', { error: "role can only be admin or user" });
+      if (role !== "Business" && role !== "Personal") {
+        return res.status(400).render('register', { error: "role can only be Business or Personal" });
       }
       if (confirmPassword !== password) {
         return res.status(400).render('register', { error: "passwords must match" });

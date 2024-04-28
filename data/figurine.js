@@ -10,7 +10,7 @@ export const registerUser = async (
   password,
   role
 ) => {
-  if (!firstName || !lastName || !username || !password ||  !role) {
+  if (!firstName || !lastName || !username || !password || !role) {
     throw "Must provide all parameters"
   }
   if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof username !== 'string' ||
@@ -23,7 +23,7 @@ export const registerUser = async (
   password = password.trim()
   role = role.trim()
   if (firstName.length < 2 || lastName.length < 2 || username.length < 5 ||
-    password.length < 8 
+    password.length < 8
     || role.length < 4) {
     throw "Invalid length for input parameters"
   }
@@ -81,17 +81,28 @@ export const registerUser = async (
     throw 'must have uppercase character, number, and special character'
   }
 
-  
-  if (role !== "admin" && role !== "user") {
-    throw "role can only be admin or user"
+
+  if (role !== "Business" && role !== "Personal") {
+    throw "role can only be Business or Personal"
   }
+
   const hash = await bcrypt.hash(password, saltRounds);
+  const currentDate = new Date();
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1; 
+  const day = currentDate.getDate();
+  const date = `${year}/${month}/${day}`
   let newUser = {
     firstName: firstName,
     lastName: lastName,
     username: username,
     password: hash,
-    role: role
+    role: role,
+    badges: [],
+    wishlist: [],
+    favoriteFigurine: "",
+    dateCreated:date
   }
 
   const newInsertInformation = await userCollection.insertOne(newUser);
