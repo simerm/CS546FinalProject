@@ -1,6 +1,8 @@
 import { Router } from 'express';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/figurine.js';
+import fs from 'fs';
+import path from 'path';
 
 router
   .route('/')
@@ -12,10 +14,20 @@ router
     .get(async (req, res) => {
       res.render('userProfile')
     }),
-  router
-    .route('/collections')
-    .get(async (req, res) => {
 
+  router.route.get('/collections', async (req, res) => {
+    fs.readFile('./data/figurines.json', 'utf8', (err, figurines) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      fs.readFile('./data/series.json', 'utf8', (err, series) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        res.render('collections', {figurines: JSON.parse(figurines), series: JSON.parse(series)})
+      })
     }),
   router
     .route('/businessRegister')
@@ -369,6 +381,7 @@ router
     //code here for GET
     res.render("login", { themePreference: 'light' })
   })
+  
 
   .post(async (req, res) => {
     //code here for POST
