@@ -19,11 +19,14 @@
   },
   "homepage": "https://github.com/simerm/CS546FinalProject#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
-    "fs": "^0.0.1-security",
+    "express-session": "^1.18.0",
     "handlebars": "^4.7.8",
+    "libphonenumber-js": "^1.10.61",
     "mongodb": "^6.5.0",
+    "fs": "^0.0.1-security",
     "path": "^0.12.7"
   }
 }

@@ -43,7 +43,7 @@ h1 {
 .profile{
     display:flex;
     justify-content:space-evenly;
-    
+    margin-bottom: 20px;
     flex-direction: row;
     
 }
@@ -60,7 +60,6 @@ h1 {
     display: flex;
     flex-direction: row; 
     justify-content: space-between;
-    /* align-items: center; */
 }
 
 .profileDetails h3 {

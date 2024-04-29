@@ -62,7 +62,7 @@
                 <h3>Add New Wish</h3>
                 <div class="wishclientError" id="wishclientError"></div>
                 <form id="wishForm" class="wishForm" action='/wishlist' method="POST">
-                    <label class = "wishLabel" id="wishLabel" for="wishName">Item:</label>
+                    <label class="wishLabel" id="wishLabel" for="wishName">Item:</label>
                     <input class="wishName" type="text" id="wishName" name="wishName" placeholder="Enter Wish Name">
                     <div class="closeButton">
                         <button class="wishSubmit" type="submit">Submit</button>
@@ -77,6 +77,34 @@
         </div>
 
     </div>
+    <div class="jumbotron">
+        <h3>You are eligible to become an Admin!</h3>
+        <p>If you are seeing this, you have been a user for more than 3 years, which 
+            makes you eligible to apply to become an admin.
+        </p>
+        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#theModal">
+            Apply here!
+        </button>
+        <div class="modal" id="theModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Admin Application</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        Modal body..
+                    </div>
+                    
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{#if eligible}}
+
+    {{/if}}
     <div class="divider"></div>
     <div class="collection">
         <h2>My Collections</h2>
