@@ -1,114 +1,123 @@
-<h1>My Profile</h1>
-<div class="personal">
-    <div class="profile">
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/collections">Collections</a>
+    <a href="/profile">My Profile</a>
+</div>
+<div class="body">
 
-        <div class="profileDetails">
-            <div class="left">
-                <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
-                <h3>Username</h3>
-            </div>
-            <div class="right">
-                <h2>Firstname Lastname</h2>
-                <div class="locationDiv">
-                    <img src="/public/location.png" class="locationPicture">
-                    <p>New York City, USA</p>
+    <h1>My Profile</h1>
+    <div class="personal">
+        <div class="profile">
+
+            <div class="profileDetails">
+                <div class="left">
+                    <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+                    <h3>Username</h3>
+                </div>
+                <div class="right">
+                    <h2>Firstname Lastname</h2>
+                    <div class="locationDiv">
+                        <img src="/public/location.png" class="locationPicture">
+                        <p>New York City, USA</p>
+                    </div>
+
+                    <div class="divider"></div>
+                    <p>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p>Favorite Figurine: Pikachu</p>
                 </div>
 
-                <div class="divider"></div>
-                <p>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <p>Favorite Figurine: Pikachu</p>
             </div>
 
-        </div>
+            <div class="badges">
+                <div class="buttontitle">
+                    <h2>My Badges</h2>
+                    <button class="addBadge" id="addBadge">Add Badge</button>
+                </div>
 
-        <div class="badges">
-            <div class="buttontitle">
-                <h2>My Badges</h2>
-                <button class="addBadge" id="addBadge">Add Badge</button>
-            </div>
+                <p>You don't have any badges currently.</p>
+                {{!-- <div class="overlay" id="overlay"></div>
+                <div class="form-popup" id="formPopup">
+                    <h3>Add New Badge</h3>
+                    <div class="clientError" id="clientError"></div>
 
-            <p>You don't have any badges currently.</p>
-            {{!-- <div class="overlay" id="overlay"></div>
-            <div class="form-popup" id="formPopup">
-                <h3>Add New Badge</h3>
-                <div class="clientError" id="clientError"></div>
-
-                <form id="badgeForm" class="badgeForm" action='/badge' method="POST">
-                    <label class="badgelabel" for="badgeName">Badge Name:</label>
-                    <input class="badgeName" type="text" id="badgeName" name="badgeName" placeholder="Enter Badge Name">
+                    <form id="badgeForm" class="badgeForm" action='/badge' method="POST">
+                        <label class="badgelabel" for="badgeName">Badge Name:</label>
+                        <input class="badgeName" type="text" id="badgeName" name="badgeName"
+                            placeholder="Enter Badge Name">
+                        <div class="closeButton">
+                            <button class="badgeSubmit" type="submit">Submit</button>
+                        </div>
+                    </form>
                     <div class="closeButton">
-                        <button class="badgeSubmit" type="submit">Submit</button>
+                        <button class="badgeClose" onclick="closeForm()">Close</button>
                     </div>
-                </form>
-                <div class="closeButton">
-                    <button class="badgeClose" onclick="closeForm()">Close</button>
-                </div>
 
-            </div> --}}
+                </div> --}}
 
 
-        </div>
-
-        <div class="wishlist">
-            <div class="wishTitle">
-                <h2>My Wishlist</h2>
-                <button class="addWish" id="addWish">Add Wish</button>
             </div>
 
+            <div class="wishlist">
+                <div class="wishTitle">
+                    <h2>My Wishlist</h2>
+                    <button class="addWish" id="addWish">Add Wish</button>
+                </div>
 
-            <p>You don't have any wishes currently.</p>
-            <div class="overlay" id="overlay"></div>
-            <div class="wish-form-popup" id="wishformPopup">
-                <h3>Add New Wish</h3>
-                <div class="wishclientError" id="wishclientError"></div>
-                <form id="wishForm" class="wishForm" action='/wishlist' method="POST">
-                    <label class="wishLabel" id="wishLabel" for="wishName">Item:</label>
-                    <input class="wishName" type="text" id="wishName" name="wishName" placeholder="Enter Wish Name">
+
+                <p>You don't have any wishes currently.</p>
+                <div class="overlay" id="overlay"></div>
+                <div class="wish-form-popup" id="wishformPopup">
+                    <h3>Add New Wish</h3>
+                    <div class="wishclientError" id="wishclientError"></div>
+                    <form id="wishForm" class="wishForm" action='/wishlist' method="POST">
+                        <label class="wishLabel" id="wishLabel" for="wishName">Item:</label>
+                        <input class="wishName" type="text" id="wishName" name="wishName" placeholder="Enter Wish Name">
+                        <div class="closeButton">
+                            <button class="wishSubmit" type="submit">Submit</button>
+                        </div>
+                    </form>
                     <div class="closeButton">
-                        <button class="wishSubmit" type="submit">Submit</button>
-                    </div>
-                </form>
-                <div class="closeButton">
 
-                    <button class="wishClose" onclick="closeWishForm()">Close</button>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-    <div class="jumbotron">
-        <h3>You are eligible to become an Admin!</h3>
-        <p>If you are seeing this, you have been a user for more than 3 years, which 
-            makes you eligible to apply to become an admin.
-        </p>
-        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#theModal">
-            Apply here!
-        </button>
-        <div class="modal" id="theModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Admin Application</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button class="wishClose" onclick="closeWishForm()">Close</button>
                     </div>
-                    <div class="modal-body">
-                        Modal body..
-                    </div>
-                    
 
                 </div>
             </div>
+
+        </div>
+        <div class="jumbotron">
+            <h3>You are eligible to become an Admin!</h3>
+            <p>If you are seeing this, you have been a user for more than 3 years, which
+                makes you eligible to apply to become an admin.
+            </p>
+            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#theModal">
+                Apply here!
+            </button>
+            <div class="modal" id="theModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Admin Application</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            Modal body..
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {{#if eligible}}
+
+        {{/if}}
+        <div class="divider"></div>
+        <div class="collection">
+            <h2>My Collections</h2>
+            <button class="addCollectionName">Add Collection</button>
         </div>
 
     </div>
-    {{#if eligible}}
-
-    {{/if}}
-    <div class="divider"></div>
-    <div class="collection">
-        <h2>My Collections</h2>
-        <button class="addCollectionName">Add Collection</button>
-    </div>
-
 </div>
