@@ -15,7 +15,8 @@ router
       res.render('userProfile')
     }),
 
-  router.route.get('/collections', async (req, res) => {
+  router
+    .route('/collections').get( async (req, res) => {
     fs.readFile('./data/figurines.json', 'utf8', (err, figurines) => {
       if (err) {
         console.error(err)
@@ -28,7 +29,8 @@ router
         }
         res.render('collections', {figurines: JSON.parse(figurines), series: JSON.parse(series)})
       })
-    }),
+    })
+  }),
   router
     .route('/businessRegister')
     .get(async (req, res) => {
