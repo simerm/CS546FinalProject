@@ -103,7 +103,8 @@ export const registerUser = async (
     badges: [],
     wishlist: [],
     favoriteFigurine: "",
-    dateCreated: date
+    dateCreated: date,
+    friends: []
   }
 
   const newInsertInformation = await userCollection.insertOne(newUser);
