@@ -16,22 +16,17 @@ router
     .get(async (req, res) => {
       res.render('userProfile')
     }),
-
   router
-    .route('/collections').get( async (req, res) => {
-    fs.readFile('./data/figurines.json', 'utf8', (err, figurines) => {
-      if (err) {
-        console.error(err)
-        return
-      }
-      fs.readFile('./data/series.json', 'utf8', (err, series) => {
-        if (err) {
-          console.error(err)
-          return
-        }
-        res.render('collections', {figurines: JSON.parse(figurines), series: JSON.parse(series)})
-      })
-    })
+  .route('/collections')
+  .get(async (req, res) => {
+    try{
+      const figurineInfo = await sortFigurines();
+      res.render('generalCollection', {figurineInfo})
+    }
+    catch(e){
+      res.status(500).json({error: 'Error while searching for the collection.'})
+    }
+    
   }),
   router
     .route('/businessRegister')
