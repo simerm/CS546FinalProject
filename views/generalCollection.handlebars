@@ -1,0 +1,54 @@
+<h1>The General Collection</h1>
+<div id="collection" class="collection">
+    {{#each figurineInfo}} {{!-- access to each figurine/key --}}
+         <h5>{{this.figurineName}}</h5>
+        {{#each this}}
+            <h5>{{figurineName}}</h5>
+            <h3>{{seriesName}} Series</h3>
+            <div class="row row-cols-2 row-cols-md-5 g-4">
+            {{#each figurineTypes}}
+                <div class="col">
+                    <div class="card h-100" style="width: 15rem;">
+                        {{#if rare}}
+                            <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
+                            <div class="overlay-div rounded-2"></div>
+                            <div class="card-img-overlay text-light">
+                                <h5 class="card-title">Secret Figurine</h5>
+                                <p class="card-text">Hover over to see it!</p>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.modelName}}</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
+                            </ul>
+                        {{else}}
+                            <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.modelName}}</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
+                            </ul>
+                        {{/if}}
+                        {{#if loggedIn}}
+                            {{#if user}}
+                                {{#if inWishlist}}
+                                    <a href="/removeWishlist/{{this.id}}" class="btn btn-danger">Remove from Wishlist</a>
+                                {{else}}
+                                    <a href="/addWishlist/{{this.id}}" class="btn btn-primary">Add to Wishlist</a>
+                                {{/if}}
+                                {{#if inCollection}}
+                                    <a href="/removeCollection/{{this.id}}" class="btn btn-danger">Remove from My Collection</a>
+                                {{else}}
+                                    <a href="/addCollection/{{this.id}}" class="btn btn-primary">Add to My Collection</a>
+                                {{/if}}
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+            {{/each}}
+            </div>
+        {{/each}}
+    {{/each}}
+</div>

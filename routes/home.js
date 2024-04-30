@@ -1,4 +1,6 @@
-import { Router } from 'express';
+import {Router} from 'express';
+import { sortFigurines } from '../data/genCollection.js';
+import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
 import fs from 'fs';
@@ -380,106 +382,7 @@ router
 router
   .route('/login')
   .get(async (req, res) => {
-    //code here for GET
-    res.render("login", { themePreference: 'light' })
+    
   })
-  
-
-  .post(async (req, res) => {
-    //code here for POST
-    let { username, password } = req.body;
-    if (!username || !password || !isNaN(username) || !isNaN(password)) {
-      return res.status(400).render('login', { themePreference: 'light', error: "username and password must be provided" });
-    }
-    if (typeof username !== 'string' || typeof password !== 'string') {
-      return res.status(400).render('login', { themePreference: 'light', error: "must provide strings" });
-    }
-    username = username.trim()
-    password = password.trim()
-    if (username.length < 5 || password.length < 8) {
-      return res.status(400).render('login', { themePreference: 'light', error: "invalid length" });
-
-    }
-    username = username.toLowerCase()
-    if (username.length > 10) {
-      return res.status(400).render('login', { themePreference: 'light', error: "username too long" });
-
-    }
-    let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    for (let x of username) {
-      if (n.includes(x)) {
-        return res.status(400).render('login', { themePreference: 'light', error: "no numbers allowed" });
-
-      }
-    }
-
-    //password checking for special characters and stuff
-    let upper = false
-    let num = false
-    let special = false
-    let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
-    for (let x of password) {
-      if (x === " ") {
-        return res.status(400).render('login', { themePreference: 'light', error: "no spaces allowed" });
-      }
-      else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
-        upper = true
-      }
-      else if (x.charCodeAt(0) >= 48 && x.charCodeAt(0) <= 57) {
-        num = true
-      }
-      else if (sc.includes(x)) {
-        special = true
-      }
-    }
-    if (!upper || !num || !special) {
-      return res.status(400).render('login', { themePreference: 'light', error: "must have uppercase character, number, and special character" });
-
-    }
-
-    try {
-      const user = await loginUser(username, password)
-      if (user) {
-        if (user.role == 'business') {
-          req.session.user = {
-            storeName: user.storeName,
-            phoneNumber: user.phoneNumber,
-            businessId: user.id,
-            street: user.street,
-            city: user.city,
-            state: user.state,
-            zipcode: user.zipcode,
-            username: user.username,
-            figurineStock: user.figurineStock,
-            role: user.role
-          }
-        }
-        else{
-          req.session.user = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            role: user.role
-          }
-        }
-      
-        return res.redirect('/profile')
-        //CHANGE WHAT HAPPENS WHEN LOGIN
-        // if (user.role === 'admin') {
-        //   return res.redirect('/admin');
-        // } else {
-        //   return res.redirect('/user');
-        // }
-      }
-      else {
-        return res.status(400).render('login', { error: 'invalid username or password' });
-      }
-
-    } catch (e) {
-      return res.status(400).render('login', { error: e });
-
-    }
-
-  });
 
 export default router;

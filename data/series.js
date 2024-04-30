@@ -1,5 +1,6 @@
-[
+export const series = [
     {
+        "figurineName": "Sonny Angel",
         "seriesId": "SonnyAngelVegetables",
         "seriesName": "Vegetable",
         "figurineTypes": [
@@ -46,7 +47,7 @@
             {
                 "modelName": "Bok Choy",
                 "rare": false,
-                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/BokChoy.pngp"
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/BokChoy.png"
             },
             {
                 "modelName": "Corn",
@@ -76,6 +77,7 @@
         ]
     },
     {
+        "figurineName": "Sonny Angel",
         "seriesId": "SonnyAngelMarine",
         "seriesName": "Marine",
         "figurineTypes": [
@@ -152,6 +154,7 @@
         ]
     },
     {
+        "figurineName": "Sonny Angel",
         "seriesId": "SonnyAngelFlower",
         "seriesName": "Flower",
         "figurineTypes": [
@@ -191,9 +194,9 @@
                 "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/LilyBell.png"
             },
             {
-                "modelName": "Hydrangea",
+                "modelName": "Hybrangea",
                 "rare": false,
-                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Hydrangea.png"
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Hybrangea.png"
             },
             {
                 "modelName": "Pansy",
@@ -201,9 +204,9 @@
                 "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Pansy.png"
             },
             {
-                "modelName": "Carnation",
+                "modelName": "Carnarion",
                 "rare": false,
-                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Carnation.png"
+                "image_url": "https://www.sonnyangel.com/renewal/wp-content/uploads/2019/10/Carnarion.png"
             },
             {
                 "modelName": "Acorn",
@@ -228,6 +231,7 @@
         ]
     },
     {
+        "figurineName": "Smiski",
         "seriesId": "Smiski1",
         "seriesName": "Series 1",
         "figurineTypes": [
@@ -269,6 +273,7 @@
         ]
     },
     {
+        "figurineName": "Smiski",
         "seriesId": "SmiskiBed",
         "seriesName": "Bed",
         "figurineTypes": [
@@ -310,6 +315,7 @@
         ]
     },
     {
+        "figurineName": "Smiski",
         "seriesId": "SmiskiMuseum",
         "seriesName": "Museum",
         "figurineTypes": [
