@@ -83,7 +83,7 @@ export const registerUser = async (
   }
 
 
-  if (role !== "Business" && role !== "Personal") {
+  if (role !== "business" && role !== "personal") {
     throw "role can only be Business or Personal"
   }
 

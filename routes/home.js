@@ -277,7 +277,7 @@ router
     .post(async (req, res) => {
       //code here for POST
       let { firstName, lastName, username, password, confirmPassword } = req.body;
-      let role = "Personal"
+      let role = "personal"
       if (!firstName || !lastName || !username || !confirmPassword || !password || !role) {
         return res.status(400).render('register', { error: 'Must have all fields' });
       }
