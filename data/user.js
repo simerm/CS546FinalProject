@@ -104,7 +104,19 @@ export const registerUser = async (
     wishlist: [],
     favoriteFigurine: "",
     dateCreated: date,
-    friends: []
+    friends: [],
+    figurineCollection: {}
+    // { sample object
+    // Smiski: {
+    //   series1: ["lounging figure", "sleeping figure"],
+    //   series2: ["workout figure", "etc figure"]
+    //
+    // },
+    // Sonny Angel: {
+    //  series1: ["lounging figure", "sleeping figure"],
+    //  series2: ["workout figure", "etc figure"]
+    // }
+
   }
 
   const newInsertInformation = await userCollection.insertOne(newUser);
