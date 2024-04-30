@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { loginUser, registerUser, registerBusiness } from '../data/figurine.js';
+import { loginUser, registerUser, registerBusiness } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 
