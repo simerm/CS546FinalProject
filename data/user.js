@@ -206,14 +206,21 @@ export const loginUser = async (username, password) => {
   }
 
   return {
-    firstName: u.firstName,
-    lastName: u.lastName,
+    storeName: u.storeName,
+    phoneNumber: u.phoneNumber,
+    businessId: u.id,
+    street: u.street,
+    city: u.city,
+    state: u.state,
+    zipcode: u.zipcode,
     username: username,
+    figurineStock: u.figurineStock,
     role: role
   }
 
 };
 
+//ERROR HANDLING NEEDS TO BE DONE FOR THIS FUNCTION
 export const registerBusiness = async (
   name, phoneNumber, id, street, city, state, zipcode, username, password
 ) => {
