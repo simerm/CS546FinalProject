@@ -206,16 +206,16 @@ export const loginUser = async (username, password) => {
   }
 
   return {
-    storeName: u.storeName,
-    phoneNumber: u.phoneNumber,
-    businessId: u.id,
-    street: u.street,
-    city: u.city,
-    state: u.state,
-    zipcode: u.zipcode,
-    username: username,
-    figurineStock: u.figurineStock,
-    role: role
+    firstName: u.firstName,
+    lastName: u.lastName,
+    username: u.username,
+    role: u.role,
+    badges: u.badges,
+    wishlist: u.wishlist,
+    favoriteFigurine: u.favoriteFigurine,
+    dateCreated: u.dateCreated,
+    friends: u.friends,
+    figurineCollection: u.figurineCollection
   }
 
 };

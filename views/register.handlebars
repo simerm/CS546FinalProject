@@ -1,10 +1,8 @@
-
 <h1>Sign Up</h1>
 {{#if error}}
-<p class="error">{{error}}</p>
+<p class="alert alert-danger">{{error}}</p>
 {{/if}}
-<div id = "clientError"></div>
-<div class="display">
+<div  class = "alert alert-danger" style="display: none" id = "clientError"></div>
 <form id="signup-form" name="signup-form" action="/register" method="POST">
     <div>
         <label for="firstName">First Name:</label>

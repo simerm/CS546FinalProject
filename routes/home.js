@@ -1,43 +1,55 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import { sortFigurines } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
 
 router
   .route('/')
   .get(async (req, res) => {
-    res.render('home')
+
+    let val = false
+    if (req.session.user) {
+      val = true
+    }
+    res.render('home', { auth: val })
   }),
   router
     .route('/profile')
     .get(async (req, res) => {
+      let val = false
+      if (req.session.user) {
+        val = true
+      }
       res.render('userProfile', {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
         username: req.session.user.username,
-        role: req.session.user.role
+        role: req.session.user.role,
+        auth: val
       })
     }),
   router
-  .route('/collections')
-  .get(async (req, res) => {
-    try{
-      const figurineInfo = await sortFigurines();
-      if (req.session.user) {
-        console.log('logged in')
-        res.render('generalCollection', {figurineInfo, loggedIn: true}) // trying to make this work
-      } else {
-        res.render('generalCollection', {figurineInfo})
+    .route('/collections')
+    .get(async (req, res) => {
+      try {
+        const figurineInfo = await sortFigurines();
+        if (req.session.user) {
+          console.log('logged in')
+          res.render('generalCollection', { figurineInfo, loggedIn: true, auth: true }) // trying to make this work
+        } else {
+          res.render('generalCollection', { figurineInfo, auth: false })
+        }
       }
-    }
-    catch(e){
-      res.status(500).json({error: 'Error while searching for the collection.'})
-    }
-    
-  }),
+      catch (e) {
+        res.status(500).json({ error: 'Error while searching for the collection.' })
+      }
+
+    }),
   router
     .route('/businessRegister')
     .get(async (req, res) => {
@@ -458,7 +470,7 @@ router
             role: user.role
           }
         }
-        else{
+        else {
           req.session.user = {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -466,7 +478,6 @@ router
             role: user.role
           }
         }
-      
         return res.redirect('/profile')
         //CHANGE WHAT HAPPENS WHEN LOGIN
         // if (user.role === 'admin') {
@@ -497,7 +508,7 @@ router
         res.redirect('/login');
       }
     } catch (e) {
-      res.status(500).json({error: e});
+      res.status(500).json({ error: e });
     }
   });
 

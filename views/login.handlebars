@@ -1,9 +1,9 @@
-<div class = "display">
+<div class="display">
     <h1>Login</h1>
     {{#if error}}
     <p class="error">{{error}}</p>
     {{/if}}
-    <div class = "clientError" id = "clientError"></div>
+    <div class="alert alert-danger" style="display: none" id="clientError"></div>
 
     <form id="signin-form" action="/login" method="POST">
         <div>
