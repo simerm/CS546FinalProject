@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import { sortFigurines } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
@@ -34,22 +34,26 @@ router
       })
     }),
   router
-    .route('/collections')
-    .get(async (req, res) => {
-      try {
-        const figurineInfo = await sortFigurines();
-        if (req.session.user) {
-          console.log('logged in')
-          res.render('generalCollection', { figurineInfo, loggedIn: true, auth: true }) // trying to make this work
-        } else {
-          res.render('generalCollection', { figurineInfo, auth: false })
+  .route('/collections')
+  .get(async (req, res) => {
+    try{
+      if (req.session.user) {
+        if (req.session.user.role == 'business') {
+          res.render('generalCollection', { figurineInfo })
+        } else if (req.session.user.role == 'personal') {
+          const figurineInfo = await sortFigurines(); // sortFigurinesUser(req) once function works
+          res.render('generalCollection', { user: true, figurineInfo })
         }
+      } else {
+        const figurineInfo = await sortFigurines();
+        res.render('generalCollection', { figurineInfo })
       }
-      catch (e) {
-        res.status(500).json({ error: 'Error while searching for the collection.' })
-      }
-
-    }),
+    }
+    catch(e){
+      res.status(500).json({error: 'Error while searching for the collection.'})
+    }
+    
+  }),
   router
     .route('/businessRegister')
     .get(async (req, res) => {
@@ -478,6 +482,7 @@ router
             role: user.role
           }
         }
+      
         return res.redirect('/profile')
         //CHANGE WHAT HAPPENS WHEN LOGIN
         // if (user.role === 'admin') {
