@@ -681,3 +681,9 @@ if (document.getElementById('business-signup-form')) {
     })
 
 }
+
+//admin-app
+
+if (document.getElementById('admin-app')) {
+
+}
