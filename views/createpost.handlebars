@@ -1,0 +1,28 @@
+<h1>Create a Post</h1>
+{{#if error}}
+<p class="error">{{error}}</p>
+{{/if}}
+<div id="clientError"></div>
+<div class="display">
+    <form id="createpost" name="createpost" action="/createpost" method="POST">
+        <div>
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image">
+        </div>
+        <div>
+            <label for="videofile">Video file:</label>
+            <input type="file" id="videofile" name="videofile">
+        </div>
+        <div>
+            <label for="videourl">Video file:</label>
+            <input type="text" id="videourl" name="videourl">
+        </div>
+        <div>
+            <label for="caption">Caption:</label>
+            <input type="text" id="caption" name="caption">
+        </div>
+        
+        <button type="post" id="postButton" name="postButton">Post</button>
+</div>
+</form>
+</div>

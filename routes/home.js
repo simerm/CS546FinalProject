@@ -16,6 +16,18 @@ router
     .get(async (req, res) => {
       res.render('userProfile')
     }),
+  //createpost/forum router
+  router
+    .route('/createpost')
+    .get(async(req, res)=>{
+      res.render('createpost')
+    }),
+    router
+    .route('/forum')
+    .get(async(req, res)=>{
+      res.render('forum')
+    }),
+  //createpost/forum router end
   router
   .route('/collections')
   .get(async (req, res) => {
