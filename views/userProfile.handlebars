@@ -76,7 +76,19 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        Modal body..
+                        <form id="admin-app" class="was-validated" action="/adminApplication" method="POST">
+                            <div class = "form-group">
+                                <p>Please provide a valid email for identification.</p>
+                                <label for="email">Email:</label>
+                                <input class="form-control" type="text" id="email" name="email" required>
+                            
+                            
+                                <label for="whyAdmin">Why would you like to be an admin?</label>
+                                <input class="form-control" type="text" id="whyAdmin" name="whyAdmin" required>
+                            
+                                <button type="submit" class = "btn btn-success" id="submitButton" name="submitButton">Submit Application</button>
+                            </div>
+                        </form>
                     </div>
 
 

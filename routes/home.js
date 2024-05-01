@@ -517,4 +517,13 @@ router
   .get(async (req, res) => {
     res.render('business')
   });
+
+router
+  .route('adminApplication')
+  .post(async (req, res) => {
+    
+  });
+
+
+
 export default router;
