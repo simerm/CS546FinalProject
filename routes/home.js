@@ -14,14 +14,24 @@ router
   router
     .route('/profile')
     .get(async (req, res) => {
-      res.render('userProfile')
+      res.render('userProfile', {
+        firstName: req.session.user.firstName,
+        lastName: req.session.user.lastName,
+        username: req.session.user.username,
+        role: req.session.user.role
+      })
     }),
   router
   .route('/collections')
   .get(async (req, res) => {
     try{
       const figurineInfo = await sortFigurines();
-      res.render('generalCollection', {figurineInfo})
+      if (req.session.user) {
+        console.log('logged in')
+        res.render('generalCollection', {figurineInfo, loggedIn: true}) // trying to make this work
+      } else {
+        res.render('generalCollection', {figurineInfo})
+      }
     }
     catch(e){
       res.status(500).json({error: 'Error while searching for the collection.'})
