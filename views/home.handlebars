@@ -4,7 +4,10 @@
     <a href="/profile">My Profile</a>
 </div>
 <div class="body">
-
-    <p>i am in home</p>
-
+    <h1>Feed</h1>
+    {{#if error}}
+    <p class="error">{{error}}</p>
+    {{/if}}
+    <div class = "clientError" id = "clientError"></div>
+    <a href="/createpost">Create Post</a>
 </div>
