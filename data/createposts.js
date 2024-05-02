@@ -33,4 +33,11 @@ export const getAllPosts = async () => {
     let post_list = await post_collection.find({}).toArray();
     if (!post_list) throw "Error: Could not get all products.";
     return post_list;
-  };
+};
+
+export const uploadFile = async () => {
+    const post_collection = await posts();
+    let post_list = await post_collection.find({}).toArray();
+    if (!post_list) throw "Error: Could not get all products.";
+    return post_list;
+};
