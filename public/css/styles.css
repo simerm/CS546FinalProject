@@ -355,7 +355,7 @@ h1 {
     opacity: 0; /* Make the overlay disappear on hover */
 }
 
-/*create post css(she does not work yet) */
+/*create post css*/
 .postButton {
     /* Your custom styles here */
     background-color: #4CAF50; /* Green */
@@ -371,3 +371,54 @@ h1 {
     border-radius: 10px;
     transition: background-color 0.3s ease;
 }
+
+/*forum css (want to look like reddit) */
+/* Style for post container */
+.post{
+    display:flex;
+    justify-content:space-evenly;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    flex-direction: row;
+    
+}
+.postDetails {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Changed to column to stack elements */
+    padding: 10px; /* Added padding for spacing */
+}
+
+/* Style for post image */
+.postPicture {
+    max-width: 100%; /* Ensures the image doesn't overflow its container */
+    height: auto; /* Maintains aspect ratio */
+    margin-bottom: 10px; /* Added margin for spacing */
+}
+
+/* Style for post title */
+.postTitle {
+    text-align: center;
+    margin: 0; /* Removed margin-top to maintain consistent spacing */
+}
+
+/* Style for post caption */
+.postCaption {
+    margin: 0; /* Removed margin-top to maintain consistent spacing */
+}
+.up-btn,
+.down-btn{
+    background-color: transparent;
+    border:none;
+    padding: 0;
+}
+
+/* Style for comment box */
+.commentBox {
+    border-top: 1px solid #ccc; /* Added border to separate comments */
+    margin-top: 10px; /* Added margin for spacing */
+    padding-top: 10px; /* Added padding for spacing */
+}
+
