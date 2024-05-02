@@ -393,7 +393,7 @@ h1 {
 
 /* Style for post image */
 .postPicture {
-    max-width: 100%; /* Ensures the image doesn't overflow its container */
+    width: 100px; /* Ensures the image doesn't overflow its container */
     height: auto; /* Maintains aspect ratio */
     margin-bottom: 10px; /* Added margin for spacing */
 }
@@ -408,17 +408,22 @@ h1 {
 .postCaption {
     margin: 0; /* Removed margin-top to maintain consistent spacing */
 }
+
 .up-btn,
 .down-btn{
     background-color: transparent;
     border:none;
     padding: 0;
 }
-
+.previous-comments h2{
+    font-size:medium;
+}
 /* Style for comment box */
 .commentBox {
     border-top: 1px solid #ccc; /* Added border to separate comments */
     margin-top: 10px; /* Added margin for spacing */
     padding-top: 10px; /* Added padding for spacing */
 }
+
+
 

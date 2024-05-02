@@ -26,12 +26,21 @@
                 <button class="up-btn">&#8593;</button>
                 <button class="down-btn">&#8595;</button>
                 <button class="hide-up-down-btn">Hide Up and Down Feature</button>
+                <div class="previous-comments">
+                    <h2>Previous Comments</h2>
+                    <ul>
+                        {{#each comments}}
+                            <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
                 <div class="commentBox">
                     <label for="commentInput">Add a comment:</label>
                     <input type="text" id="commentInput" name="commentInput">
                 </div>
                 <button class="hide-comments-btn">Hide comments</button>
             </div>
+            
         </div>
     </div>
 </div>
