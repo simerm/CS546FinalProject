@@ -1,4 +1,3 @@
-//import mongo collections, bcrypt and implement the following data functions
 import bcrypt, { compare } from 'bcrypt'
 const saltRounds = 16
 import { users } from '../config/mongoCollections.js';

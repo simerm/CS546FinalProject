@@ -60,14 +60,19 @@
         </div>
 
     </div>
+
+    {{#if eligible}}
     <div class="jumbotron">
         <h3>You are eligible to become an Admin!</h3>
-        <p>If you are seeing this, you have been a user for more than 3 years, which
+        <p>If you are seeing this, you have been a user for at least 3 years, which
             makes you eligible to apply to become an admin.
         </p>
         <button type="button" class="btn btn-light" data-toggle="modal" data-target="#theModal">
             Apply here!
         </button>
+        {{#if error}}
+        <p class="alert alert-danger">{{error}}</p>
+        {{/if}}
         <div class="modal" id="theModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -76,17 +81,23 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
+                        {{#if error}}
+                        <p class="alert alert-danger">{{error}}</p>
+                        {{/if}}
+                        <div class="alert alert-danger" style="display: none" id="clientError"></div>
                         <form id="admin-app" class="was-validated" action="/adminApplication" method="POST">
-                            <div class = "form-group">
+                            <div class="form-group">
                                 <p>Please provide a valid email for identification.</p>
                                 <label for="email">Email:</label>
                                 <input class="form-control" type="text" id="email" name="email" required>
-                            
-                            
+
+
                                 <label for="whyAdmin">Why would you like to be an admin?</label>
-                                <input class="form-control" type="text" id="whyAdmin" name="whyAdmin" required>
-                            
-                                <button type="submit" class = "btn btn-success" id="submitButton" name="submitButton">Submit Application</button>
+                                <textarea class="form-control" rows="5" id="whyAdmin" name="whyAdmin"
+                                    required></textarea>
+
+                                <button type="submit" class="btn btn-success" id="submitButton"
+                                    name="submitButton">Submit Application</button>
                             </div>
                         </form>
                     </div>
@@ -97,7 +108,6 @@
         </div>
 
     </div>
-    {{#if eligible}}
 
     {{/if}}
     <div class="divider"></div>

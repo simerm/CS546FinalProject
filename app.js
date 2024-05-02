@@ -14,6 +14,7 @@ app.use(session({
   saveUninitialized: false
 }))
 app.use('/public', express.static('public'));
+app.use(express.static('public'));
 
 // // Middleware #1
 // app.use((req, res, next) => {

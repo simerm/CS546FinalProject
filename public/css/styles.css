@@ -354,6 +354,13 @@ h1 {
     opacity: 0; /* Make the overlay disappear on hover */
 }
 
-.form-group input{
+.form-group input {
     margin-bottom: 20px;
+}
+
+.form-group textarea{
+    margin-bottom: 20px;
+}
+#whyAdmin{
+    height:40px;
 }
