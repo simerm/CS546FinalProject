@@ -1,8 +1,8 @@
 <h1>Sign Up As A Business</h1>
 {{#if error}}
-<p class="error">{{error}}</p>
+<p class="alert alert-danger">{{error}}</p>
 {{/if}}
-<div  class = "alert alert-danger" style="display: none" id = "clientError"></div>
+<div class="alert alert-danger" style="display: none" id="clientError"></div>
 <div class="display">
     <form id="business-signup-form" name="business-signup-form" action="/businessRegister" method="POST">
         <div>

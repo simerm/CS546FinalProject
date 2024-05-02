@@ -6,7 +6,7 @@ import { loginUser, registerUser, registerBusiness } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-
+import { submitApplication, appExists } from '../data/adminApplication.js';
 
 router
   .route('/')
@@ -25,12 +25,34 @@ router
       if (req.session.user) {
         val = true
       }
+      let date = req.session.user.dateCreated
+      const [year, month, day] = date.split('/').map(Number);
+      let dobj = new Date(year, month - 1, day);
+      let currentDate = new Date();
+      const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
+      let eligible = false
+      if (diff >= 3){
+        eligible = true
+      }
+      try{
+        let exist = await appExists(req.session.user.username)
+        if (exist){
+          eligible = false
+        }
+      } catch(e){
+        res.status(500).json({ error: 'Error: Loading info' })
+
+      }
+      
+
+
       res.render('userProfile', {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
         username: req.session.user.username,
         role: req.session.user.role,
-        auth: val
+        auth: val,
+        eligible: eligible
       })
     }),
   router
@@ -436,7 +458,7 @@ router
     let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
     for (let x of password) {
       if (x === " ") {
-        return res.status(400).render('login', { themePreference: 'light', error: "no spaces allowed" });
+        return res.status(400).render('login', { error: "no spaces allowed" });
       }
       else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
         upper = true
@@ -449,7 +471,7 @@ router
       }
     }
     if (!upper || !num || !special) {
-      return res.status(400).render('login', { themePreference: 'light', error: "must have uppercase character, number, and special character" });
+      return res.status(400).render('login', { error: "must have uppercase character, number, and special character" });
 
     }
 
@@ -475,7 +497,8 @@ router
             firstName: user.firstName,
             lastName: user.lastName,
             username: user.username,
-            role: user.role
+            role: user.role,
+            dateCreated: user.dateCreated
           }
         }
         return res.redirect('/profile')
@@ -513,15 +536,73 @@ router
   });
 
 router
-  .route('business')
+  .route('/business')
   .get(async (req, res) => {
     res.render('business')
   });
 
 router
-  .route('adminApplication')
+  .route('/adminApplication')
   .post(async (req, res) => {
-    
+    let { email, whyAdmin } = req.body;
+    let username = ""
+    if (req.session.user) {
+      username = req.session.user.username
+    }
+
+    if (!username || typeof username !== 'string' || !isNaN(username)) {
+      return res.status(400).render('userProfile', { error: "Invalid User" });
+    }
+    if (!email) {
+      return res.status(400).render('userProfile', { error: "Invalid email" });
+    }
+    else {
+      if (typeof email !== "string" || !isNaN(email)) {
+        return res.status(400).render('userProfile', { error: "Invalid email" });
+      }
+      else {
+        email = email.trim()
+        if (email.length < 5) {
+          return res.status(400).render('userProfile', { error: "Invalid email" });
+        }
+        else {
+          const emailSplit = email.split('@');
+          if (!(emailSplit.length === 2 && emailSplit[1].includes('.'))) {
+            return res.status(400).render('userProfile', { error: "Invalid email" });
+          }
+        }
+      }
+    }
+
+    if (!whyAdmin) {
+      return res.status(400).render('userProfile', { error: "Statement not provided" });
+    }
+    else {
+      if (typeof whyAdmin !== "string" || !isNaN(whyAdmin)) {
+        return res.status(400).render('userProfile', { error: "Invalid statement" });
+      }
+      else {
+        whyAdmin = whyAdmin.trim()
+        if (whyAdmin.length < 50) {
+          return res.status(400).render('userProfile', { error: "Invalid length for statement" });
+        }
+      }
+    }
+    let bool = true;
+    try {
+      let result = await submitApplication(username, email, whyAdmin)
+      bool = result.signupCompleted
+      if (!bool) {
+        return res.status(400).render('userProfile', { error: "Something went wrong" });
+
+      }
+      return res.redirect('/profile')
+    } catch (e) {
+      return res.status(500).render('userProfile', { error: e });
+
+    }
+
+
   });
 
 
