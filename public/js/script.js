@@ -1,3 +1,4 @@
+import { store } from "../../config/mongoCollections.js";
 // import { parsePhoneNumberFromString } from '../node_modules/libphonenumber-js/bundle/libphonenumber-js.min.js';
 
 // const overlay = document.getElementById('overlay');
@@ -154,7 +155,7 @@ if (document.getElementById('signin-form')) {
         if (valid) {
             document.getElementById('signin-form').submit()
         }
-        else{
+        else {
             error.style.display = 'block'
         }
 
@@ -348,7 +349,7 @@ if (document.getElementById('signup-form')) {
         if (valid) {
             document.getElementById('signup-form').submit()
         }
-        else{
+        else {
             error.style.display = 'block'
         }
 
@@ -361,12 +362,12 @@ if (document.getElementById('signup-form')) {
 
 
 if (document.getElementById('business-signup-form')) {
-    document.getElementById('business-signup-form').addEventListener('submit', function (event) {
+    document.getElementById('business-signup-form').addEventListener('submit', async function (event) {
         event.preventDefault();
         let name = document.getElementById('name').value;
         let phoneNumber = document.getElementById('phoneNumber').value;
         let id = document.getElementById('id').value;
-        let street = document.getElementById('street-address').value;
+        let street = document.getElementById('streetAddress').value;
         let city = document.getElementById('city').value;
         let state = document.getElementById('state').value;
         let zipcode = document.getElementById('zipcode').value;
@@ -664,6 +665,23 @@ if (document.getElementById('business-signup-form')) {
             }
         }
 
+        const storeCollection = await store();
+        username = username.toLowerCase()
+        const u = await storeCollection.findOne({ username: username });
+        if (u) {
+            let e = document.createElement("p");
+            e.innerHTML = 'Username already exists'
+            error.appendChild(e)
+            valid = false
+        }
+        const c = await storeCollection.findOne({ businessId: id });
+        if (c) {
+            let e = document.createElement("p");
+            e.innerHTML = 'Business ID already exists'
+            error.appendChild(e)
+            valid = false
+        }
+
 
 
 
@@ -671,19 +689,39 @@ if (document.getElementById('business-signup-form')) {
         if (valid) {
             document.getElementById('business-signup-form').submit()
         }
-        else{
+        else {
             error.style.display = 'block'
         }
-
-
-
-
     })
-
 }
 
 //admin-app
 
 if (document.getElementById('admin-app')) {
+    document.getElementById('admin-app').addEventListener('submit', function (event) {
+
+        event.preventDefault();
+        // let firstName = document.getElementById('firstName').value;
+        // let lastName = document.getElementById('lastName').value;
+        // let username = document.getElementById('username').value;
+        // let password = document.getElementById('password').value;
+        // let confirmPassword = document.getElementById('confirmPassword').value;
+
+        let error = document.getElementById('clientError');
+        error.innerHTML = '';
+
+        let valid = true;
+
+        if (valid) {
+            document.getElementById('admin-app').submit()
+        }
+        else {
+            error.style.display = 'block'
+        }
+    })
+
+
+
+
 
 }
