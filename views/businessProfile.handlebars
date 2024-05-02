@@ -1,0 +1,48 @@
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/collections">Collections</a>
+    <a href="/profile">My Profile</a>
+</div>
+<div class="body">
+
+{{!-- source the info from the businesses  --}}
+
+    <h1>My Profile</h1>
+    <div class="bisiness">
+        <div class="profile">
+
+            <div class="profileDetails">
+                <div class="left">
+                    <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+                    <h3>{{username}}</h3>
+                </div>
+                <div class="right">
+                    <h2>{{name}} </h2>
+                    <div class="locationDiv">
+                        <img src="/public/location.png" class="locationPicture">
+                        <p>{{city}}, {{state}}</p>
+                    </div>
+
+                    <div class="divider"></div>
+                    <p>About Us: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+
+            </div>
+
+        </div>
+        
+        <div class="divider"></div>
+        <div class="collection">
+            <h2>My Stock</h2>
+            <label for="add-stock">Add Stock</label>
+            <select name="add-stock" id="add-stock">
+                {optionsList.map((option, index) => (
+                    <option key={index} value={option}>
+                        {option}
+                    </option>
+                ))}
+            </select>
+        </div>
+
+    </div> 
+</div>

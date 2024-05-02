@@ -466,7 +466,8 @@ router
             role: user.role
           }
         }
-      
+        
+        if(user.role === 'business') return res.redirect('businessProfile', {grabList}) //if the user is a business and clicks profile, redirect them to here
         return res.redirect('/profile')
         //CHANGE WHAT HAPPENS WHEN LOGIN
         // if (user.role === 'admin') {
