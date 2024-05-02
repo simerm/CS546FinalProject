@@ -10,4 +10,40 @@
     {{/if}}
     <div class = "clientError" id = "clientError"></div>
     <a href="/createpost">Create Post</a>
+<div class="display">
+    <div>
+        <label for="searchfriend">Search for a Friend:</label>
+        <input type="text" id="searchfriend" name="searchfriend">
+    </div>
+    <div class="post">
+        <div class="postDetails">
+            <div class="right">
+                <h2>Post Title</h2>
+                <div class="postDiv">
+                    <p>This is where the caption would appear</p>
+                    <img src="/public/mockpost.jpg" class="postPicture">
+                </div>
+                <div class="divider"></div> <!-- Keep only one divider here -->
+                <button class="up-btn">&#8593;</button>
+                <button class="down-btn">&#8595;</button>
+                <button class="hide-up-down-btn">Hide Up and Down Feature</button>
+                <div class="previous-comments">
+                    <h2>Previous Comments</h2>
+                    <ul>
+                        {{#each comments}}
+                            <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="commentBox">
+                    <label for="commentInput">Add a comment:</label>
+                    <input type="text" id="commentInput" name="commentInput">
+                </div>
+                <button class="hide-comments-btn">Hide comments</button>
+            </div>
+            
+        </div>
+    </div>
+
+
 </div>
