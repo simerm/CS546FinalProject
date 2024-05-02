@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { posts } from '../config/mongoCollections.js'
+import { users } from '../config/mongoCollections.js';
 import { sortFigurines } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
@@ -11,6 +11,8 @@ import path from 'path';
 router
   .route('/')
   .get(async (req, res) => {
+    const userData = await users();
+
     const postData = await getAllPosts();
     res.render('home', {posts: postData});
   }),
@@ -23,6 +25,9 @@ router
   router
     .route('/createpost')
     .get(async(req, res)=>{
+      if (!req.session.user) {
+        return res.redirect('/login');
+      }
       res.render('createpost')
     })
     .post(async (req, res) => {
@@ -44,12 +49,6 @@ router
     }
     return res.redirect('/');
     }),
-    router
-    .route('/forum')
-    .get(async(req, res)=>{
-      res.render('forum')
-    }),
-  //createpost/forum router end
   router
   .route('/collections')
   .get(async (req, res) => {
