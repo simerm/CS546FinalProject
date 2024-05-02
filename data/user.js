@@ -220,13 +220,228 @@ export const loginUser = async (username, password) => {
 
 };
 
-//ERROR HANDLING NEEDS TO BE DONE FOR THIS FUNCTION
+
 export const registerBusiness = async (
   name, phoneNumber, id, street, city, state, zipcode, username, password
 ) => {
-  // if (!username || !password || !name || !phoneNumber || !id || !street || !city || !state || !zipcode ) {
-  //   throw "Must provide all parameters"
-  // }
+  let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+  //id error handling
+  if(!id){
+    throw"Must provide an id"
+  }
+  else {
+    if (typeof id !== "string" || !isNaN(id)) {
+      throw "Invalid id"
+    }
+    else {
+      if (id.length !== 10 || id[2] !== "-") {
+        throw "Invalid id length"
+
+      }
+      else {
+        for (let i = 0; i < id.length; i++) {
+          if (i != 2 && isNaN(parseInt(id[i]))) {
+            throw"Invalid parameters"
+
+          }
+        }
+      }
+    }
+  }
+  //name error handling
+  name = name.trim();
+  if (!name) {
+    throw "Must provide a name"
+
+  }
+  else {
+    if (typeof name !== "string" || !isNaN(name)) {
+      throw "Invalid name"
+
+    }
+    else {
+      name = name.trim()
+      if (name.length < 5 || name.length > 25) {
+        throw "Invalid name length"
+
+      }
+      else {
+        for (let x of name) {
+          if (n.includes(x)) {
+            throw "Name can't include numbers"
+
+          }
+        }
+      }
+    }
+  }
+  //street error handling
+  street = street.trim();
+  if (!street) {
+    throw"Must provide a street"
+
+  }
+  else {
+    if (typeof street !== "string" || !isNaN(street)) {
+      throw"Invalid street"
+
+    }
+    else {
+      street = street.trim()
+      if (street.length < 5 || street.length > 25) {
+        throw"Street must be between 5 to 25 characters"
+
+      }
+
+    }
+  }
+  //city error handling
+  city = city.trim();
+  if (!city) {
+    throw"Must provide a city"
+
+  }
+  else {
+    if (typeof city !== "string" || !isNaN(city)) {
+      throw"Must provide a valid city"
+
+    }
+    else {
+      city = city.trim()
+      if (city.length < 3 || city.length > 25) {
+        throw "City must be between 3 to 25 characters"
+      }
+      else {
+        for (let x of city) {
+          if (n.includes(x)) {
+            throw"City should not include numbers"
+
+          }
+        }
+      }
+    }
+  }
+  //state error handling
+  const stateAbbreviations = [
+    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+    'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+    'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+    'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+    'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
+  ];
+  if (!state || typeof state !== "string") {
+    throw"Provide a valid state"
+
+  }
+  else {
+    state = state.trim()
+    state = state.toUpperCase()
+
+    if (!stateAbbreviations.includes(state)) {
+      throw"Not a valid state"
+
+    }
+  }
+  //zipcode error handling
+  if (!zipcode || typeof zipcode !== "string") {
+    throw"Provide a valid zipcode"
+
+  }
+  else {
+    if ((zipcode.length === 5 || zipcode.length === 9)) {
+      for (let i = 0; i < zipcode.length; i++) {
+        if (isNaN(parseInt(zipcode[i]))) {
+          throw"Make sure your zipcode is 5 numbers"
+
+        }
+      }
+    }
+  }
+  //phone number error handling
+  if (!phoneNumber || typeof phoneNumber !== "string") {
+    throw"Provide a phonenumber"
+
+  }
+  else {
+    let number = parsePhoneNumberFromString(phoneNumber);
+    if (!number || !number.isValid()) {
+      throw"Number is not valid"
+
+    }
+  }
+  //username error handling
+  if (!username) {
+    throw"Provide a username"
+
+  }
+  else {
+    if (typeof username !== "string" || !isNaN(username)) {
+      throw"Must provide a valid username"
+
+    }
+    else {
+      username = username.trim()
+      if (username.length < 5 || username.length > 10) {
+        throw"Username has to be between 5-10 letters"
+
+      }
+      else {
+        for (let x of username) {
+          if (n.includes(x)) {
+            throw"Username should not include numbers"
+          }
+        }
+      }
+    }
+  }
+  //password error handling
+  if (!password) {
+    throw"Must provide a password"
+
+  }
+  else {
+    if (typeof password !== "string" || !isNaN(password)) {
+      throw"Must provide a valid password"
+
+    }
+    else {
+      password = password.trim()
+      if (password.length < 8) {
+        throw"Password must be at least 8 characters"
+
+      }
+      else {
+        let upper = false
+        let num = false
+        let special = false
+        let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
+        for (let x of password) {
+          if (x === " ") {
+            let e = document.createElement("p");
+            e.innerHTML = 'password not allowed spaces'
+            error.appendChild(e)
+            valid = false
+          }
+          else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
+            upper = true
+          }
+          else if (x.charCodeAt(0) >= 48 && x.charCodeAt(0) <= 57) {
+            num = true
+          }
+          else if (sc.includes(x)) {
+            special = true
+          }
+        }
+        if (!upper || !num || !special) {
+          throw"Password must have an uppercase letter, number, and special character"
+
+        }
+      }
+    }
+  }
+
+
+
 
   const storeCollection = await store();
   username = username.toLowerCase()
