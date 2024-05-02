@@ -10,4 +10,13 @@
     {{/if}}
     <div class = "clientError" id = "clientError"></div>
     <a href="/createpost">Create Post</a>
+    <ul>
+    {{#each posts}}
+        <article class="article">
+            <h2>{{title}}</h2>
+            <p>{{file}}</p>
+            <p>{{caption}}</p>
+        </article>
+    {{/each}}
+    </ul>
 </div>

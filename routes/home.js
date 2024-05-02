@@ -1,16 +1,18 @@
 import {Router} from 'express';
+import { posts } from '../config/mongoCollections.js'
 import { sortFigurines } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
-import { create } from '../data/createposts.js';
+import { createPost, getAllPosts } from '../data/createposts.js';
 import fs from 'fs';
 import path from 'path';
 
 router
   .route('/')
   .get(async (req, res) => {
-    res.render('home')
+    const postData = await getAllPosts();
+    res.render('home', {posts: postData});
   }),
   router
     .route('/profile')
@@ -36,7 +38,7 @@ router
       if (postTitle.length < 1 || postTitle.length > 25) {
         return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
       }
-    const user_info = await create(postTitle, file, caption);
+    const user_info = await createPost(postTitle, file, caption);
     if (!user_info) {
       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
     }

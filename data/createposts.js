@@ -1,5 +1,5 @@
 import { posts } from '../config/mongoCollections.js';
-export const create = async (
+export const createPost = async (
     postTitle,
     file,
     caption
@@ -27,3 +27,10 @@ export const create = async (
     const post_info = await post_collection.insertOne(newPost_obj);
     return post_info;
 }
+
+export const getAllPosts = async () => {
+    const post_collection = await posts();
+    let post_list = await post_collection.find({}).toArray();
+    if (!post_list) throw "Error: Could not get all products.";
+    return post_list;
+  };
