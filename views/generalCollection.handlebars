@@ -24,14 +24,22 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
                                     {{#if inWishlist}}
-                                        <li class="list-group-item"><a href="/removeWishlist/{{this.id}}" class="btn btn-danger">Remove from Wishlist</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-danger" onclick="removeFromWishlist('{{this.modelName}}')">Remove from Wishlist</button>
+                                        </li>
                                     {{else}}
-                                        <li class="list-group-item"></li><a href="/addWishlist/{{this.id}}" class="btn btn-primary">Add to Wishlist</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-primary" onclick="addToWishlist('{{this.modelName}}')">Add to Wishlist</button>
+                                        </li>
                                     {{/if}}
                                     {{#if inCollection}}
-                                        <li class="list-group-item"></li><a href="/removeCollection/{{this.id}}" class="btn btn-danger">Remove from My Collection</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-danger" onclick="removeFromCollection('{{this.modelName}}')">Remove from My Collection</button>
+                                        </li>
                                     {{else}}
-                                        <li class="list-group-item"></li><a href="/addCollection/{{this.id}}" class="btn btn-primary">Add to My Collection</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-primary" onclick="addToCollection('{{this.modelName}}')">Add to My Collection</button>
+                                        </li>
                                     {{/if}}
                                 </ul>
                             {{else}}
@@ -42,14 +50,22 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
                                     {{#if inWishlist}}
-                                        <li class="list-group-item"><a href="/removeWishlist/{{this.id}}" class="btn btn-danger">Remove from Wishlist</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-danger" onclick="removeFromWishlist('{{this.modelName}}')">Remove from Wishlist</button>
+                                        </li>
                                     {{else}}
-                                        <li class="list-group-item"></li><a href="/addWishlist/{{this.id}}" class="btn btn-primary">Add to Wishlist</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-primary" onclick="addToWishlist('{{this.modelName}}')">Add to Wishlist</button>
+                                        </li>
                                     {{/if}}
                                     {{#if inCollection}}
-                                        <li class="list-group-item"></li><a href="/removeCollection/{{this.id}}" class="btn btn-danger">Remove from My Collection</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-danger" onclick="removeFromCollection('{{this.modelName}}')">Remove from My Collection</button>
+                                        </li>
                                     {{else}}
-                                        <li class="list-group-item"></li><a href="/addCollection/{{this.id}}" class="btn btn-primary">Add to My Collection</a></li>
+                                        <li class="list-group-item">
+                                            <button class="btn btn-primary" onclick="addToCollection('{{../figurineName}}', '{{../seriesName}}', '{{this.modelName}}')">Add to My Collection</button>
+                                        </li>
                                     {{/if}}
                                 </ul>
                             {{/if}}
@@ -101,3 +117,36 @@
         {{/each}}
     </div>
 {{/if}}
+
+<script>
+    function removeFromWishlist(figurineName, seriesName, modelName) {
+        sendPatchRequest(`/removeWishlist/${figurineName}/${seriesName}/${modelName}`);
+    }
+
+    function addToWishlist(figurineName, seriesName, modelName) {
+        sendPatchRequest(`/addWishlist/${figurineName}/${seriesName}/${modelName}`);
+    }
+
+    function removeFromCollection(figurineName, seriesName, modelName) {
+        sendPatchRequest(`/removeCollection/${figurineName}/${seriesName}/${modelName}`);
+    }
+
+    function addToCollection(figurineName, seriesName, modelName) {
+        sendPatchRequest(`/addCollection/${figurineName}/${seriesName}/${modelName}`);
+    }
+
+    function sendPatchRequest(url) {
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any additional headers if needed
+            },
+            // Add any request body if needed
+        }).then(response => {
+            // Handle response
+        }).catch(error => {
+            // Handle error
+        });
+    }
+</script>

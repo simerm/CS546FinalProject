@@ -256,3 +256,31 @@ export const registerBusiness = async (
   return { signupCompleted: true }
 
 };
+
+export const addCollection = async (username, figurineName, seriesName, modelName) => {
+  const userCollection = await users();
+  const user = await userCollection.findOne({ username: username });
+  if (!user) throw 'User not found';
+  if (!user.figurineCollection) {
+    user.figurineCollection = {}
+  }
+
+  // { sample figurineCollection
+    // Smiski: {
+    //   series1: ["lounging figure", "sleeping figure"],
+    //   series2: ["workout figure", "etc figure"]
+    //
+    // },
+    // Sonny Angel: {
+    //  series1: ["lounging figure", "sleeping figure"],
+    //  series2: ["workout figure", "etc figure"]
+    // }
+
+  if (!user.figurineCollection[figurineName]) {
+    user.figurineCollection[figurineName] = {}
+  } else {
+    if (!user.figurineCollection[figurineName][modelName]) {
+      user.figurineCollection[figurineName][modelName] = []
+    }
+  }
+}

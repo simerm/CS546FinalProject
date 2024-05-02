@@ -1,22 +1,21 @@
-import {Router} from 'express';
+import { Router} from 'express';
 import { sortFigurines } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
-
 router
   .route('/')
   .get(async (req, res) => {
-
-    let val = false
     if (req.session.user) {
-      val = true
+      res.render('home', { auth: true })
+    } else {
+      res.render('login', { auth: false })
     }
-    res.render('home', { auth: val })
+    
   }),
   router
     .route('/profile')
@@ -42,7 +41,7 @@ router
           res.render('generalCollection', { figurineInfo })
         } else if (req.session.user.role == 'personal') {
           const figurineInfo = await sortFigurines(); // sortFigurinesUser(req) once function works
-          res.render('generalCollection', { user: true, figurineInfo })
+          res.render('generalCollection', { auth: true, user: true, figurineInfo })
         }
       } else {
         const figurineInfo = await sortFigurines();
@@ -398,7 +397,7 @@ router
       }
 
 
-    });
+    }),
 
 router
   .route('/login')
@@ -500,7 +499,7 @@ router
 
     }
 
-  });
+  }),
 
 router
   .route('/logout')
@@ -515,11 +514,25 @@ router
     } catch (e) {
       res.status(500).json({ error: e });
     }
-  });
+  }),
 
 router
-  .route('business')
+  .route('/business')
   .get(async (req, res) => {
     res.render('business')
+  }),
+
+  router
+  .route('/addCollection/:figurineName/:seriesName/:modelName')
+  .patch(async (req, res) => {
+    try {
+      console.log(req.params.figurineName)
+      console.log(req.params.seriesName)
+      console.log(req.params.modelName)
+    } catch (e) {
+      console.log(e)
+      res.status(500).json({ error: e });
+    }
   });
+
 export default router;
