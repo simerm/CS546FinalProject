@@ -18,9 +18,11 @@
     <div class="post">
         <div class="postDetails">
             <div class="right">
-                <h2>Post Title</h2>
+                {{#each posts}}
+                <article class="article">
+                <h2>{{title}}</h2>
                 <div class="postDiv">
-                    <p>This is where the caption would appear</p>
+                    <p>{{caption}}</p>
                     <img src="/public/mockpost.jpg" class="postPicture">
                 </div>
                 <div class="divider"></div> <!-- Keep only one divider here -->
@@ -40,11 +42,8 @@
                     <input type="text" id="commentInput" name="commentInput">
                 </div>
                 <button class="hide-comments-btn">Hide comments</button>
+                {{/each}}
             </div>
-            
         </div>
     </div>
-
-
->>>>>>> a2bd31048fd716367e6934e6633afd44d3d39a17
 </div>
