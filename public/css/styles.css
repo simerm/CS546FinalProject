@@ -388,7 +388,8 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column; /* Changed to column to stack elements */
-    padding: 10px; /* Added padding for spacing */
+    padding: 20px; /* Added padding for spacing */
+    margin-bottom: 20px;
 }
 
 /* Style for post image */
