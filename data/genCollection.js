@@ -43,7 +43,7 @@ export const sortFigurines = async () => { //sorts through the data on what type
     }
 };
 
-export const sortFigurinesUser = async (req) => { //sorts through the data on what type of figurine it is - gives us then something to work with
+export const sortFigurinesUser = async () => { //sorts through the data on what type of figurine it is - gives us then something to work with
     try {
         let sorted = {};
         let figNamesList = await getFigurineNames(); //call getFigurineNames to grab all the names 
@@ -71,3 +71,4 @@ export const sortFigurinesUser = async (req) => { //sorts through the data on wh
       throw 'Error fetching general collection data!'; 
     }
 };
+

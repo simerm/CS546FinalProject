@@ -258,29 +258,32 @@ export const registerBusiness = async (
 };
 
 export const addCollection = async (username, figurineName, seriesName, modelName) => {
-  const userCollection = await users();
-  const user = await userCollection.findOne({ username: username });
-  if (!user) throw 'User not found';
-  if (!user.figurineCollection) {
-    user.figurineCollection = {}
-  }
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
 
-  // { sample figurineCollection
-    // Smiski: {
-    //   series1: ["lounging figure", "sleeping figure"],
-    //   series2: ["workout figure", "etc figure"]
-    //
-    // },
-    // Sonny Angel: {
-    //  series1: ["lounging figure", "sleeping figure"],
-    //  series2: ["workout figure", "etc figure"]
-    // }
-
-  if (!user.figurineCollection[figurineName]) {
-    user.figurineCollection[figurineName] = {}
-  } else {
-    if (!user.figurineCollection[figurineName][modelName]) {
-      user.figurineCollection[figurineName][modelName] = []
+    if (!user.figurineCollection) {
+      user.figurineCollection = {};
     }
+
+    if (!user.figurineCollection[figurineName]) {
+      user.figurineCollection[figurineName] = {};
+    }
+
+    if (!user.figurineCollection[figurineName][seriesName]) {
+      user.figurineCollection[figurineName][seriesName] = [];
+    }
+
+    if (user.figurineCollection[figurineName][seriesName].includes(modelName)) {
+      return { success: false, message: 'Model already exists in collection' };
+    } else {
+      user.figurineCollection[figurineName][seriesName].push(modelName);
+      // Update user's document in the collection
+      await userCollection.updateOne({ username: username }, { $set: { figurineCollection: user.figurineCollection } });
+      return { success: true, message: 'Model added to collection', userCollection: user.figurineCollection };
+    }
+  } catch (error) {
+    return { success: false, message: error }; // Return error message
   }
-}
+};
