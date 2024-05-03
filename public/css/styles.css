@@ -400,3 +400,9 @@ h1 {
 .display h1{
     margin-bottom: 30px
 }
+
+.edit{
+    display: flex;
+    margin-top:10px;
+    justify-content: flex-end;
+}
