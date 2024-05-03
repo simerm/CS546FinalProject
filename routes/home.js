@@ -45,9 +45,7 @@ router
       } catch (e) {
         res.status(500).json({ error: 'Error: Loading info' })
       }
-      console.log(eligible)
-      console.log(exist)
-      console.log(req.session.user)
+      
       res.render('userProfile', {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
