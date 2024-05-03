@@ -19,6 +19,7 @@
                 <div class="right">
     {{#each posts}}
     <div class="postDetails">
+        <p>{{name}}</p>
         <h2>{{title}}</h2>
     <div class="postDiv">
         <p>{{caption}}</p>
@@ -35,8 +36,10 @@
             <h2>Previous Comments</h2>
     <ul>
             {{#each comments}}
-            <li>{{this}}</li>
+            <li>{{user}}</li>
+            <li>{{comment}}</li>
             <li>{{likes}}</li>
+            <li>{{dislikes}}</li>
             {{/each}}
     </ul>
     </div>

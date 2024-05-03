@@ -43,7 +43,8 @@ router
       res.render('createpost')
     })
     .post(async (req, res) => {
-      let {postTitle, file, caption} = req.body;
+      let {postTitle, caption} = req.body;
+      let file = req.files.file;
       if (!postTitle) {
         return res.status(400).render('createpost', { error: 'Must provide a post title' });
       }
@@ -55,7 +56,7 @@ router
       if (postTitle.length < 1 || postTitle.length > 25) {
         return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
       }
-    const user_info = await createPost(postTitle, file, caption);
+    const user_info = await createPost(req.session.user, postTitle, file, caption);
     if (!user_info) {
       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
     }

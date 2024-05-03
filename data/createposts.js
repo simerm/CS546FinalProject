@@ -1,7 +1,7 @@
 import { posts } from '../config/mongoCollections.js';
-import React, { useState } from 'react';
 
 export const createPost = async (
+    user,
     postTitle,
     file,
     caption
@@ -20,6 +20,7 @@ export const createPost = async (
     const post_collection = await posts();
 
     let newPost_obj = {
+        name: user.username,
         title: postTitle,
         file: file,
         caption: caption,
@@ -53,4 +54,31 @@ export const deletePost = async (postId) => {
     }
 
     return { deleted: true };
+}
+
+export const createComment = async (
+    comment,
+    user,
+    postId
+  ) => {
+    if (!comment) {
+        throw "Must provide a comment";
+    }
+    if (typeof comment !== 'string') {
+        throw "Must provide a string";
+    }
+    comment = comment.trim();
+    if (comment.length < 1 || comment.length > 50) {
+        throw "Post title must be between 1-50 characters long";
+    }
+    const post_collection = await posts();
+
+    let newComment_obj = {
+        comment: comment,
+        user: user.username,
+        likes: 0,
+        dislikes: 0
+    }
+    const post_info = await post_collection.insertOne(newPost_obj);
+    return post_info;
 }
