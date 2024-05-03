@@ -37,28 +37,20 @@ export const getAllPosts = async () => {
     return post_list;
 };
 
-// export function uploadFile() {
-//     function convertToBase64(e) {
-//         console.log(e);
-//         var reader = new FileReader();
-//         reader.readAsDataURL(e.target.files[e]);
-//         reader.onload = () => {
-//             console.log(reader.result);
-//         };
-//         reader.onerror = error => {
-//             console.log(error);
-//         };
-//     }
-//     let output = 
-//     <div className="auth-wrapper" > 
-//         <div className="auth-inner" style={{width: "auto"}}>
-//             Upload File
-//             <input
-//             accepts="image/*"
-//             type="file"
-//             onChange={convertToBase64} 
-//             />
-//         </div>
-//     </div>
-//     return output;
-// }
+export const deletePost = async (postId) => {
+    const postCollection = await posts();
+
+    // Check if the post exists
+    const post = await postCollection.findOne({ _id: postId });
+    if (!post) {
+        throw "Post not found";
+    }
+
+    // Delete the post
+    const deletionInfo = await postCollection.deleteOne({ _id: postId });
+    if (deletionInfo.deletedCount === 0) {
+        throw "Failed to delete post";
+    }
+
+    return { deleted: true };
+}

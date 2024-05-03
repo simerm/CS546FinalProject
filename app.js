@@ -41,6 +41,7 @@ app.use(session({
 }))
 app.use('/public', express.static('public'));
 
+
 // // Middleware #1
 // app.use((req, res, next) => {
 //   if (req.originalUrl === "/") {
