@@ -1,7 +1,6 @@
 import {Router} from 'express';
 import { users } from '../config/mongoCollections.js';
 import { sortFigurines } from '../data/genCollection.js';
-import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
 import { createPost, getAllPosts } from '../data/createposts.js';
@@ -47,6 +46,16 @@ router
     if (!user_info) {
       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
     }
+    if (!req.files) {
+      return res.status(400).send('No files were uploaded');
+    }
+    // let sampleFile = req.files.sampleFile;
+    // let uploadPath = thename + '/uploads/' + sampleFile.name;
+    // sampleFile.mv(uploadPath, function (err) {
+    //   if (err) {
+    //     return res.status(500).send(err);
+    //   }
+    // });
     return res.redirect('/');
     }),
   router
