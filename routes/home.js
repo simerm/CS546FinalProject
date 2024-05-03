@@ -3,7 +3,7 @@ import { sortFigurines } from '../data/genCollection.js';
 import { grabList } from '../data/companyStock.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addToStock } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -508,12 +508,25 @@ router
 router 
   .route('/businessProfile')
   .get(async (req, res) => {
-    res.render('businessProfile', 
-    {username: req.session.user.username,
-    city: req.session.user.city,
-    state: req.session.user.state,
-    role: req.session.user.role,
-    grabList})
+    try{
+      const figList = await grabList();
+      res.render('businessProfile', 
+      {username: req.session.user.username,
+      city: req.session.user.city,
+      state: req.session.user.state,
+      role: req.session.user.role,
+      figurineStock: req.session.user.figurineStock,
+      figList})
+    }catch(e){
+      res.status(500).json({error: 'Error while rendering business profile'})
+    }
+    
+    try{ //try to add a series to the company stock
+      const adding = await addToStock();
+      
+    }catch(e){
+      res.status(400).render('businessProfile', {error: 'Error adding in this figurine to the stock'})
+    }
   });
 
 export default router;

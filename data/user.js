@@ -258,3 +258,7 @@ export const registerBusiness = async (
   return { signupCompleted: true }
 
 };
+
+export const addToStock = async (fig) => {
+  figurineStock.push(fig);
+};
