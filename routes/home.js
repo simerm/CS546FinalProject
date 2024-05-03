@@ -31,19 +31,19 @@ router
       let currentDate = new Date();
       const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
       let eligible = false
-      if (diff >= 3){
+      if (diff >= 3) {
         eligible = true
       }
-      try{
+      try {
         let exist = await appExists(req.session.user.username)
-        if (exist){
+        if (exist) {
           eligible = false
         }
-      } catch(e){
+      } catch (e) {
         res.status(500).json({ error: 'Error: Loading info' })
 
       }
-      
+
 
 
       res.render('userProfile', {
@@ -207,17 +207,22 @@ router
           }
         }
       }
-      // if (!phoneNumber || typeof phoneNumber !== "string") {
-      //   return res.status(400).render('businessRegister', { error: 'Invalid params' });
+      if (!phoneNumber || typeof phoneNumber !== "string") {
+        return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
-      // }
-      // else {
-      //   let number = parsePhoneNumberFromString(phoneNumber);
-      //   if (!number || !number.isValid()) {
-      //     return res.status(400).render('businessRegister', { error: 'Invalid params' });
+      }
+      else {
+        if (phoneNumber.length != 12 || phoneNumber[0] !== "+" || phoneNumber[1] !== "1") {
+          return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
-      //   }
-      // }
+        }
+        for (let i = 2; i < 12; i++) {
+          if (isNaN(parseInt(phoneNumber[i]))) {
+            return res.status(400).render('businessRegister', { error: 'Invalid params' });
+
+          }
+        }
+      }
       if (!username) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -554,15 +559,15 @@ router
       let currentDate = new Date();
       const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
       let eligible = false
-      if (diff >= 3){
+      if (diff >= 3) {
         eligible = true
       }
-      try{
+      try {
         let exist = await appExists(req.session.user.username)
-        if (exist){
+        if (exist) {
           eligible = false
         }
-      } catch(e){
+      } catch (e) {
         res.status(500).json({ error: 'Error: Loading info' })
 
       }

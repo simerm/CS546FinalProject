@@ -57,7 +57,7 @@ if (document.getElementById('wishForm')) {
     const closeButton = document.getElementById('closeButton');
 
 
-    closeButton.addEventListener("click", function() {
+    closeButton.addEventListener("click", function () {
         closeWishForm();
     });
 
@@ -566,15 +566,23 @@ if (document.getElementById('business-signup-form')) {
             error.appendChild(e)
             valid = false
         }
-        // else {
-        //     let number = parsePhoneNumberFromString(phoneNumber);
-        //     if (!number || !number.isValid()) {
-        //         let e = document.createElement("p");
-        //         e.innerHTML = 'Must have a valid phone number'
-        //         error.appendChild(e)
-        //         valid = false
-        //     }
-        // }
+        else {
+            if (phoneNumber.length != 12 || phoneNumber[0] !== "+" || phoneNumber[1] !== "1") {
+                let e = document.createElement("p");
+                e.innerHTML = 'Must have a valid phone number'
+                error.appendChild(e)
+                valid = false
+            }
+            for (let i = 2; i < 12; i++) {
+                if (isNaN(parseInt(phoneNumber[i]))) {
+                    let e = document.createElement("p");
+                    e.innerHTML = 'Must have a valid phone number'
+                    error.appendChild(e)
+                    valid = false
+                    break;
+                }
+            }
+        }
         if (!username) {
             let e = document.createElement("p");
             e.innerHTML = 'Must have username'
@@ -675,25 +683,6 @@ if (document.getElementById('business-signup-form')) {
                 valid = false
             }
         }
-
-        // const storeCollection = await store();
-        // username = username.toLowerCase()
-        // const u = await storeCollection.findOne({ username: username });
-        // if (u) {
-        //     let e = document.createElement("p");
-        //     e.innerHTML = 'Username already exists'
-        //     error.appendChild(e)
-        //     valid = false
-        // }
-        // const c = await storeCollection.findOne({ businessId: id });
-        // if (c) {
-        //     let e = document.createElement("p");
-        //     e.innerHTML = 'Business ID already exists'
-        //     error.appendChild(e)
-        //     valid = false
-        // }
-
-
 
 
 
