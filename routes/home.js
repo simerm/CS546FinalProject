@@ -2,7 +2,7 @@ import { Router} from 'express';
 import { sortFigurines } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, addCollection } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection, removeCollection } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -33,26 +33,26 @@ router
       })
     }),
   router
-  .route('/collections')
-  .get(async (req, res) => {
-    try{
-      if (req.session.user) {
-        if (req.session.user.role == 'business') {
+    .route('/collections')
+    .get(async (req, res) => {
+      try {
+        if (req.session.user) {
+          if (req.session.user.role == 'business') {
+            res.render('generalCollection', { figurineInfo })
+          } else if (req.session.user.role == 'personal') {
+            const figurineInfo = await sortFigurines(); // sortFigurinesUser(req) once function works
+            res.render('generalCollection', { auth: true, user: true, figurineInfo })
+          }
+        } else {
+          const figurineInfo = await sortFigurines();
           res.render('generalCollection', { figurineInfo })
-        } else if (req.session.user.role == 'personal') {
-          const figurineInfo = await sortFigurines(); // sortFigurinesUser(req) once function works
-          res.render('generalCollection', { auth: true, user: true, figurineInfo })
         }
-      } else {
-        const figurineInfo = await sortFigurines();
-        res.render('generalCollection', { figurineInfo })
       }
-    }
-    catch(e){
-      res.status(500).json({error: 'Error while searching for the collection.'})
-    }
+      catch (e) {
+        res.status(500).json({ error: 'Error while searching for the collection.' })
+      }
     
-  }),
+    }),
   router
     .route('/businessRegister')
     .get(async (req, res) => {
@@ -399,156 +399,185 @@ router
 
     }),
 
-router
-  .route('/login')
-  .get(async (req, res) => {
-    res.render("login", { themePreference: 'light' })
-  })
-  .post(async (req, res) => {
-    //code here for POST
-    let { username, password } = req.body;
-    if (!username || !password || !isNaN(username) || !isNaN(password)) {
-      return res.status(400).render('login', { themePreference: 'light', error: "username and password must be provided" });
-    }
-    if (typeof username !== 'string' || typeof password !== 'string') {
-      return res.status(400).render('login', { themePreference: 'light', error: "must provide strings" });
-    }
-    username = username.trim()
-    password = password.trim()
-    if (username.length < 5 || password.length < 8) {
-      return res.status(400).render('login', { themePreference: 'light', error: "invalid length" });
-
-    }
-    username = username.toLowerCase()
-    if (username.length > 10) {
-      return res.status(400).render('login', { themePreference: 'light', error: "username too long" });
-
-    }
-    let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    for (let x of username) {
-      if (n.includes(x)) {
-        return res.status(400).render('login', { themePreference: 'light', error: "no numbers allowed" });
+  router
+    .route('/login')
+    .get(async (req, res) => {
+      res.render("login", { themePreference: 'light' })
+    })
+    .post(async (req, res) => {
+      //code here for POST
+      let { username, password } = req.body;
+      if (!username || !password || !isNaN(username) || !isNaN(password)) {
+        return res.status(400).render('login', { themePreference: 'light', error: "username and password must be provided" });
+      }
+      if (typeof username !== 'string' || typeof password !== 'string') {
+        return res.status(400).render('login', { themePreference: 'light', error: "must provide strings" });
+      }
+      username = username.trim()
+      password = password.trim()
+      if (username.length < 5 || password.length < 8) {
+        return res.status(400).render('login', { themePreference: 'light', error: "invalid length" });
 
       }
-    }
+      username = username.toLowerCase()
+      if (username.length > 10) {
+        return res.status(400).render('login', { themePreference: 'light', error: "username too long" });
 
-    //password checking for special characters and stuff
-    let upper = false
-    let num = false
-    let special = false
-    let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
-    for (let x of password) {
-      if (x === " ") {
-        return res.status(400).render('login', { themePreference: 'light', error: "no spaces allowed" });
       }
-      else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
-        upper = true
-      }
-      else if (x.charCodeAt(0) >= 48 && x.charCodeAt(0) <= 57) {
-        num = true
-      }
-      else if (sc.includes(x)) {
-        special = true
-      }
-    }
-    if (!upper || !num || !special) {
-      return res.status(400).render('login', { themePreference: 'light', error: "must have uppercase character, number, and special character" });
+      let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+      for (let x of username) {
+        if (n.includes(x)) {
+          return res.status(400).render('login', { themePreference: 'light', error: "no numbers allowed" });
 
-    }
+        }
+      }
 
-    try {
-      const user = await loginUser(username, password)
-      if (user) {
-        if (user.role == 'business') {
-          req.session.user = {
-            storeName: user.storeName,
-            phoneNumber: user.phoneNumber,
-            businessId: user.id,
-            street: user.street,
-            city: user.city,
-            state: user.state,
-            zipcode: user.zipcode,
-            username: user.username,
-            figurineStock: user.figurineStock,
-            role: user.role
+      //password checking for special characters and stuff
+      let upper = false
+      let num = false
+      let special = false
+      let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
+      for (let x of password) {
+        if (x === " ") {
+          return res.status(400).render('login', { themePreference: 'light', error: "no spaces allowed" });
+        }
+        else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
+          upper = true
+        }
+        else if (x.charCodeAt(0) >= 48 && x.charCodeAt(0) <= 57) {
+          num = true
+        }
+        else if (sc.includes(x)) {
+          special = true
+        }
+      }
+      if (!upper || !num || !special) {
+        return res.status(400).render('login', { themePreference: 'light', error: "must have uppercase character, number, and special character" });
+
+      }
+
+      try {
+        const user = await loginUser(username, password)
+        if (user) {
+          if (user.role == 'business') {
+            req.session.user = {
+              storeName: user.storeName,
+              phoneNumber: user.phoneNumber,
+              businessId: user.id,
+              street: user.street,
+              city: user.city,
+              state: user.state,
+              zipcode: user.zipcode,
+              username: user.username,
+              figurineStock: user.figurineStock,
+              role: user.role
+            }
           }
+          else {
+            req.session.user = {
+              firstName: user.firstName,
+              lastName: user.lastName,
+              username: user.username,
+              role: user.role
+            }
+          }
+      
+          return res.redirect('/profile')
+          //CHANGE WHAT HAPPENS WHEN LOGIN
+          // if (user.role === 'admin') {
+          //   return res.redirect('/admin');
+          // } else {
+          //   return res.redirect('/user');
+          // }
         }
         else {
-          req.session.user = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            role: user.role
-          }
+          return res.status(400).render('login', { error: 'invalid username or password' });
         }
-      
-        return res.redirect('/profile')
-        //CHANGE WHAT HAPPENS WHEN LOGIN
-        // if (user.role === 'admin') {
-        //   return res.redirect('/admin');
-        // } else {
-        //   return res.redirect('/user');
-        // }
-      }
-      else {
-        return res.status(400).render('login', { error: 'invalid username or password' });
+
+      } catch (e) {
+        return res.status(400).render('login', { error: e });
+
       }
 
-    } catch (e) {
-      return res.status(400).render('login', { error: e });
-
-    }
-
-  }),
-
-router
-  .route('/logout')
-  .get(async (req, res) => {
-    try {
-      if (req.session.user) {
-        req.session.destroy();
-        res.render('logout');
-      } else {
-        res.redirect('/login');
-      }
-    } catch (e) {
-      res.status(500).json({ error: e });
-    }
-  }),
-
-router
-  .route('/business')
-  .get(async (req, res) => {
-    res.render('business')
-  }),
+    }),
 
   router
-  .route('/addCollection/:figurineName/:seriesName/:modelName')
-  .patch(async (req, res) => {
-    try {
-      console.log(req.params.figurineName)
-      console.log(req.params.seriesName)
-      console.log(req.params.modelName)
-
-      let figurineName = req.params.figurineName
-      let seriesName = req.params.seriesName
-      let modelName = req.params.modelName
-      let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName)
-
-      if (collection.success) {
-        console.log('success')
-        console.log(collection.userCollection)
-        res.status(200).json({ success: true }); 
-        // need to render the general collection page again after calling sortFigurinesUser to show updated collection
-      } else {
-        console.log('fail')
-        console.log(collection.message)
-        res.status(400).json({ success: false, message: collection.message });
+    .route('/logout')
+    .get(async (req, res) => {
+      try {
+        if (req.session.user) {
+          req.session.destroy();
+          res.render('logout');
+        } else {
+          res.redirect('/login');
+        }
+      } catch (e) {
+        res.status(500).json({ error: e });
       }
-    } catch (e) {
-      console.log(e)
-      res.status(500).json({ error: e });
-    }
-  });
+    }),
+
+  router
+    .route('/business')
+    .get(async (req, res) => {
+      res.render('business')
+    }),
+
+  router
+    .route('/addCollection/:figurineName/:seriesName/:modelName')
+    .patch(async (req, res) => {
+      try {
+        console.log(req.params.figurineName)
+        console.log(req.params.seriesName)
+        console.log(req.params.modelName)
+
+        let figurineName = req.params.figurineName
+        let seriesName = req.params.seriesName
+        let modelName = req.params.modelName
+        let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName)
+
+        if (collection.success) {
+          console.log('success')
+          console.log(collection.userCollection)
+          res.status(200).json({ success: true });
+          // need to render the general collection page again after calling sortFigurinesUser to show updated collection
+        } else {
+          console.log('fail')
+          console.log(collection.message)
+          res.status(400).json({ success: false, message: collection.message });
+        }
+      } catch (e) {
+        console.log(e)
+        res.status(500).json({ error: e });
+      }
+    }),
+
+  router
+    .route('/removeCollection/:figurineName/:seriesName/:modelName')
+    .patch(async (req, res) => {
+      try {
+        console.log(req.params.figurineName)
+        console.log(req.params.seriesName)
+        console.log(req.params.modelName)
+
+        let figurineName = req.params.figurineName
+        let seriesName = req.params.seriesName
+        let modelName = req.params.modelName
+        let collection = await removeCollection(req.session.user.username, figurineName, seriesName, modelName)
+
+        if (collection.success) {
+          console.log('success')
+          console.log(collection.userCollection)
+          res.status(200).json({ success: true });
+          // need to render the general collection page again after calling sortFigurinesUser to show updated collection
+        } else {
+          console.log('fail')
+          console.log(collection.message)
+          res.status(400).json({ success: false, message: collection.message });
+        }
+      } catch (e) {
+        console.log(e)
+        res.status(500).json({ error: e });
+      }
+    });
 
 export default router;
