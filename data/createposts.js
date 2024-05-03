@@ -42,3 +42,22 @@ export const uploadFile = async () => {
     if (!post_list) throw "Error: Could not get all products.";
     return post_list;
 };
+
+//delete post
+export const deletePost = async (postId) => {
+    const postCollection = await posts();
+
+    // Check if the post exists
+    const post = await postCollection.findOne({ _id: postId });
+    if (!post) {
+        throw "Post not found";
+    }
+
+    // Delete the post
+    const deletionInfo = await postCollection.deleteOne({ _id: postId });
+    if (deletionInfo.deletedCount === 0) {
+        throw "Failed to delete post";
+    }
+
+    return { deleted: true };
+}
