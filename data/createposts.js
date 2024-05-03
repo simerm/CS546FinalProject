@@ -34,6 +34,7 @@ export const getAllPosts = async () => {
     if (!post_list) throw "Error: Could not get all products.";
     return post_list;
 };
+//upload file
 
 export const uploadFile = async () => {
     const post_collection = await posts();

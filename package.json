@@ -27,7 +27,7 @@
     "handlebars": "^4.7.8",
     "libphonenumber-js": "^1.10.61",
     "mongodb": "^6.5.0",
-    "fs": "^0.0.1-security",
+    "multer": "^1.4.5-lts.1",
     "path": "^0.12.7"
   }
 }

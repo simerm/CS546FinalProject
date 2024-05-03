@@ -15,6 +15,7 @@ app.use(session({
 }))
 app.use('/public', express.static('public'));
 
+
 // // Middleware #1
 // app.use((req, res, next) => {
 //   if (req.originalUrl === "/") {
@@ -114,6 +115,7 @@ app.use(rewriteUnsupportedBrowserMethods);
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
 
 configRoutes(app);
 
