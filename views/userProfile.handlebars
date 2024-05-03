@@ -28,7 +28,7 @@
         <div class="badges">
             <div class="buttontitle">
                 <h2>My Badges</h2>
-                <button class="addBadge" id="addBadge">Add Badge</button>
+                
             </div>
 
             <p>You don't have any badges currently.</p>
@@ -47,7 +47,7 @@
             <div class="overlay" id="overlay"></div>
             <div class="wish-form-popup" id="wishformPopup">
                 <h3>Add New Wish</h3>
-                <div class="wishclientError" id="wishclientError"></div>
+                <div class="alert alert-danger" id="wishclientError"></div>
                 <form id="wishForm" class="wishForm" action='/wishlist' method="POST">
                     <label class="wishLabel" id="wishLabel" for="wishName">Item:</label>
                     <input class="wishName" type="text" id="wishName" name="wishName" placeholder="Enter Wish Name">
@@ -57,7 +57,7 @@
                 </form>
                 <div class="closeButton">
 
-                    <button class="wishClose" onclick="closeWishForm()">Close</button>
+                    <button id = "closeButton" class="wishClose" >Close</button>
                 </div>
 
             </div>

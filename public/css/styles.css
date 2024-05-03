@@ -406,3 +406,7 @@ h1 {
     margin-top:10px;
     justify-content: flex-end;
 }
+
+.alert.alert-danger{
+    display: none
+}

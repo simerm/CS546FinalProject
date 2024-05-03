@@ -3,7 +3,7 @@
     {{#if error}}
     <p class="alert alert-danger">{{error}}</p>
     {{/if}}
-    <div class="alert alert-danger" style="display: none" id="clientError"></div>
+    <div class="alert alert-danger" id="clientError"></div>
     <form id="signup-form" name="signup-form" action="/register" method="POST">
         <div>
             <label for="firstName">First Name:</label>
@@ -29,6 +29,6 @@
         <button class="btn btn-secondary" type="submit" id="submitButton" name="submitButton">Submit</button>
     </form>
 
-    <p>Are you a business instead? <a href="/businessRegister">Click here to log-in</a></p>
+    <p>Are you a business instead? <a href="/businessRegister">Click here to register as a business.</a></p>
     <p>Already have an account? <a href="/login">Click here to log-in</a></p>
 </div>

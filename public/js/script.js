@@ -1,56 +1,67 @@
-// import { store } from "../../config/mongoCollections.js";
-// import { parsePhoneNumberFromString } from '../node_modules/libphonenumber-js/bundle/libphonenumber-js.min.js';
 
-// const overlay = document.getElementById('overlay');
-// const addWishBtn = document.getElementById('addWish');
-// const wishFormPopup = document.getElementById('wishformPopup');
+const overlay = document.getElementById('overlay');
+const addWishBtn = document.getElementById('addWish');
+const wishFormPopup = document.getElementById('wishformPopup');
 
-// function openWishForm() {
-//     wishFormPopup.style.display = 'block';
-//     overlay.style.display = 'block';
-//     document.getElementById('wishName').value = ''
-//     let error = document.getElementById('wishclientError')
-//     error.innerHTML = ""
-// }
+function openWishForm() {
+    wishFormPopup.style.display = 'block';
+    overlay.style.display = 'block';
+    document.getElementById('wishName').value = ''
+    let error = document.getElementById('wishclientError')
+    error.innerHTML = ""
+}
 
-// function closeWishForm() {
-//     wishFormPopup.style.display = 'none';
-//     overlay.style.display = 'none';
-// }
+function closeWishForm() {
+    wishFormPopup.style.display = 'none';
+    overlay.style.display = 'none';
+}
 
-// addWishBtn.addEventListener('click', openWishForm);
+if (addWishBtn) {
+    addWishBtn.addEventListener('click', openWishForm);
+}
+
+if (document.getElementById('wishForm')) {
+
+    document.getElementById('wishForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        let value = true;
+        let wish = document.getElementById("wishName").value
+        let error = document.getElementById('wishclientError')
+        error.innerHTML = ""
+        if (!wish || !isNaN(wish)) {
+            error.innerHTML = "Must provide a wish name"
+            value = false
+        }
+        else {
+            if (typeof wish !== "string") {
+                error.innerHTML = "Must provide a string"
+                value = false
+            }
+            else {
+                wish = wish.trim()
+                if (wish.length < 2) {
+                    error.innerHTML = "Wish name can't be less than 2 characters"
+                    value = false
+                }
+            }
+        }
+        if (value) {
+            document.getElementById('wishForm').submit()
+        }
+        else {
+            error.style.display = 'block'
+        }
+
+    });
+    const closeButton = document.getElementById('closeButton');
 
 
+    closeButton.addEventListener("click", function() {
+        closeWishForm();
+    });
 
-// document.getElementById('wishForm').addEventListener('submit', function (event) {
-//     event.preventDefault();
-
-//     let value = true;
-//     let wish = document.getElementById("wishName").value
-//     let error = document.getElementById('wishclientError')
-//     error.innerHTML = ""
-//     if (!wish || !isNaN(wish)) {
-//         error.innerHTML = "Must provide a wish name"
-//         value = false
-//     }
-//     else {
-//         if (typeof wish !== "string") {
-//             error.innerHTML = "Must provide a string"
-//             value = false
-//         }
-//         else {
-//             wish = wish.trim()
-//             if (wish.length < 2) {
-//                 error.innerHTML = "Wish name can't be less than 2 characters"
-//                 value = false
-//             }
-//         }
-//     }
-//     if (value) {
-//         document.getElementById('wishForm').submit()
-//     }
-
-// });
+}
 
 
 //REGISTER AND LOGIN HANDLING
@@ -729,7 +740,7 @@ if (document.getElementById('admin-app')) {
                 }
                 else {
                     const emailSplit = email.split('@');
-                    if (!(emailSplit.length === 2 && emailSplit[1].includes('.'))){
+                    if (!(emailSplit.length === 2 && emailSplit[1].includes('.'))) {
                         let e = document.createElement("p");
                         e.innerHTML = 'Invalid email'
                         error.appendChild(e)
