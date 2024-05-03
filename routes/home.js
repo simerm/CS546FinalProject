@@ -34,18 +34,20 @@ router
       if (diff >= 3) {
         eligible = true
       }
+      console.log(diff)
+      let exist = false
       try {
-        let exist = await appExists(req.session.user.username)
+        exist = await appExists(req.session.user.username)
+
         if (exist) {
           eligible = false
         }
       } catch (e) {
         res.status(500).json({ error: 'Error: Loading info' })
-
       }
-
-
-
+      console.log(eligible)
+      console.log(exist)
+      console.log(req.session.user)
       res.render('userProfile', {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,

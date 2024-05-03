@@ -776,3 +776,22 @@ if (document.getElementById('admin-app')) {
 
 
 }
+
+if (document.getElementById('editProfile')) {
+    const editProfileBtn = document.getElementById('editProfile');
+    const editProfileModal = document.getElementById('editProfileModal');
+
+    editProfileBtn.addEventListener('click', function () {
+        $(editProfileModal).modal('show');
+    });
+}
+
+//editProfileModal
+if (document.getElementById('editProfileModal')){
+    const closeButton = document.getElementById('closeEdit');
+    closeButton.addEventListener('click', function () {
+        $(editProfileModal).modal('hide');
+    });
+
+
+}
