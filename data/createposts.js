@@ -1,4 +1,6 @@
 import { posts } from '../config/mongoCollections.js';
+import React, { useState } from 'react';
+
 export const createPost = async (
     postTitle,
     file,
@@ -34,16 +36,7 @@ export const getAllPosts = async () => {
     if (!post_list) throw "Error: Could not get all products.";
     return post_list;
 };
-//upload file
 
-export const uploadFile = async () => {
-    const post_collection = await posts();
-    let post_list = await post_collection.find({}).toArray();
-    if (!post_list) throw "Error: Could not get all products.";
-    return post_list;
-};
-
-//delete post
 export const deletePost = async (postId) => {
     const postCollection = await posts();
 
