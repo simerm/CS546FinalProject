@@ -32,13 +32,13 @@
                                             <button class="btn btn-primary" onclick="addToWishlist('{{this.modelName}}')">Add to Wishlist</button>
                                         </li>
                                     {{/if}}
-                                    {{#if inCollection}}
+                                    {{#if owned}}
                                         <li class="list-group-item">
-                                            <button class="btn btn-danger" onclick="removeFromCollection('{{this.modelName}}')">Remove from My Collection</button>
+                                            <button class="btn btn-danger" onclick="removeFromCollection('{{../figurineName}}', '{{../seriesName}}', '{{this.modelName}}')">Remove from My Collection</button>
                                         </li>
                                     {{else}}
                                         <li class="list-group-item">
-                                            <button class="btn btn-primary" onclick="addToCollection('{{this.modelName}}')">Add to My Collection</button>
+                                            <button class="btn btn-primary" onclick="addToCollection('{{../figurineName}}', '{{../seriesName}}', '{{this.modelName}}')">Add to My Collection</button>
                                         </li>
                                     {{/if}}
                                 </ul>
@@ -58,9 +58,9 @@
                                             <button class="btn btn-primary" onclick="addToWishlist('{{this.modelName}}')">Add to Wishlist</button>
                                         </li>
                                     {{/if}}
-                                    {{#if inCollection}}
+                                    {{#if owned}}
                                         <li class="list-group-item">
-                                            <button class="btn btn-danger" onclick="removeFromCollection('{{this.modelName}}')">Remove from My Collection</button>
+                                            <button class="btn btn-danger" onclick="removeFromCollection('{{../figurineName}}', '{{../seriesName}}', '{{this.modelName}}'')">Remove from My Collection</button>
                                         </li>
                                     {{else}}
                                         <li class="list-group-item">

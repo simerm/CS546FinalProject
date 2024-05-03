@@ -1,5 +1,5 @@
 import { Router} from 'express';
-import { sortFigurines } from '../data/genCollection.js';
+import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness, addCollection, removeCollection } from '../data/user.js';
@@ -38,18 +38,22 @@ router
       try {
         if (req.session.user) {
           if (req.session.user.role == 'business') {
+            console.log(figurineInfo)
+            const figurineInfo = await sortFigurines();
             res.render('generalCollection', { figurineInfo })
           } else if (req.session.user.role == 'personal') {
-            const figurineInfo = await sortFigurines(); // sortFigurinesUser(req) once function works
+            const figurineInfo = await sortFigurinesUser(req.session.user.username); // sortFigurinesUser(req) once function works
             res.render('generalCollection', { auth: true, user: true, figurineInfo })
           }
         } else {
           const figurineInfo = await sortFigurines();
+          // console.log(figurineInfo)
           res.render('generalCollection', { figurineInfo })
         }
       }
       catch (e) {
-        res.status(500).json({ error: 'Error while searching for the collection.' })
+        console.error(e); // Log the error to the console
+        res.status(500).json({ error: e }) 
       }
     
     }),
