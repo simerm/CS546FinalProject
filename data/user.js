@@ -138,7 +138,7 @@ export const loginUser = async (username, password) => {
     throw "invalid length"
   }
   username = username.toLowerCase()
-  if (username.length > 10) {
+  if (username.length > 20) {
     throw "username too long"
   }
   let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
@@ -187,13 +187,13 @@ export const loginUser = async (username, password) => {
       storeName: b.storeName,
       phoneNumber: b.phoneNumber,
       businessId: b.id,
-      street: b.street,
+      street: b.streetAddress,
       city: b.city,
       state: b.state,
       zipcode: b.zipcode,
       username: username,
       figurineStock: b.figurineStock,
-      role: role
+      role: b.role
 
     }
   }
@@ -235,7 +235,8 @@ export const registerBusiness = async (
   const c = await storeCollection.findOne({ businessId: id });
   if (c) throw 'business id already exists';
 
-
+  role = "business"
+  
   const hash = await bcrypt.hash(password, saltRounds);
 
   let newUser = {
@@ -248,6 +249,7 @@ export const registerBusiness = async (
     zipcode: zipcode,
     username: username,
     password: hash,
+    role: role,
     figurineStock: []
   }
 

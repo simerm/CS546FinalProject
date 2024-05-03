@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import { sortFigurines } from '../data/genCollection.js';
+import { grabList } from '../data/companyStock.js';
 import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
@@ -22,31 +23,32 @@ router
       })
     }),
   router
-  .route('/collections')
-  .get(async (req, res) => {
-    try{
-      const figurineInfo = await sortFigurines();
-      if (req.session.user) {
-        console.log('logged in')
-        res.render('generalCollection', {figurineInfo, loggedIn: true}) // trying to make this work
-      } else {
-        res.render('generalCollection', {figurineInfo})
+    .route('/collections')
+    .get(async (req, res) => {
+      try{
+        const figurineInfo = await sortFigurines();
+        if (req.session.user) {
+          console.log('logged in')
+          res.render('generalCollection', {auth: true, figurineInfo, loggedIn: true}) 
+        } else {
+          res.render('generalCollection', {figurineInfo})
+        }
       }
-    }
-    catch(e){
-      res.status(500).json({error: 'Error while searching for the collection.'})
-    }
-    
-  }),
+      catch(e){
+        res.status(500).json({error: 'Error while searching for the collection.'})
+      }
+      
+    }),
   router
     .route('/businessRegister')
     .get(async (req, res) => {
       res.render('businessRegister')
     })
     .post(async (req, res) => {
-      let { name, phoneNumber, id, street, city, state, zipcode, username, password, confirmPassword } = req.body;
+      let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword } = req.body;
       let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-
+      
+      /*
       if (!id) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -96,18 +98,18 @@ router
           }
         }
       }
-      if (!street) {
+      if (!streetAddress) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
       }
       else {
-        if (typeof street !== "string" || !isNaN(street)) {
+        if (typeof streetAddress !== "string" || !isNaN(streetAddress)) {
           return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
         }
         else {
-          street = street.trim()
-          if (street.length < 5 || street.length > 25) {
+          streetAddress = streetAddress.trim()
+          if (streetAddress.length < 5 || streetAddress.length > 25) {
             return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
           }
@@ -173,17 +175,17 @@ router
           }
         }
       }
-      if (!phoneNumber || typeof phoneNumber !== "string") {
-        return res.status(400).render('businessRegister', { error: 'Invalid params' });
+      // if (!phoneNumber || typeof phoneNumber !== "string") {
+      //   return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
-      }
-      else {
-        let number = parsePhoneNumberFromString(phoneNumber);
-        if (!number || !number.isValid()) {
-          return res.status(400).render('businessRegister', { error: 'Invalid params' });
+      // }
+      // else {
+      //   let number = parsePhoneNumberFromString(phoneNumber);
+      //   if (!number || !number.isValid()) {
+      //     return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
-        }
-      }
+      //   }
+      // }
       if (!username) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -262,12 +264,14 @@ router
 
         }
       }
+      */
       let bool = true
       try {
-        let result = await registerBusiness(name, phoneNumber, id, street, city, state, zipcode, username, password)
+        let result = await registerBusiness(name, phoneNumber, id, streetAddress, city, state, zipcode, username, password)
         bool = result.signupCompleted
+        
         if (bool) {
-          return res.redirect('/login');
+          return res.redirect('businessProfile');
 
         }
       } catch (e) {
@@ -354,8 +358,6 @@ router
         return res.status(400).render('register', { error: "must have uppercase character, number, and special character" });
       }
 
-
-
       if (confirmPassword !== password) {
         return res.status(400).render('register', { error: "passwords must match" });
       }
@@ -405,7 +407,7 @@ router
 
     }
     username = username.toLowerCase()
-    if (username.length > 10) {
+    if (username.length > 20) {
       return res.status(400).render('login', { themePreference: 'light', error: "username too long" });
 
     }
@@ -449,7 +451,7 @@ router
             storeName: user.storeName,
             phoneNumber: user.phoneNumber,
             businessId: user.id,
-            street: user.street,
+            streetAddress: user.streetAddress,
             city: user.city,
             state: user.state,
             zipcode: user.zipcode,
@@ -467,14 +469,9 @@ router
           }
         }
         
-        if(user.role === 'business') return res.redirect('businessProfile', {grabList}) //if the user is a business and clicks profile, redirect them to here
+        if(user.role == 'business') return res.redirect('businessProfile'); //if the user is a business, redirect them to here
         return res.redirect('/profile')
-        //CHANGE WHAT HAPPENS WHEN LOGIN
-        // if (user.role === 'admin') {
-        //   return res.redirect('/admin');
-        // } else {
-        //   return res.redirect('/user');
-        // }
+    
       }
       else {
         return res.status(400).render('login', { error: 'invalid username or password' });
@@ -503,8 +500,20 @@ router
   });
 
 router
-  .route('business')
+  .route('/business')
   .get(async (req, res) => {
     res.render('business')
   });
+
+router 
+  .route('/businessProfile')
+  .get(async (req, res) => {
+    res.render('businessProfile', 
+    {username: req.session.user.username,
+    city: req.session.user.city,
+    state: req.session.user.state,
+    role: req.session.user.role,
+    grabList})
+  });
+
 export default router;

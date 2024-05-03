@@ -408,7 +408,7 @@ document.getElementById('business-signup-form').addEventListener('submit', funct
     let name = document.getElementById('name').value;
     let phoneNumber = document.getElementById('phoneNumber').value;
     let id = document.getElementById('id').value;
-    let street = document.getElementById('street-address').value;
+    let street = document.getElementById('streetAddress').value;
     let city = document.getElementById('city').value;
     let state = document.getElementById('state').value;
     let zipcode = document.getElementById('zipcode').value;
