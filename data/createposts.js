@@ -25,7 +25,9 @@ export const createPost = async (
         file: file,
         caption: caption,
         comments: [],
-        likes: 0
+        likes: 0,
+        dislikes:0,
+        dateAdded: new Date()
     }
     const post_info = await post_collection.insertOne(newPost_obj);
     return post_info;
@@ -35,6 +37,7 @@ export const getAllPosts = async () => {
     const post_collection = await posts();
     let post_list = await post_collection.find({}).toArray();
     if (!post_list) throw "Error: Could not get all products.";
+    post_list.sort((a, b) => b.dateAdded - a.dateAdded);
     return post_list;
 };
 

@@ -410,8 +410,8 @@ h1 {
     margin: 0; /* Removed margin-top to maintain consistent spacing */
 }
 
-.up-btn,
-.down-btn{
+.thumbsUp,
+.thumbsDown{
     background-color: transparent;
     border:none;
     padding: 0;
