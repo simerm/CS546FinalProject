@@ -548,6 +548,24 @@ router
     let username = ""
     if (req.session.user) {
       username = req.session.user.username
+      let date = req.session.user.dateCreated
+      const [year, month, day] = date.split('/').map(Number);
+      let dobj = new Date(year, month - 1, day);
+      let currentDate = new Date();
+      const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
+      let eligible = false
+      if (diff >= 3){
+        eligible = true
+      }
+      try{
+        let exist = await appExists(req.session.user.username)
+        if (exist){
+          eligible = false
+        }
+      } catch(e){
+        res.status(500).json({ error: 'Error: Loading info' })
+
+      }
     }
 
     if (!username || typeof username !== 'string' || !isNaN(username)) {
