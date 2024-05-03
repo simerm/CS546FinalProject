@@ -1,4 +1,6 @@
 import { posts } from '../config/mongoCollections.js';
+import React, { useState } from 'react';
+
 export const createPost = async (
     postTitle,
     file,
@@ -35,9 +37,28 @@ export const getAllPosts = async () => {
     return post_list;
 };
 
-export const uploadFile = async () => {
-    const post_collection = await posts();
-    let post_list = await post_collection.find({}).toArray();
-    if (!post_list) throw "Error: Could not get all products.";
-    return post_list;
-};
+// export function uploadFile() {
+//     function convertToBase64(e) {
+//         console.log(e);
+//         var reader = new FileReader();
+//         reader.readAsDataURL(e.target.files[e]);
+//         reader.onload = () => {
+//             console.log(reader.result);
+//         };
+//         reader.onerror = error => {
+//             console.log(error);
+//         };
+//     }
+//     let output = 
+//     <div className="auth-wrapper" > 
+//         <div className="auth-inner" style={{width: "auto"}}>
+//             Upload File
+//             <input
+//             accepts="image/*"
+//             type="file"
+//             onChange={convertToBase64} 
+//             />
+//         </div>
+//     </div>
+//     return output;
+// }

@@ -1,10 +1,36 @@
-import express from 'express';
-const app = express();
-import configRoutes from './routes/index.js';
-import exphbs from 'express-handlebars';
+// import express from 'express';
+// const app = express();
+// import configRoutes from './routes/index.js';
+// import exphbs from 'express-handlebars';
+// import imgur from 'imgur';
+// import fileUpload from 'express-fileupload';
+// import fs from 'fs';
+// import path from 'path';
+// app.use(fileUpload());
+// app.set('view engine', 'ejs');
+// app.set('views', 'views');
 
+// import { fileURLToPath } from 'url';
+// import { dirname } from 'path';
+// import session from 'express-session';
+
+import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import configRoutes from './routes/index.js';
+import exphbs from 'express-handlebars';
+import fileUpload from 'express-fileupload';
+
+const __filename = fileURLToPath(import.meta.url);
+const thename = dirname(__filename);
+
+const app = express();
+
+app.use(fileUpload());
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+app.use('/public', express.static('public'));
 import session from 'express-session';
 
 app.use(session({
@@ -114,6 +140,32 @@ app.use(rewriteUnsupportedBrowserMethods);
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+// app.get('/', (req, res) => {
+//   res.render("home");
+// });
+
+// app.get('/upload', (req, res) => {
+//   if (!req.session.user) {
+//     return res.redirect('/login');
+//   }
+//   res.render('createpost');
+// });
+
+
+// app.post('/upload', (req, res) => {
+//   if (!req.files) {
+//     return res.status(400).send('No files were uploaded');
+//   }
+//   let sampleFile = req.files.sampleFile;
+//   let uploadPath = thename + '/uploads/' + sampleFile.name;
+//   sampleFile.mv(uploadPath, function (err) {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//   res.render('home');
+//   });
+// });
 
 configRoutes(app);
 
