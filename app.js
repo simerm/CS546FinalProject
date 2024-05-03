@@ -1,19 +1,3 @@
-// import express from 'express';
-// const app = express();
-// import configRoutes from './routes/index.js';
-// import exphbs from 'express-handlebars';
-// import imgur from 'imgur';
-// import fileUpload from 'express-fileupload';
-// import fs from 'fs';
-// import path from 'path';
-// app.use(fileUpload());
-// app.set('view engine', 'ejs');
-// app.set('views', 'views');
-
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
-// import session from 'express-session';
-
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -142,15 +126,16 @@ app.use(rewriteUnsupportedBrowserMethods);
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+//upload stuff
 // app.get('/', (req, res) => {
-//   res.render("home");
+//   res.render("uploadForm");
 // });
 
 // app.get('/upload', (req, res) => {
 //   if (!req.session.user) {
 //     return res.redirect('/login');
 //   }
-//   res.render('createpost');
+//   res.render('createPost');
 // });
 
 
@@ -167,7 +152,7 @@ app.set('view engine', 'handlebars');
 //   res.render('home');
 //   });
 // });
-
+//end upload stuff
 configRoutes(app);
 
 app.listen(3000, () => {
