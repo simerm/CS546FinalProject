@@ -6,16 +6,15 @@
     <div class="alert alert-danger" style="display: none" id="clientError"></div>
 
     <form id="signin-form" action="/login" method="POST">
-        <div>
+        <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
-        </div>
-        <div>
+            <input class="form-control" type="text" id="username" name="username">
+       
+        
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
-        </div>
-        <div>
-            <button type="submit" id="submitButton" name="submitButton">Login</button>
+            <input class="form-control" type="password" id="password" name="password">
+       
+            <button type="submit" class="btn btn-secondary"  id="submitButton" name="submitButton">Login</button>
         </div>
     </form>
     <a href="/register">Click here to register!</a>

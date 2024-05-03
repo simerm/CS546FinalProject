@@ -1,42 +1,34 @@
-<h1>Sign Up</h1>
-{{#if error}}
-<p class="alert alert-danger">{{error}}</p>
-{{/if}}
-<div  class = "alert alert-danger" style="display: none" id = "clientError"></div>
-<form id="signup-form" name="signup-form" action="/register" method="POST">
-    <div>
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName">
-    </div>
-    <div>
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName">
-    </div>
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-    </div>
-    <div>
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword">
-    </div>
-    
-    {{!-- <div>
-        <label for="role">Account Type:</label>
-        <select id="role" name="role">
-            <option value="Business">Business</option>
-            <option value="Personal">Personal</option>
-        </select>
-    </div>
-    <div> --}}
-        <button type="submit" id="submitButton" name="submitButton">Submit</button>
-    </div>
-</form>
+<div class="display">
+    <h1>Sign Up</h1>
+    {{#if error}}
+    <p class="alert alert-danger">{{error}}</p>
+    {{/if}}
+    <div class="alert alert-danger" style="display: none" id="clientError"></div>
+    <form id="signup-form" name="signup-form" action="/register" method="POST">
+        <div>
+            <label for="firstName">First Name:</label>
+            <input class="form-control" type="text" id="firstName" name="firstName">
+        </div>
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input class="form-control" type="text" id="lastName" name="lastName">
+        </div>
+        <div>
+            <label for="username">Username:</label>
+            <input class="form-control" type="text" id="username" name="username">
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input class="form-control" type="password" id="password" name="password">
+        </div>
+        <div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input class="form-control" type="password" id="confirmPassword" name="confirmPassword">
+        </div>
 
-<p>Are you a business instead? <a href="/businessRegister">Click here to log-in</a></p>
-<a href="/login">Already have an account? Click here to log-in</a>
+        <button class="btn btn-secondary" type="submit" id="submitButton" name="submitButton">Submit</button>
+    </form>
+
+    <p>Are you a business instead? <a href="/businessRegister">Click here to log-in</a></p>
+    <p>Already have an account? <a href="/login">Click here to log-in</a></p>
 </div>

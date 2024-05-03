@@ -364,3 +364,39 @@ h1 {
 #whyAdmin{
     height:40px;
 }
+
+.display {
+    margin: 100px auto auto auto ;
+    width: 50%;
+    padding: 50px;
+    border: 1px solid #34495e;
+    border-radius: 10px;
+    
+}
+
+.display input{
+    margin-bottom: 8px;
+}
+
+.display button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+   
+}
+
+.group{
+    margin-bottom: 20px;
+}
+
+.display p{
+    margin-top: 0px;
+    font-size: 13px;
+}
+
+.display h3{
+    font-size: 20px;
+}
+
+.display h1{
+    margin-bottom: 30px
+}

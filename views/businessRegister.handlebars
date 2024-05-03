@@ -1,58 +1,60 @@
-<h1>Sign Up As A Business</h1>
-{{#if error}}
-<p class="alert alert-danger">{{error}}</p>
-{{/if}}
-<div class="alert alert-danger" style="display: none" id="clientError"></div>
 <div class="display">
+    <h1>Sign Up As A Business</h1>
+    {{#if error}}
+    <p class="alert alert-danger">{{error}}</p>
+    {{/if}}
+    <div class="alert alert-danger" style="display: none" id="clientError"></div>
+
     <form id="business-signup-form" name="business-signup-form" action="/businessRegister" method="POST">
-        <div>
+        <div class = "group">
             <label for="name">Business Name:</label>
-            <input type="text" id="name" name="name">
+            <input class="form-control"  type="text" id="name" name="name">
         </div>
-        <div>
+        <div class = "group">
             <label for="phoneNumber">Business Phone Number:</label>
             <p>Include +1 for country code.</p>
-            <input type="text" id="phoneNumber" name="phoneNumber">
+            <input class="form-control"  type="text" id="phoneNumber" name="phoneNumber">
         </div>
-        <div>
+        <div class = "group">
             <label for="id">Business ID:</label>
-            <input type="text" id="id" name="id">
+            <input class="form-control"  type="text" id="id" name="id">
         </div>
+        <h3>Address</h3>
         <p>Business must be located in the USA to register.</p>
-        <div>
+        <div class = "group">
             <label for="streetAddress">Street Address:</label>
-            <input type="text" id="streetAddress" name="streetAddress">
+            <input class="form-control"  type="text" id="streetAddress" name="streetAddress">
         </div>
-        <div>
+        <div class = "group">
             <label for="city">City:</label>
-            <input type="text" id="city" name="city">
+            <input class="form-control"  type="text" id="city" name="city">
         </div>
-        <div>
+        <div class = "group">
             <label for="state">State (Abbreviation):</label>
-            <input type="text" id="state" name="state">
+            <input class="form-control"  type="text" id="state" name="state">
         </div>
-        <div>
+        <div class = "group">
             <label for="zipcode">Zipcode:</label>
-            <input type="text" id="zipcode" name="zipcode">
+            <input class="form-control"  type="text" id="zipcode" name="zipcode">
         </div>
 
-        <div>
+        <div class = "group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+            <input class="form-control"  type="text" id="username" name="username">
         </div>
-        <div>
+        <div class = "group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
+            <input class="form-control"  type="password" id="password" name="password">
         </div>
-        <div>
+        <div class = "group">
             <label for="confirmPassword">Confirm Password:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword">
+            <input class="form-control"  type="password" id="confirmPassword" name="confirmPassword">
         </div>
 
-        <button type="submit" id="submitButton" name="submitButton">Submit</button>
-</div>
+        <button class="btn btn-secondary"  type="submit" id="submitButton" name="submitButton">Submit</button>
+
 </form>
 
-<p>Don't want to create a business account? <a href="/businessRegister">Create a personal account here.</a></p>
-<a href="/login">Already have an account? Click here to log-in</a>
+<p>Don't want to create a business account? <a href="/register">Create a personal account here.</a></p>
+<p>Already have an account? <a href="/login">Click here to log-in</a></p>
 </div>
