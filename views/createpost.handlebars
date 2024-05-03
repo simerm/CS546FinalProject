@@ -4,23 +4,14 @@
 {{/if}}
 <div id="clientError"></div>
 <div class="display">
-    <form id="createpost" name="createpost" action="/upload" method="POST" encType="multipart/form-data">
+    <form id="createpost" name="createpost" action="/createpost" method="POST" encType="multipart/form-data">
         <div>
             <label for="postTitle">Post Title:</label>
             <input type="text" id="postTitle" name="postTitle">
         </div>
-        {{!-- <div>
+        <div>
             <label for="file">Image/Video File</label>
             <input type="file" id="file" name="file">
-        </div> --}}
-        <div class="file">
-            <label class="file-label">
-                <input class="file-input" type="file" name="sampleFile">
-                    <span class="file-cta">
-                    <span class="file-label">
-                    </span>
-                    </span>
-            </label>
         </div>
         <div>
             <label for="caption">Caption:</label>

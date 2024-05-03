@@ -6,6 +6,19 @@ import { loginUser, registerUser, registerBusiness } from '../data/user.js';
 import { createPost, getAllPosts } from '../data/createposts.js';
 import fs from 'fs';
 import path from 'path';
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fileUpload from 'express-fileupload';
+
+const __filename = fileURLToPath(import.meta.url);
+const thename = dirname(__filename);
+
+const app = express();
+
+app.use(fileUpload());
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 router
   .route('/')
@@ -46,16 +59,6 @@ router
     if (!user_info) {
       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
     }
-    if (!req.files) {
-      return res.status(400).send('No files were uploaded');
-    }
-    // let sampleFile = req.files.sampleFile;
-    // let uploadPath = thename + '/uploads/' + sampleFile.name;
-    // sampleFile.mv(uploadPath, function (err) {
-    //   if (err) {
-    //     return res.status(500).send(err);
-    //   }
-    // });
     return res.redirect('/');
     }),
   router
