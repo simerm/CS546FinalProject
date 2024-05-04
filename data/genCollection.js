@@ -3,6 +3,9 @@
 //const series = require('./series.js'); //import the series.json file
 import { figurines } from './figurines.js';
 import { series } from './series.js';
+import { users } from '../config/mongoCollections.js';
+import { store } from '../config/mongoCollections.js';
+
 //Do this for both smitskis and sonny angels 
 
 export const getFigurineNames = async () => { //grab each of the figurine names (for the dropdown menu)
@@ -37,5 +40,65 @@ export const sortFigurines = async () => { //sorts through the data on what type
         return sorted;
     } catch (e) {
       throw 'Error fetching general collection data!'; 
+    }
+};
+
+export const sortFigurinesUser = async (username) => {
+    try {
+        let sorted = {};
+        let figNamesList = await getFigurineNames();
+        const userCollection = await users();
+        const user = await userCollection.findOne({ username: username });
+        if (!user) throw 'User not found';
+        let userCollectionData = {};
+        if (user.figurineCollection) {
+            userCollectionData = user.figurineCollection;
+        }
+        const generalCollection = await sortFigurines(); // Assuming you have a function to get the general collection
+        // console.log('collection: ' + JSON.stringify(userCollectionData));
+        // console.log('figNamesList: ' + JSON.stringify(figNamesList));
+        figNamesList.forEach(name => {
+            sorted[name] = []; // Initialize an array for each figurine name
+            // console.log('name: ' + JSON.stringify(userCollectionData[name])) // THIS IS PRINTING UNDERFINED FOR SOME REASON
+            if (userCollectionData[name]) {
+                generalCollection[name].forEach(series => {
+                    // console.log(userCollectionData[name][series.seriesName])
+                    const seriesData = {
+                        figurineName: series.figurineName,
+                        seriesId: series.seriesId,
+                        seriesName: series.seriesName,
+                        figurineTypes: series.figurineTypes.map(figurine => {
+                            const owned = userCollectionData[name][series.seriesName]?.includes(figurine.modelName) || false; // Check if modelName exists in user's collection
+                            return {
+                                ...figurine,
+                                owned: owned,
+                                seriesName: series.seriesName
+                            }
+                        })
+                    };
+                    sorted[name].push(seriesData);
+                });
+            } else {
+                generalCollection[name].forEach(series => {
+                    const seriesData = {
+                        figurineName: series.figurineName,
+                        seriesId: series.seriesId,
+                        seriesName: series.seriesName,
+                        figurineTypes: series.figurineTypes.map(figurine => ({
+                            ...figurine,
+                            owned: false, // Set owned to false if user's collection for this figurine name does not exist
+                            seriesName: series.seriesName
+                        }))
+                    };
+                    sorted[name].push(seriesData);
+                });
+            }
+        });
+        // console.log('sorted:')
+        // console.log(sorted)
+        return sorted;
+    } catch (e) {
+        console.error(e);
+        throw e;
     }
 };

@@ -255,3 +255,55 @@ export const registerBusiness = async (
   return { signupCompleted: true }
 
 };
+
+export const addCollection = async (username, figurineName, seriesName, modelName) => {
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.figurineCollection) {
+      user.figurineCollection = {};
+    }
+
+    if (!user.figurineCollection[figurineName]) {
+      user.figurineCollection[figurineName] = {};
+    }
+
+    if (!user.figurineCollection[figurineName][seriesName]) {
+      user.figurineCollection[figurineName][seriesName] = [];
+    }
+
+    if (user.figurineCollection[figurineName][seriesName].includes(modelName)) {
+      return { success: false, message: 'Model already exists in collection' };
+    } else {
+      user.figurineCollection[figurineName][seriesName].push(modelName);
+      // Update user's document in the collection
+      await userCollection.updateOne({ username: username }, { $set: { figurineCollection: user.figurineCollection } });
+      return { success: true, message: 'Model added to collection', userCollection: user.figurineCollection };
+    }
+  } catch (error) {
+    return { success: false, message: error }; // Return error message
+  }
+};
+
+export const removeCollection = async (username, figurineName, seriesName, modelName) => {
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.figurineCollection || !user.figurineCollection[figurineName] || !user.figurineCollection[figurineName][seriesName]) {
+      return { success: true, message: 'Collection is empty, no need to delete figurine' };
+    }
+
+    if (user.figurineCollection[figurineName][seriesName].includes(modelName)) {
+      user.figurineCollection[figurineName][seriesName] = user.figurineCollection[figurineName][seriesName].filter(model => model !== modelName);
+      // Update user's document in the collection
+      await userCollection.updateOne({ username: username }, { $set: { figurineCollection: user.figurineCollection } });
+      return { success: true, message: 'Model removed from collection', userCollection: user.figurineCollection };
+    }
+  } catch (e) {
+    throw 'Error fetching user data!';
+  }
+};
