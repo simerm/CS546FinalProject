@@ -2,7 +2,7 @@ import { Router} from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, addCollection, removeCollection } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection, removeCollection, addWishlist, removeWishlist } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -45,7 +45,18 @@ router
       }
 
       const figurineInfo = await sortFigurinesUser(req.session.user.username);
-      console.log(figurineInfo)
+      let hasBadges = false;
+      let hasWishlist = false;
+      
+      if (req.session.user.badges) {
+        hasBadges = true;
+      }
+
+      if (req.session.user.wishlist) {
+        hasWishlist = true;
+      }
+
+      // console.log(figurineInfo)
       res.render('userProfile', {
         figurineInfo,
         collectionExists: figurineInfo ? true : false,
@@ -54,7 +65,11 @@ router
         username: req.session.user.username,
         role: req.session.user.role,
         auth: val,
-        eligible: eligible
+        eligible: eligible,
+        hasBadges: hasBadges,
+        badges: req.session.user.badges,
+        hasWishlist: hasWishlist,
+        wishlist: req.session.user.wishlist
       })
     }),
   router
@@ -63,7 +78,7 @@ router
       try {
         if (req.session.user) {
           if (req.session.user.role == 'business') {
-            console.log(figurineInfo)
+            // console.log(figurineInfo)
             const figurineInfo = await sortFigurines();
             res.render('generalCollection', { figurineInfo })
           } else if (req.session.user.role == 'personal') {
@@ -78,7 +93,7 @@ router
       }
       catch (e) {
         console.error(e); // Log the error to the console
-        res.status(500).json({ error: e }) 
+        res.status(500).json({ error: e })
       }
     
     }),
@@ -466,67 +481,67 @@ router
         }
       }
 
-    //password checking for special characters and stuff
-    let upper = false
-    let num = false
-    let special = false
-    let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
-    for (let x of password) {
-      if (x === " ") {
-        return res.status(400).render('login', { error: "no spaces allowed" });
+      //password checking for special characters and stuff
+      let upper = false
+      let num = false
+      let special = false
+      let sc = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "."]
+      for (let x of password) {
+        if (x === " ") {
+          return res.status(400).render('login', { error: "no spaces allowed" });
+        }
+        else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
+          upper = true
+        }
+        else if (x.charCodeAt(0) >= 48 && x.charCodeAt(0) <= 57) {
+          num = true
+        }
+        else if (sc.includes(x)) {
+          special = true
+        }
       }
-      else if (x.charCodeAt(0) >= 65 && x.charCodeAt(0) <= 90) {
-        upper = true
-      }
-      else if (x.charCodeAt(0) >= 48 && x.charCodeAt(0) <= 57) {
-        num = true
-      }
-      else if (sc.includes(x)) {
-        special = true
-      }
-    }
-    if (!upper || !num || !special) {
-      return res.status(400).render('login', { error: "must have uppercase character, number, and special character" });
+      if (!upper || !num || !special) {
+        return res.status(400).render('login', { error: "must have uppercase character, number, and special character" });
 
       }
 
-    try {
-      const user = await loginUser(username, password)
-      if (user) {
-        if (user.role == 'business') {
-          req.session.user = {
-            storeName: user.storeName,
-            phoneNumber: user.phoneNumber,
-            businessId: user.id,
-            streetAddress: user.streetAddress,
-            city: user.city,
-            state: user.state,
-            zipcode: user.zipcode,
-            username: user.username,
-            figurineStock: user.figurineStock,
-            role: user.role
+      try {
+        const user = await loginUser(username, password)
+        if (user) {
+          if (user.role == 'business') {
+            req.session.user = {
+              storeName: user.storeName,
+              phoneNumber: user.phoneNumber,
+              businessId: user.id,
+              streetAddress: user.streetAddress,
+              city: user.city,
+              state: user.state,
+              zipcode: user.zipcode,
+              username: user.username,
+              figurineStock: user.figurineStock,
+              role: user.role
+            }
           }
+          else {
+            req.session.user = {
+              firstName: user.firstName,
+              lastName: user.lastName,
+              username: user.username,
+              role: user.role,
+              dateCreated: user.dateCreated
+            }
+          }
+          return res.redirect('/profile')
+          //CHANGE WHAT HAPPENS WHEN LOGIN
+          // if (user.role === 'admin') {
+          //   return res.redirect('/admin');
+          // } else {
+          //   return res.redirect('/user');
+          // }
         }
         else {
-          req.session.user = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            role: user.role,
-            dateCreated: user.dateCreated
-          }
+          return res.status(400).render('login', { error: 'invalid username or password' });
         }
-        return res.redirect('/profile')
-        //CHANGE WHAT HAPPENS WHEN LOGIN
-        // if (user.role === 'admin') {
-        //   return res.redirect('/admin');
-        // } else {
-        //   return res.redirect('/user');
-        // }
-      }
-      else {
-        return res.status(400).render('login', { error: 'invalid username or password' });
-      }
 
       } catch (e) {
         return res.status(400).render('login', { error: e });
@@ -560,38 +575,38 @@ router
     .route('/addCollection/:figurineName/:seriesName/:modelName')
     .patch(async (req, res) => {
       try {
-            // Retrieve parameters from request
-            let figurineName = req.params.figurineName;
-            let seriesName = req.params.seriesName;
-            let modelName = req.params.modelName;
+        // Retrieve parameters from request
+        let figurineName = req.params.figurineName;
+        let seriesName = req.params.seriesName;
+        let modelName = req.params.modelName;
 
-            // Add to collection
-            let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName);
+        // Add to collection
+        let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName);
 
-            if (collection.success) {
-                console.log('success');
-                console.log(collection.userCollection);
-                // Instead of redirecting, send a JSON response with updated collection data
-                res.status(200).json({ success: true, userCollection: collection.userCollection });
+        if (collection.success) {
+          // console.log('success');
+          console.log(collection.userCollection);
+          // Instead of redirecting, send a JSON response with updated collection data
+          res.status(200).json({ success: true, userCollection: collection.userCollection });
 
-            } else {
-                console.log('fail');
-                console.log(collection.message);
-                res.status(400).json({ success: false, message: collection.message });
-            }
-        } catch (e) {
-            console.log(e);
-            res.status(500).json({ error: e });
+        } else {
+          // console.log('fail');
+          // console.log(collection.message);
+          res.status(400).json({ success: false, message: collection.message });
         }
+      } catch (e) {
+        // console.log(e);
+        res.status(500).json({ error: e });
+      }
     }),
 
   router
     .route('/removeCollection/:figurineName/:seriesName/:modelName')
     .patch(async (req, res) => {
       try {
-        console.log(req.params.figurineName)
-        console.log(req.params.seriesName)
-        console.log(req.params.modelName)
+        // console.log(req.params.figurineName)
+        // console.log(req.params.seriesName)
+        // console.log(req.params.modelName)
 
         let figurineName = req.params.figurineName
         let seriesName = req.params.seriesName
@@ -599,102 +614,152 @@ router
         let collection = await removeCollection(req.session.user.username, figurineName, seriesName, modelName)
 
         if (collection.success) {
-          console.log('success')
-          console.log(collection.userCollection)
+          // console.log('success')
+          // console.log(collection.userCollection)
           res.status(200).json({ success: true });
           // need to render the general collection page again after calling sortFigurinesUser to show updated collection
         } else {
-          console.log('fail')
-          console.log(collection.message)
+          // console.log('fail')
+          // console.log(collection.message)
           res.status(400).json({ success: false, message: collection.message });
         }
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         res.status(500).json({ error: e });
       }
     }),
 
 
-router
-  .route('/adminApplication')
-  .post(async (req, res) => {
-    let { email, whyAdmin } = req.body;
-    let username = ""
-    if (req.session.user) {
-      username = req.session.user.username
-      let date = req.session.user.dateCreated
-      const [year, month, day] = date.split('/').map(Number);
-      let dobj = new Date(year, month - 1, day);
-      let currentDate = new Date();
-      const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
-      let eligible = false
-      if (diff >= 3) {
-        eligible = true
-      }
-      try {
-        let exist = await appExists(req.session.user.username)
-        if (exist) {
-          eligible = false
+  router
+    .route('/adminApplication')
+    .post(async (req, res) => {
+      let { email, whyAdmin } = req.body;
+      let username = ""
+      if (req.session.user) {
+        username = req.session.user.username
+        let date = req.session.user.dateCreated
+        const [year, month, day] = date.split('/').map(Number);
+        let dobj = new Date(year, month - 1, day);
+        let currentDate = new Date();
+        const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
+        let eligible = false
+        if (diff >= 3) {
+          eligible = true
         }
-      } catch (e) {
-        res.status(500).json({ error: 'Error: Loading info' })
+        try {
+          let exist = await appExists(req.session.user.username)
+          if (exist) {
+            eligible = false
+          }
+        } catch (e) {
+          res.status(500).json({ error: 'Error: Loading info' })
 
+        }
       }
-    }
 
-    if (!username || typeof username !== 'string' || !isNaN(username)) {
-      return res.status(400).render('userProfile', { error: "Invalid User" });
-    }
-    if (!email) {
-      return res.status(400).render('userProfile', { error: "Invalid email" });
-    }
-    else {
-      if (typeof email !== "string" || !isNaN(email)) {
+      if (!username || typeof username !== 'string' || !isNaN(username)) {
+        return res.status(400).render('userProfile', { error: "Invalid User" });
+      }
+      if (!email) {
         return res.status(400).render('userProfile', { error: "Invalid email" });
       }
       else {
-        email = email.trim()
-        if (email.length < 5) {
+        if (typeof email !== "string" || !isNaN(email)) {
           return res.status(400).render('userProfile', { error: "Invalid email" });
         }
         else {
-          const emailSplit = email.split('@');
-          if (!(emailSplit.length === 2 && emailSplit[1].includes('.'))) {
+          email = email.trim()
+          if (email.length < 5) {
             return res.status(400).render('userProfile', { error: "Invalid email" });
+          }
+          else {
+            const emailSplit = email.split('@');
+            if (!(emailSplit.length === 2 && emailSplit[1].includes('.'))) {
+              return res.status(400).render('userProfile', { error: "Invalid email" });
+            }
           }
         }
       }
-    }
 
-    if (!whyAdmin) {
-      return res.status(400).render('userProfile', { error: "Statement not provided" });
-    }
-    else {
-      if (typeof whyAdmin !== "string" || !isNaN(whyAdmin)) {
-        return res.status(400).render('userProfile', { error: "Invalid statement" });
+      if (!whyAdmin) {
+        return res.status(400).render('userProfile', { error: "Statement not provided" });
       }
       else {
-        whyAdmin = whyAdmin.trim()
-        if (whyAdmin.length < 50) {
-          return res.status(400).render('userProfile', { error: "Invalid length for statement" });
+        if (typeof whyAdmin !== "string" || !isNaN(whyAdmin)) {
+          return res.status(400).render('userProfile', { error: "Invalid statement" });
+        }
+        else {
+          whyAdmin = whyAdmin.trim()
+          if (whyAdmin.length < 50) {
+            return res.status(400).render('userProfile', { error: "Invalid length for statement" });
+          }
         }
       }
-    }
-    let bool = true;
-    try {
-      let result = await submitApplication(username, email, whyAdmin)
-      bool = result.signupCompleted
-      if (!bool) {
-        return res.status(400).render('userProfile', { error: "Something went wrong" });
+      let bool = true;
+      try {
+        let result = await submitApplication(username, email, whyAdmin)
+        bool = result.signupCompleted
+        if (!bool) {
+          return res.status(400).render('userProfile', { error: "Something went wrong" });
+
+        }
+        return res.redirect('/profile')
+      } catch (e) {
+        return res.status(500).render('userProfile', { error: e });
 
       }
-      return res.redirect('/profile')
-    } catch (e) {
-      return res.status(500).render('userProfile', { error: e });
+    }),
 
-    }
-  });
+  router
+    .route('/addWishlist/:figurineName/:seriesName/:modelName')
+    .patch(async (req, res) => {
+      try {
+        // Retrieve parameters from request        
+        let figurineName = req.params.figurineName;
+        let seriesName = req.params.seriesName;
+        let modelName = req.params.modelName;
 
+        // Add to collection
+        let wishlist = await addWishlist(req.session.user.username, figurineName, seriesName, modelName);
 
+        if (wishlist.success) {
+          console.log('success');
+          // console.log(collection.userCollection); edit for wishlist
+          // Instead of redirecting, send a JSON response with updated collection data
+          res.status(200).json({ success: true, message: wishlist.message });
+
+        } else {
+          console.log('fail');
+          // console.log(collection.message);
+          res.status(400).json({ success: false, message: wishlist.message });
+        }
+      } catch (e) {
+        console.log(e);
+        res.status(500).json({ error: e });
+      }
+    }),
+  
+  router
+    .route('/removeWishlist/:figurineName/:seriesName/:modelName')
+    .patch(async (req, res) => {
+      try {  
+        let figurineName = req.params.figurineName
+        let seriesName = req.params.seriesName
+        let modelName = req.params.modelName
+        let wishlist = await removeWishlist(req.session.user.username, figurineName, seriesName, modelName)
+  
+        if (wishlist.success) {
+          console.log('success')
+          res.status(200).json({ success: true, message: wishlist.message });
+        } else {
+          console.log('fail')
+          console.log(wishlist.message)
+          res.status(400).json({ success: false, message: wishlist.message });
+        }
+      } catch (e) {
+        console.log(e)
+        res.status(500).json({ error: e });
+      }
+    });
 
 export default router;

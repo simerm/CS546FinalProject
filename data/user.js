@@ -307,3 +307,49 @@ export const removeCollection = async (username, figurineName, seriesName, model
     throw 'Error fetching user data!';
   }
 };
+
+export const addWishlist = async (username, figurineName, seriesName, modelName) => { //honestly, dont really need figurineName and seriesName
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.wishlist) {
+      user.wishlist = [];
+    }
+    console.log(user.wishlist);
+    console.log(modelName);
+    if (user.wishlist.includes(modelName)) {
+      return { success: false, message: 'Model already exists in wishlist' };
+    } else {
+      user.wishlist.push(modelName);
+      // Update user's document in the collection
+      console.log(user.wishlist);
+      await userCollection.updateOne({ username: username }, { $set: { wishlist: user.wishlist } });
+      return { success: true, message: 'Model added to wishlist', wishlist: user.wishlist };
+    }
+  } catch (e) {
+    return { success: false, message: error }; // Return error message
+  }
+};
+
+export const removeWishlist = async (username, figurineName, seriesName, modelName) => {
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.wishlist) {
+      return { success: true, message: 'Wishlist is empty, no need to delete figurine' };
+    }
+
+    if (user.wishlist.includes(modelName)) {
+      user.wishlist = user.wishlist.filter(model => model !== modelName);
+      // Update user's document in the collection
+      await userCollection.updateOne({ username: username }, { $set: { wishlist: user.wishlist } });
+      return { success: true, message: 'Model removed from wishlist', wishlist: user.wishlist };
+    }
+  } catch (e) {
+    return { success: false, message: error }; // Return error message
+  }
+};

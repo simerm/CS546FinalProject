@@ -41,9 +41,17 @@
                 <h2>My Wishlist</h2>
                 <button class="addWish" id="addWish">Add Wish</button>
             </div>
-
-
-            <p>You don't have any wishes currently.</p>
+            {{#if hasWishlist}}
+                <div class="wishList">
+                    {{#each wishlist}}
+                        <div class="wishItem">
+                            <p>{{this}}</p>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <p>You don't have any wishes currently.</p>
+            {{/if}}
             <div class="overlay" id="overlay"></div>
             <div class="wish-form-popup" id="wishformPopup">
                 <h3>Add New Wish</h3>

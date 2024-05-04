@@ -54,6 +54,12 @@ export const sortFigurinesUser = async (username) => {
         if (user.figurineCollection) {
             userCollectionData = user.figurineCollection;
         }
+
+        let wishlist = [];
+        if (user.wishlist) {
+            wishlist = user.wishlist;
+        }
+
         const generalCollection = await sortFigurines(); // Assuming you have a function to get the general collection
         // console.log('collection: ' + JSON.stringify(userCollectionData));
         // console.log('figNamesList: ' + JSON.stringify(figNamesList));
@@ -69,9 +75,11 @@ export const sortFigurinesUser = async (username) => {
                         seriesName: series.seriesName,
                         figurineTypes: series.figurineTypes.map(figurine => {
                             const owned = userCollectionData[name][series.seriesName]?.includes(figurine.modelName) || false; // Check if modelName exists in user's collection
+                            const inWishlist = wishlist?.includes(figurine.modelName) || false;
                             return {
                                 ...figurine,
                                 owned: owned,
+                                inWishlist: inWishlist,
                                 seriesName: series.seriesName
                             }
                         })
@@ -87,6 +95,7 @@ export const sortFigurinesUser = async (username) => {
                         figurineTypes: series.figurineTypes.map(figurine => ({
                             ...figurine,
                             owned: false, // Set owned to false if user's collection for this figurine name does not exist
+                            inWishlist: false,
                             seriesName: series.seriesName
                         }))
                     };
