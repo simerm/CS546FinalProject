@@ -262,7 +262,7 @@ export const registerBusiness = async (
 
 };
 
-const updateProfile = async (username, updateObject) => {
+export const updateProfile = async (username, updateObject) => {
   if (!username || username === undefined) throw 'You must provide an username to search for';
   if (typeof username !== 'string') throw 'username must be a string';
   if (username.trim().length === 0)
@@ -320,7 +320,7 @@ const updateProfile = async (username, updateObject) => {
       throw "must be a string"
     }
     updateObject.favFig = updateObject.favFig.trim()
-    if (updateObject.favFig.length < 2 || updateObject.bio.length > 20) {
+    if (updateObject.favFig.length < 2 || updateObject.favFig.length > 20) {
       throw "must not be empty"
     }
     
