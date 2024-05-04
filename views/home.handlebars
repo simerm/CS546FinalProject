@@ -49,21 +49,13 @@
 
     
         function incrementLikes(postId) {
-        // Get the current like count element
             var likeCountElement = document.getElementById("likeCount-" + postId);
-    
-        // Get the current like count value
             var currentLikes = parseInt(likeCountElement.innerText);
-    
-        // Increment the like count by 1
+            console.log("Current Likes:", currentLikes);
             var newLikes = currentLikes + 1;
-    
-        // Update the like count element with the new value
-            likeCountElement.innerText = newLikes;
-    
-        // You can also send an AJAX request here to update the server with the new like count
-            
-}
+            console.log("New Likes:", newLikes);
+            likeCountElement.innerText = newLikes;    
+        }
 
     </script>
     <style>
