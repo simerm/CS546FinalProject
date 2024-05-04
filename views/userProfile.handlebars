@@ -11,24 +11,81 @@
                 <h2>{{firstName}} {{lastName}}</h2>
                 <div class="locationDiv">
                     <img src="/public/location.png" class="locationPicture">
-                    <p>New York City, USA</p>
+                    {{#if location}}
+                    <p>{{location}}</p>
+                    {{else}}
+                    <p>No location specified</p>
+                    {{/if}}
+                    
                 </div>
 
                 <div class="divider"></div>
-                <p>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <p>Favorite Figurine: Pikachu</p>
-                <div class = "edit">
-                    <button type="submit" class="btn btn-light align-right" id="editProfile" name="editProfile">Edit
+                {{#if bio}}
+                <p>Bio: {{bio}}</p>
+                {{else}}
+                <p>Bio: Add a bio!</p>
+                {{/if}}
+
+                {{#if favFig}}
+                <p>Favorite Figurine: {{favFig}}</p>
+                {{else}}
+                <p>Favorite Figurine: Add a figurine!</p>
+                {{/if}}
+
+                <div class="edit">
+                    <button type="submit" class="btn btn-light align-right" id="editProfileButton"
+                        name="editProfile">Edit
                         Profile</button>
                 </div>
             </div>
 
         </div>
+        <div class="modal" id="editProfileModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                        <button type="button" id="closeEdit" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{#if error}}
+                        <p class="alert alert-danger">{{error}}</p>
+                        {{/if}}
+                        <div class="alert alert-danger" style="display: none" id="clientError"></div>
+                        <form id="editProfile" action="/profile" method="POST">
+                            <div class="form-group">
+                                <label for="first">First Name:</label>
+                                <input class="form-control" type="text" id="first" name="first">
+
+                                <label for="last">Last Name:</label>
+                                <input class="form-control" type="text" id="last" name="last">
+
+                                <label for="location">Location:</label>
+                                <input class="form-control" type="text" id="location" name="location">
+
+                                <label for="bio">Bio:</label>
+                                <textarea class="form-control" rows="5" id="bio" name="bio"></textarea>
+
+                                <label for="favFig">Favorite Figurine:</label>
+                                <input class="form-control" type="text" id="favFig" name="favFig">
+
+
+
+                                <button type="submit" class="btn btn-success" id="submitButton"
+                                    name="submitButton">Submit Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
         <div class="badges">
             <div class="buttontitle">
                 <h2>My Badges</h2>
-                
+
             </div>
 
             <p>You don't have any badges currently.</p>
@@ -57,7 +114,7 @@
                 </form>
                 <div class="closeButton">
 
-                    <button id = "closeButton" class="wishClose" >Close</button>
+                    <button id="closeButton" class="wishClose">Close</button>
                 </div>
 
             </div>

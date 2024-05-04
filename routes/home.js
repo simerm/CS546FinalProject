@@ -2,7 +2,7 @@ import { Router} from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, addCollection, removeCollection } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -34,18 +34,30 @@ router
       if (diff >= 3) {
         eligible = true
       }
+      let exist = false
       try {
-        let exist = await appExists(req.session.user.username)
+        exist = await appExists(req.session.user.username)
+
         if (exist) {
           eligible = false
         }
       } catch (e) {
         res.status(500).json({ error: 'Error: Loading info' })
+      }
+      let location = null
+      let bio = null
+      let favFig = null
 
+      if (req.session.user.location != ""){
+        location = req.session.user.location
+      }
+      if (req.session.user.bio != ""){
+        bio = req.session.user.bio
+      }
+      if (req.session.user.favFig != ""){
+        favFig = req.session.user.favoriteFigurine
       }
 
-      const figurineInfo = await sortFigurinesUser(req.session.user.username);
-      console.log(figurineInfo)
       res.render('userProfile', {
         figurineInfo,
         collectionExists: figurineInfo ? true : false,
@@ -54,8 +66,85 @@ router
         username: req.session.user.username,
         role: req.session.user.role,
         auth: val,
-        eligible: eligible
+        eligible: eligible,
+        location: location,
+        bio: bio,
+        favFig: favFig
       })
+    })
+    .post(async (req, res) => {
+      let { first, last, location, bio, favFig } = req.body;
+      let username = ""
+      if (req.session.user) {
+        username = req.session.user.username
+      }
+  
+      if (!username || typeof username !== 'string' || !isNaN(username)) {
+        return res.status(400).render('userProfile', { error: "Invalid User" });
+      }
+  
+      let update = {}
+  
+      if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0) {
+        return res.status(400).render('userProfile', { error: "Must change a value" });
+      }
+      else {
+        if (first.length != 0 && first.length < 2 || first.length > 25) {
+          return res.status(400).render('userProfile', { error: "Invalid first" });
+        }
+        else if (first.length != 0) {
+          update.first = first
+          req.session.user.firstName = first
+        }
+        if (last.length != 0 && last.length < 2 || last.length > 25) {
+          return res.status(400).render('userProfile', { error: "Invalid last" });
+  
+        }
+        else if (last.length != 0) {
+          update.last = last
+          req.session.user.lastName = last
+        }
+        if (location.length != 0 && location.length < 2 || location.length > 15) {
+          return res.status(400).render('userProfile', { error: "Invalid location" });
+  
+        }
+        else if (location.length != 0){
+          update.location = location
+          req.session.user.location = location
+        }
+        if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
+          return res.status(400).render('userProfile', { error: "Invalid location" });
+        }
+        else if (bio.length != 0){
+          update.bio = bio
+          req.session.user.bio = bio
+        }
+        if (favFig.length != 0 && favFig.length < 2 || favFig.length > 20) {
+          return res.status(400).render('userProfile', { error: "Invalid location" });
+  
+        }
+        else if (favFig.length != 0){
+          update.favFig = favFig
+          req.session.user.favoriteFigurine = favFig
+        }
+  
+      }
+  
+      let bool = true;
+      try {
+        let result = await updateProfile(username, update)
+        bool = result.success
+        if (!bool) {
+          return res.status(400).render('userProfile', { error: "Something went wrong" });
+  
+        }
+        return res.redirect('/profile')
+      } catch (e) {
+        return res.status(500).render('userProfile', { error: e });
+  
+      }
+  
+  
     }),
   router
     .route('/collections')
@@ -433,35 +522,35 @@ router
 
     }),
 
-  router
-    .route('/login')
-    .get(async (req, res) => {
-      res.render("login", { themePreference: 'light' })
-    })
-    .post(async (req, res) => {
-      //code here for POST
-      let { username, password } = req.body;
-      if (!username || !password || !isNaN(username) || !isNaN(password)) {
-        return res.status(400).render('login', { themePreference: 'light', error: "username and password must be provided" });
-      }
-      if (typeof username !== 'string' || typeof password !== 'string') {
-        return res.status(400).render('login', { themePreference: 'light', error: "must provide strings" });
-      }
-      username = username.trim()
-      password = password.trim()
-      if (username.length < 5 || password.length < 8) {
-        return res.status(400).render('login', { themePreference: 'light', error: "invalid length" });
+router
+  .route('/login')
+  .get(async (req, res) => {
+    res.render("login", { themePreference: 'light' })
+  })
+  .post(async (req, res) => {
+    //code here for POST
+    let { username, password } = req.body;
+    if (!username || !password || !isNaN(username) || !isNaN(password)) {
+      return res.status(400).render('login', {  error: "username and password must be provided" });
+    }
+    if (typeof username !== 'string' || typeof password !== 'string') {
+      return res.status(400).render('login', {  error: "must provide strings" });
+    }
+    username = username.trim()
+    password = password.trim()
+    if (username.length < 5 || password.length < 8) {
+      return res.status(400).render('login', {  error: "invalid length" });
 
-      }
-      username = username.toLowerCase()
-      if (username.length > 10) {
-        return res.status(400).render('login', { themePreference: 'light', error: "username too long" });
+    }
+    username = username.toLowerCase()
+    if (username.length > 10) {
+      return res.status(400).render('login', {  error: "username too long" });
 
-      }
-      let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-      for (let x of username) {
-        if (n.includes(x)) {
-          return res.status(400).render('login', { themePreference: 'light', error: "no numbers allowed" });
+    }
+    let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    for (let x of username) {
+      if (n.includes(x)) {
+        return res.status(400).render('login', {  error: "no numbers allowed" });
 
         }
       }
@@ -513,7 +602,15 @@ router
             lastName: user.lastName,
             username: user.username,
             role: user.role,
-            dateCreated: user.dateCreated
+            dateCreated: user.dateCreated,
+            badges: user.badges,
+            wishlist: user.wishlist,
+            favoriteFigurine: user.favoriteFigurine,
+            friends: user.friends,
+            figurineCollection: user.figurineCollection,
+            bio: user.bio,
+            location: user.location,
+            picture: user.picture
           }
         }
         return res.redirect('/profile')
@@ -694,7 +791,6 @@ router
 
     }
   });
-
 
 
 export default router;
