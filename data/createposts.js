@@ -20,6 +20,13 @@ export const createPost = async (
     }
     const post_collection = await posts();
 
+    let isAdminPost;
+    if (user.role === 'admin') {
+        isAdminPost = true;
+    } else {
+        isAdminPost = false;
+    }
+
     let newPost_obj = {
         name: user.username,
         title: postTitle,
@@ -28,7 +35,9 @@ export const createPost = async (
         comments: [],
         likes: 0,
         dislikes:0,
+        isAdminPost: isAdminPost,
         dateAdded: new Date(),
+
     }
     const post_info = await post_collection.insertOne(newPost_obj);
     return post_info;
@@ -44,17 +53,14 @@ export const getAllPosts = async () => {
 
 export const deletePost = async (postId) => {
     const postCollection = await posts();
-    // Check if the post exists
     const post = await postCollection.findOne({ _id: postId });
     if (!post) {
         throw "Post not found";
     }
-    // Delete the post
     const deletionInfo = await postCollection.deleteOne({ _id: postId });
     if (deletionInfo.deletedCount === 0) {
         throw "Failed to delete post";
     }
-
     return { deleted: true };
 }
 
@@ -84,4 +90,3 @@ export const createComment = async (
     const comment_info = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { comments: newComment_obj } });
     return comment_info;
 }
-
