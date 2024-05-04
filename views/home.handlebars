@@ -62,6 +62,7 @@
             likeCountElement.innerText = newLikes;
     
         // You can also send an AJAX request here to update the server with the new like count
+            
 }
 
     </script>
@@ -136,12 +137,12 @@
                             </form>
                         </div>
                         {{!delete button info}}
-                
-                                <form id="delete-{{_id}}" action="/delete" method="POST">
-                                    <input type="hidden" name="postId" value="{{_id}}">
-                                    <button type="submit">Delete</button>
-                                </form>
-
+                       
+                            <form id="delete-{{_id}}" action="/delete" method="POST">
+                                <input type="hidden" name="postId" value="{{_id}}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        
                         {{!end of delete button info}}
                         <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
                     </div>

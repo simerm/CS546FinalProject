@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fileUpload from 'express-fileupload';
 import xss from 'xss';
+import { log } from 'console';
 
 const __filename = fileURLToPath(import.meta.url);
 const thename = dirname(__filename);
@@ -26,7 +27,14 @@ router
   .route('/')
   .get(async (req, res) => {
     const postData = await getAllPosts();
-    res.render('home', {posts: postData});
+    //retrieve logged in user to keep track of posts
+    let currentUser = req.session.user;
+    if (currentUser) {
+      let currentUsername= currentUser.username
+      console.log(currentUsername)
+
+    }
+    res.render('home', {posts: postData, currentUser});
   }),
   router
     .route('/profile')

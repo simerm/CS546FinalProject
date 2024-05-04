@@ -87,6 +87,8 @@ export const registerUser = async (
     throw "role can only be Business or Personal"
   }
 
+
+
   const hash = await bcrypt.hash(password, saltRounds);
   const currentDate = new Date();
 
@@ -201,7 +203,7 @@ export const loginUser = async (username, password) => {
     if (!compare) {
       throw "Either the username or password is invalid"
     }
-    role = "admin"
+    role = "personal"
   }
 
   return {
