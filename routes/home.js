@@ -42,7 +42,10 @@ router
     })
     .post(async (req, res) => {
       let {postTitle, caption} = req.body;
-      let file = req.files.file;
+      let file;
+      if (file != null) {
+        file = req.files.file;
+      }
       if (!postTitle) {
         return res.status(400).render('createpost', { error: 'Must provide a post title' });
       }
