@@ -264,18 +264,35 @@ export const addToStock = async (username, series) => { //function to add stock 
     const bCollection = await store();
     const business = await bCollection.findOne({ username: username });
     if (!business) throw 'Business not found';
-    
-    console.log(series);
-    
+
+    //console.log("made it")
     if (business.figurineStock.includes(series)) {
       return { success: false, message: 'This series already exists in the stock' };
     } else {
-      business.figurineStock.push(series);
       // Update business' document in the collection
-      await bCollection.updateOne({ username: username }, { $set: { figurineStock: series } });
+      //console.log("got to the function")
+      await bCollection.updateOne({ username: username }, { $push: { figurineStock: series } });
       return { success: true, message: 'Series added to your stock', figurineStock: series };
     }
   }catch(e){
     throw 'Error adding to stock!';
+  }
+};
+
+export const removeFromStock = async (username, series) => { //function to remove stock from the business
+  try {
+    const bCollection = await store();
+    const business = await bCollection.findOne({ username: username });
+    if (!business) throw 'Business not found';
+
+    if (!business.figurineStock.includes(series)) {
+      return { success: false, message: 'This series does not exist in the stock' };
+    } else {
+      // Update business' document in the collection
+      await bCollection.updateOne({ username: username }, { $pull: { figurineStock: series } });
+      return { success: true, message: 'Series removed from your stock', figurineStock: series };
+    }
+  } catch (e) {
+    throw 'Error removing from stock!';
   }
 };

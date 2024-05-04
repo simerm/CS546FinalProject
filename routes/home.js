@@ -3,7 +3,7 @@ import { sortFigurines } from '../data/genCollection.js';
 import { grabList } from '../data/companyStock.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, addToStock } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addToStock, removeFromStock } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -531,18 +531,17 @@ router
       let username = req.session.user.username; //username 
       let series = req.params.seriesName //series 
 
-      console.log(series); //testing 
-
       const adding = await addToStock(username, series); //call the function to add in the stock
       
       if (adding.success) {
         console.log('success')
-        //console.log(collection.userCollection)
-        res.status(200).json({ success: true });
-        // need to render the business profile page again after calling to show updated stock?
+        // Send the updated list as JSON
+        res.status(200).json({ success: true, data: adding });
+        // need to render the business profile page again after calling to show updated stock - using ajax
+
       } else {
         console.log('fail')
-        //console.log(collection.message)
+        
         res.status(400).json({ success: false, message: "Error with adding" });
       }
 
@@ -550,6 +549,35 @@ router
       res.status(500).json({ error: e });
     }
 
+  }),
+
+router
+  .route('/removeFromStock/:seriesName')
+  .patch(async (req, res) => {
+    try{ //try to add a series to the company stock
+      //grab all of the necessary parameters for addToStock
+      let username = req.session.user.username; //username 
+      let series = req.params.seriesName //series 
+
+      const removing = await removeFromStock(username, series); //call the function to add in the stock
+      
+      if (removing.success) {
+        console.log('removed')
+        // Send the updated list as JSON
+        res.status(200).json({ success: true, data: removing });
+        // need to render the business profile page again after calling to show updated stock - using ajax
+
+      } else {
+        console.log('fail')
+        
+        res.status(400).json({ success: false, message: "Error with removing" });
+      }
+
+    }catch(e){
+      res.status(500).json({ error: e });
+    }
+
   });
-  
+
+
 export default router;
