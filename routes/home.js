@@ -384,7 +384,7 @@ router
       }
 
 
-    });
+    }),
 
 router
   .route('/login')
@@ -482,7 +482,7 @@ router
 
     }
 
-  });
+  }),
 
 router
   .route('/logout')
@@ -497,13 +497,13 @@ router
     } catch (e) {
       res.status(500).json({error: e});
     }
-  });
+  }),
 
 router
   .route('/business')
   .get(async (req, res) => {
     res.render('business')
-  });
+  }),
 
 router 
   .route('/businessProfile')
@@ -521,12 +521,35 @@ router
       res.status(500).json({error: 'Error while rendering business profile'})
     }
     
-    try{ //try to add a series to the company stock
-      const adding = await addToStock();
-      
-    }catch(e){
-      res.status(400).render('businessProfile', {error: 'Error adding in this figurine to the stock'})
-    }
-  });
+  }),
 
+router
+  .route('/addToStock/:seriesName')
+  .patch(async (req, res) => {
+    try{ //try to add a series to the company stock
+      //grab all of the necessary parameters for addToStock
+      let username = req.session.user.username; //username 
+      let series = req.params.seriesName //series 
+
+      console.log(series); //testing 
+
+      const adding = await addToStock(username, series); //call the function to add in the stock
+      
+      if (adding.success) {
+        console.log('success')
+        //console.log(collection.userCollection)
+        res.status(200).json({ success: true });
+        // need to render the business profile page again after calling to show updated stock?
+      } else {
+        console.log('fail')
+        //console.log(collection.message)
+        res.status(400).json({ success: false, message: "Error with adding" });
+      }
+
+    }catch(e){
+      res.status(500).json({ error: e });
+    }
+
+  });
+  
 export default router;

@@ -35,18 +35,42 @@
         <div class="collection">
             <h2>My Stock</h2>
             {{#each figurineStock}}
-                <option value="{{this}}">{{this}}</option>
+                <p>{{this}}</p>
             {{/each}} <br>
-            <label for="add-stock"><h2>Add Stock</h2></label> <br>
-            <select name="add-stock" id="add-stock">
-                {{#each figList}}
-                    <option value="{{this}}">{{this}}</option>
-                {{/each}}
-            </select>
 
-            <button onclick="addItem()" id="AddButton" name="AddButton">Add to Stock</button>
-            <ul id="itemList"></ul>
+            <form>
+                <label for="add-stock"><h2>Add Stock</h2></label> <br>
+                <select name="add-stock" id="add-stock">
+                    {{#each figList}}
+                        <option value="{{this}}">{{this}}</option>
+                    {{/each}}
+                </select>
+               
+                <button onclick="addToStock()" id="AddButton" name="AddButton">Add to Stock</button>
+            </form>
         </div>
 
     </div> 
 </div>
+
+<script>
+    function addToStock(seriesName) {
+        const selectedOption = document.getElementById('add-stock').value;
+        sendPatchRequest(`/addToStock/${selectedOption}`);
+    }
+
+    function sendPatchRequest(url) {
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any additional headers if needed
+            },
+            // Add any request body if needed
+        }).then(response => {
+            // Handle response
+        }).catch(error => {
+            // Handle error
+        });
+    }
+</script>
