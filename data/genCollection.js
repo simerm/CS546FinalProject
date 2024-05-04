@@ -55,14 +55,14 @@ export const sortFigurinesUser = async (username) => {
             userCollectionData = user.figurineCollection;
         }
         const generalCollection = await sortFigurines(); // Assuming you have a function to get the general collection
-        console.log('collection: ' + JSON.stringify(userCollectionData));
-        console.log('figNamesList: ' + JSON.stringify(figNamesList));
+        // console.log('collection: ' + JSON.stringify(userCollectionData));
+        // console.log('figNamesList: ' + JSON.stringify(figNamesList));
         figNamesList.forEach(name => {
             sorted[name] = []; // Initialize an array for each figurine name
-            console.log('name: ' + JSON.stringify(userCollectionData[name])) // THIS IS PRINTING UNDERFINED FOR SOME REASON
+            // console.log('name: ' + JSON.stringify(userCollectionData[name])) // THIS IS PRINTING UNDERFINED FOR SOME REASON
             if (userCollectionData[name]) {
                 generalCollection[name].forEach(series => {
-                    console.log(userCollectionData[name][series.seriesName])
+                    // console.log(userCollectionData[name][series.seriesName])
                     const seriesData = {
                         figurineName: series.figurineName,
                         seriesId: series.seriesId,
@@ -94,8 +94,8 @@ export const sortFigurinesUser = async (username) => {
                 });
             }
         });
-        console.log('sorted:')
-        console.log(sorted)
+        // console.log('sorted:')
+        // console.log(sorted)
         return sorted;
     } catch (e) {
         console.error(e);

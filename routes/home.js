@@ -530,29 +530,29 @@ router
     .route('/addCollection/:figurineName/:seriesName/:modelName')
     .patch(async (req, res) => {
       try {
-        console.log(req.params.figurineName)
-        console.log(req.params.seriesName)
-        console.log(req.params.modelName)
+            // Retrieve parameters from request
+            let figurineName = req.params.figurineName;
+            let seriesName = req.params.seriesName;
+            let modelName = req.params.modelName;
 
-        let figurineName = req.params.figurineName
-        let seriesName = req.params.seriesName
-        let modelName = req.params.modelName
-        let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName)
+            // Add to collection
+            let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName);
 
-        if (collection.success) {
-          console.log('success')
-          console.log(collection.userCollection)
-          res.status(200).json({ success: true });
-          // need to render the general collection page again after calling sortFigurinesUser to show updated collection
-        } else {
-          console.log('fail')
-          console.log(collection.message)
-          res.status(400).json({ success: false, message: collection.message });
+            if (collection.success) {
+                console.log('success');
+                console.log(collection.userCollection);
+                // Instead of redirecting, send a JSON response with updated collection data
+                res.status(200).json({ success: true, userCollection: collection.userCollection });
+
+            } else {
+                console.log('fail');
+                console.log(collection.message);
+                res.status(400).json({ success: false, message: collection.message });
+            }
+        } catch (e) {
+            console.log(e);
+            res.status(500).json({ error: e });
         }
-      } catch (e) {
-        console.log(e)
-        res.status(500).json({ error: e });
-      }
     }),
 
   router

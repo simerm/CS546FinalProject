@@ -140,13 +140,22 @@
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
-                // Add any additional headers if needed
             },
-            // Add any request body if needed
-        }).then(response => {
-            // Handle response
-        }).catch(error => {
-            // Handle error
+        })
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => {
+            // Check if the operation was successful
+            if (data.success) {
+                // Reload the page using AJAX
+                location.reload();
+            } else {
+                // Handle the case where the operation failed
+                console.error(data.message);
+            }
+        })
+        .catch(error => {
+            // Handle fetch errors
+            console.error('Error:', error);
         });
     }
 </script>
