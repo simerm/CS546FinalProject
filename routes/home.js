@@ -410,8 +410,7 @@ router
         bool = result.signupCompleted
         
         if (bool) {
-          return res.redirect('businessProfile');
-
+          return res.redirect('/login');
         }
       } catch (e) {
         return res.status(400).render('businessRegister', { error: e });

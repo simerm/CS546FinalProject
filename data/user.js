@@ -240,7 +240,7 @@ export const registerBusiness = async (
   const c = await storeCollection.findOne({ businessId: id });
   if (c) throw 'business id already exists';
 
-  role = "business"
+  let role = "business"
   
   const hash = await bcrypt.hash(password, saltRounds);
 
