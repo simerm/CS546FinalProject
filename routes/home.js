@@ -2,7 +2,7 @@ import { Router} from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, addCollection, removeCollection, addWishlist, removeWishlist } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection, removeCollection, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -45,14 +45,12 @@ router
       }
 
       const figurineInfo = await sortFigurinesUser(req.session.user.username);
+      const wishlist = await getWishlist(req.session.user.username);
+
       let hasBadges = false;
       let hasWishlist = false;
-      
-      if (req.session.user.badges) {
-        hasBadges = true;
-      }
 
-      if (req.session.user.wishlist) {
+      if (wishlist.wishlist && wishlist.wishlist.length > 0) {
         hasWishlist = true;
       }
 
@@ -69,7 +67,7 @@ router
         hasBadges: hasBadges,
         badges: req.session.user.badges,
         hasWishlist: hasWishlist,
-        wishlist: req.session.user.wishlist
+        wishlist: wishlist.wishlist
       })
     }),
   router

@@ -353,3 +353,19 @@ export const removeWishlist = async (username, figurineName, seriesName, modelNa
     return { success: false, message: error }; // Return error message
   }
 };
+
+export const getWishlist = async (username) => {
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.wishlist) {
+      return { success: true, message: 'Wishlist is empty' };
+    }
+
+    return { success: true, wishlist: user.wishlist };
+  } catch (e) {
+    return { success: false, message: error }; // Return error message
+  }
+}

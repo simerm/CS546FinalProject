@@ -43,11 +43,11 @@
             </div>
             {{#if hasWishlist}}
                 <div class="wishList">
-                    {{#each wishlist}}
-                        <div class="wishItem">
-                            <p>{{this}}</p>
-                        </div>
-                    {{/each}}
+                    <ul class="list-group">
+                        {{#each wishlist}}
+                            <li class="list-group-item wishItem">{{this}}</li>
+                        {{/each}}
+                    </ul>
                 </div>
             {{else}}
                 <p>You don't have any wishes currently.</p>
@@ -130,7 +130,7 @@
                 {{#if collectionExists}}
                     {{#each figurineInfo}}
                         {{#each this}}
-                            <h3>{{this.seriesName}} Series</h3>
+                        <br></br>
                             <div class="row row-cols-2 row-cols-md-5 g-4">
                                 {{#each this.figurineTypes}}
                                     {{#if owned}}
