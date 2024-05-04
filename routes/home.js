@@ -1,9 +1,10 @@
 import {Router} from 'express';
+import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
 import { sortFigurines } from '../data/genCollection.js';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
-import { createPost, getAllPosts, createComment } from '../data/createposts.js';
+import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
@@ -67,6 +68,23 @@ router
     }
     return res.redirect('/');
     }),
+  router
+  .route('/delete')
+  .post(async (req, res) => {
+    try {
+      let postId = req.body.postId;
+      postId = new ObjectId(postId);
+      // Call the deletePost function passing postId
+      const deleted = await deletePost(postId);
+      if (!deleted) {
+        res.status(404).json({ error: 'Post not found' });
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    return res.redirect('/');
+  }),
 
 
   router
