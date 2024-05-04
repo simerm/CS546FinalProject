@@ -59,6 +59,8 @@ router
         favFig = req.session.user.favoriteFigurine
       }
 
+      const figurineInfo = await sortFigurinesUser(req.session.user.username);
+
       res.render('userProfile', {
         figurineInfo,
         collectionExists: figurineInfo ? true : false,
@@ -742,7 +744,7 @@ router
 
             if (collection.success) {
                 console.log('success');
-                console.log(collection.userCollection);
+                // console.log(collection.userCollection);
                 // Instead of redirecting, send a JSON response with updated collection data
                 res.status(200).json({ success: true, userCollection: collection.userCollection });
 
@@ -772,7 +774,7 @@ router
 
         if (collection.success) {
           console.log('success')
-          console.log(collection.userCollection)
+          // console.log(collection.userCollection)
           res.status(200).json({ success: true });
           // need to render the general collection page again after calling sortFigurinesUser to show updated collection
         } else {
