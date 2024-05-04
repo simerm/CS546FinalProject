@@ -11,6 +11,7 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fileUpload from 'express-fileupload';
+import xss from 'xss';
 
 const __filename = fileURLToPath(import.meta.url);
 const thename = dirname(__filename);
@@ -43,6 +44,9 @@ router
     })
     .post(async (req, res) => {
       let {postTitle, caption} = req.body;
+      //xss stuff
+      postTitle=xss(postTitle);
+      caption= xss(caption);
       let file;
       if (file != null) {
         file = req.files.file;
@@ -82,6 +86,7 @@ router
     return res.redirect('/');
   }),
 
+
   router
   .route('/comments')
   .post(async (req, res) =>  {
@@ -89,6 +94,7 @@ router
       return res.redirect('/login');
     }
     let {postId, commentInput} = req.body;
+    commentInput=xss(commentInput);
     let comment = await createComment(commentInput, req.session.user, postId);
     if (!comment) {
       return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
@@ -114,6 +120,14 @@ router
     })
     .post(async (req, res) => {
       let { name, phoneNumber, id, street, city, state, zipcode, username, password, confirmPassword } = req.body;
+      name = xss(name);
+      street = xss(street);
+      city = xss(city);
+      state = xss(state);
+      zipcode = xss(zipcode);
+      username = xss(username);
+      password = xss(password);
+      confirmPassword = xss(confirmPassword);
       let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
       if (!id) {
@@ -357,6 +371,11 @@ router
       //code here for POST
       let { firstName, lastName, username, password, confirmPassword } = req.body;
       let role = "personal"
+      firstName= xss(firstName);
+      lastName= xss(lastName);
+      username=xss(username)
+      password= xss(password);
+      confirmPassword=xss(confirmPassword);
       if (!firstName || !lastName || !username || !confirmPassword || !password || !role) {
         return res.status(400).render('register', { error: 'Must have all fields' });
       }
@@ -461,6 +480,8 @@ router
   .post(async (req, res) => {
     //code here for POST
     let { username, password } = req.body;
+    username=xss(username);
+    password=xss(password);
     if (!username || !password || !isNaN(username) || !isNaN(password)) {
       return res.status(400).render('login', { themePreference: 'light', error: "username and password must be provided" });
     }

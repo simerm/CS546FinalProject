@@ -27,14 +27,31 @@ app.use(session({
 }))
 app.use('/public', express.static('public'));
 //set current user
-const setCurrentUser = (req, res, next) => {
-  if (req.session.user) {
-    res.locals.currentUser = req.session.user;
-    //console.log("Current user:", req.session.user.username);
-  }
-  next();
-};
+// const setCurrentUser = (req, res, next) => {
+//   if (req.session.user) {
+//     res.locals.currentUser = req.session.user;
+//     //console.log("Current user:", req.session.user.username);
+//   }
+//   next();
+// };
 // Define route for deleting a post
+// app.post('/delete', async (req, res) => {
+//   try {
+//     let {postId} = req.body;
+//     // const postId = req.params.postId;
+//     console.log(postId);
+//     // Call the deletePost function passing postId
+//     const deleted = await deletePost(postId);
+//     if (deleted) {
+//       res.status(200).json({ message: 'Post deleted successfully' });
+//     } else {
+//       res.status(404).json({ error: 'Post not found' });
+//     }
+//   } catch (error) {
+//     console.error('Error deleting post:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
 // app.post('/delete', async (req, res) => {
 //   try {
 //     const postId = req.params.postId;
