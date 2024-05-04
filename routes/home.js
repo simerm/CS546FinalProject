@@ -23,8 +23,6 @@ app.set('views', 'views');
 router
   .route('/')
   .get(async (req, res) => {
-    const userData = await users();
-
     const postData = await getAllPosts();
     res.render('home', {posts: postData});
   }),

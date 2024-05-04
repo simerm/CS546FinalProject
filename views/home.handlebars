@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feed</title>
+<title>Feed</title>
     <script>
         function toggleLikesAndDislikes(postId) {
             var likesAndDislikes = document.getElementById("likes-" + postId);
@@ -16,17 +11,42 @@
         }
 
         function searchFriend() {
-            var searchInput = document.getElementById("searchfriend").value.toLowerCase();
+            var searchInput = document.getElementById("searchfriend");
+            var searchValue = searchInput.value.toLowerCase();
             var posts = document.querySelectorAll(".postDetails");
+            var seeAllButton = document.getElementById("seeAllButton");
+
+            var anyMatch = false; // Flag to check if any post matches the search
 
             posts.forEach(function(post) {
                 var name = post.querySelector(".name").innerText.toLowerCase();
-                if (name.includes(searchInput)) {
+                if (name.includes(searchValue)) {
                     post.style.display = "block";
+                    anyMatch = true; // At least one match found
                 } else {
                     post.style.display = "none";
                 }
             });
+
+            // Show/hide "See All Posts" button based on search result
+            if (anyMatch) {
+                seeAllButton.style.display = "inline-block"; // Show "See All Posts" button
+            } else {
+                seeAllButton.style.display = "none"; // Hide "See All Posts" button
+            }
+
+            // Clear the search input box
+            searchInput.value = "";
+        }
+
+        function seeAllPosts() {
+            var posts = document.querySelectorAll(".postDetails");
+            var seeAllButton = document.getElementById("seeAllButton");
+
+            posts.forEach(function(post) {
+                post.style.display = "block";
+            });
+            seeAllButton.style.display = "none"; // Hide "See All Posts" button
         }
     </script>
     <style>
@@ -47,18 +67,22 @@
         <p class="error">{{error}}</p>
         {{/if}}
         <div class="clientError" id="clientError"></div>
-        <a href="/createpost">Create Post</a>
+        <form id="createpost" action="/createpost" method="GET"><button id="createpost">Create Post</button></form>
         <div>
-            <label for="searchfriend">Search for a Friend:</label>
+            <label for="searchfriend">Search for User:</label>
             <input type="text" id="searchfriend" name="searchfriend">
             <button onclick="searchFriend()">Search</button>
+            <button id="seeAllButton" onclick="seeAllPosts()" style="display: none;">See All Posts</button>
         </div>
         <div class="display">
             <div class="post">
                 <div class="right">
                     {{#each posts}}
                     <div class="postDetails">
-                        <p class="name"><b>{{name}}</b></p>
+                        <p class="name"><b>{{name}}</b>
+                        {{#if isAdmin}}
+                            <span class="admin-icon">Admin Icon</span>
+                        {{/if}}</p>
                         <h2>{{title}}</h2>
                         <div class="postDiv">
                             <p>{{caption}}</p>
@@ -85,9 +109,9 @@
                         <div class="commentBox">
                             <form id="comments-{{_id}}" action="/comments" method="POST">
                                 <input type="hidden" name="postId" value="{{_id}}">
-                                <label for="commentInput">Add a Comment:</label>
+                                <label for="commentInput">Add Comment:</label>
                                 <input type="text" id="commentInput" name="commentInput" data-post-id="{{_id}}">
-                                <button class="add-comment-btn">Add Comment</button>
+                                <button class="add-comment-btn">Add</button>
                             </form>
                         </div>
                         <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
@@ -99,8 +123,6 @@
     </div>
 </body>
 </html>
-
-
 
 
 {{!-- <!DOCTYPE html>

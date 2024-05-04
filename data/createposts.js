@@ -28,7 +28,7 @@ export const createPost = async (
         comments: [],
         likes: 0,
         dislikes:0,
-        dateAdded: new Date()
+        dateAdded: new Date(),
     }
     const post_info = await post_collection.insertOne(newPost_obj);
     return post_info;

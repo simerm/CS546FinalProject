@@ -194,7 +194,6 @@ export const loginUser = async (username, password) => {
       username: username,
       figurineStock: b.figurineStock,
       role: role
-
     }
   }
   else if (u) {
