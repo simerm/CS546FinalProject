@@ -13,6 +13,7 @@ import { dirname } from 'path';
 import fileUpload from 'express-fileupload';
 import xss from 'xss';
 import { log } from 'console';
+import Handlebars from 'handlebars';
 
 const __filename = fileURLToPath(import.meta.url);
 const thename = dirname(__filename);
@@ -23,18 +24,25 @@ app.use(fileUpload());
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+Handlebars.registerHelper('equals', function() {
+  var args = [].slice.apply(arguments);
+  if (args[0] === args[1]) {
+      return true;
+  }
+  return false;
+});
+
 router
   .route('/')
   .get(async (req, res) => {
     const postData = await getAllPosts();
     //retrieve logged in user to keep track of posts
     let currentUser = req.session.user;
+    let currentUsername;
     if (currentUser) {
-      let currentUsername= currentUser.username
-      console.log(currentUsername)
-
+      currentUsername= currentUser.username;
     }
-    res.render('home', {posts: postData, currentUser});
+    res.render('home', {posts: postData, c_usr: currentUsername});
   }),
   router
     .route('/profile')
