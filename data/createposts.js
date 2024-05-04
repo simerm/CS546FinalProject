@@ -44,7 +44,6 @@ export const getAllPosts = async () => {
 
 export const deletePost = async (postId) => {
     const postCollection = await posts();
-
     // Check if the post exists
     const post = await postCollection.findOne({ _id: postId });
     if (!post) {

@@ -113,7 +113,7 @@
                         </div>
                         {{!delete button info}}
                 
-                                <form action="/delete" method="POST">
+                                <form id="delete-{{_id}}" action="/delete" method="POST">
                                     <input type="hidden" name="postId" value="{{_id}}">
                                     <button type="submit">Delete</button>
                                 </form>

@@ -35,23 +35,22 @@ const setCurrentUser = (req, res, next) => {
   next();
 };
 // Define route for deleting a post
-app.post('/delete', async (req, res) => {
-  try {
-    let {postId} = req.body;
-    // const postId = req.params.postId;
-    console.log(postId);
-    // Call the deletePost function passing postId
-    const deleted = await deletePost(postId);
-    if (deleted) {
-      res.status(200).json({ message: 'Post deleted successfully' });
-    } else {
-      res.status(404).json({ error: 'Post not found' });
-    }
-  } catch (error) {
-    console.error('Error deleting post:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+// app.post('/delete', async (req, res) => {
+//   try {
+//     const postId = req.params.postId;
+//     // Call the deletePost function passing postId
+//     const deleted = await deletePost(postId);
+//     if (deleted) {
+//       res.status(200).json({ message: 'Post deleted successfully' });
+//     } else {
+//       res.status(404).json({ error: 'Post did not delete successfully' });
+//     }
+//   } catch (error) {
+//     console.error('Error deleting post:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+//   return res.redirect('/');
+// });
 
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
@@ -136,32 +135,6 @@ app.use(rewriteUnsupportedBrowserMethods);
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-//upload stuff
-// app.get('/', (req, res) => {
-//   res.render("uploadForm");
-// });
-
-// app.get('/upload', (req, res) => {
-//   if (!req.session.user) {
-//     return res.redirect('/login');
-//   }
-//   res.render('createPost');
-// });
-
-
-// app.post('/upload', (req, res) => {
-//   if (!req.files) {
-//     return res.status(400).send('No files were uploaded');
-//   }
-//   let sampleFile = req.files.sampleFile;
-//   let uploadPath = thename + '/uploads/' + sampleFile.name;
-//   sampleFile.mv(uploadPath, function (err) {
-//     if (err) {
-//       return res.status(500).send(err);
-//     }
-//   res.render('home');
-//   });
-// });
 
 configRoutes(app);
 
