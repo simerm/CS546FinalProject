@@ -45,9 +45,11 @@ router
 
       }
 
-
-
+      const figurineInfo = await sortFigurinesUser(req.session.user.username);
+      console.log(figurineInfo)
       res.render('userProfile', {
+        figurineInfo,
+        collectionExists: figurineInfo ? true : false,
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
         username: req.session.user.username,
@@ -685,7 +687,7 @@ router
         console.log(e)
         res.status(500).json({ error: e });
       }
-    });
+    }),
 
 
 router
@@ -766,8 +768,6 @@ router
       return res.status(500).render('userProfile', { error: e });
 
     }
-
-
   });
 
 
