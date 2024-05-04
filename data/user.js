@@ -52,8 +52,8 @@ export const registerUser = async (
     }
   }
 
-  if (username.length > 10) {
-    throw "username can't be more than 10 characters"
+  if (username.length > 20) {
+    throw "username can't be more than 20 characters"
   }
   const userCollection = await users();
   username = username.toLowerCase()
