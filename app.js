@@ -124,8 +124,6 @@ const requireLogout = (req, res, next) => {
     next();
   }
 };
-//set current user for delete button
-app.use(setCurrentUser);
 app.use("/login", redirectAuthenticated);
 app.use("/register", redirectAuthenticatedForRegister);
 app.use("/profile", requireAuthentication);

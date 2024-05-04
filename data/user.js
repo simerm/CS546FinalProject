@@ -201,7 +201,7 @@ export const loginUser = async (username, password) => {
     if (!compare) {
       throw "Either the username or password is invalid"
     }
-    role = "admin"
+    role = "personal"
   }
 
   return {
