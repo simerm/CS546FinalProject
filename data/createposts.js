@@ -49,7 +49,6 @@ export const deletePost = async (postId) => {
     if (!post) {
         throw "Post not found";
     }
-
     // Delete the post
     const deletionInfo = await postCollection.deleteOne({ _id: postId });
     if (deletionInfo.deletedCount === 0) {
