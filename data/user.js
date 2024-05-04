@@ -104,7 +104,10 @@ export const registerUser = async (
     favoriteFigurine: "",
     dateCreated: date,
     friends: [],
-    figurineCollection: {}
+    figurineCollection: {},
+    bio: "",
+    location: "",
+    picture: ""
     // { sample object
     // Smiski: {
     //   series1: ["lounging figure", "sleeping figure"],
@@ -214,7 +217,10 @@ export const loginUser = async (username, password) => {
     favoriteFigurine: u.favoriteFigurine,
     dateCreated: u.dateCreated,
     friends: u.friends,
-    figurineCollection: u.figurineCollection
+    figurineCollection: u.figurineCollection,
+    bio: u.bio,
+    location: u.location,
+    picture: u.picture
   }
 
 };
@@ -255,3 +261,133 @@ export const registerBusiness = async (
   return { signupCompleted: true }
 
 };
+
+const updateProfile = async (username, updateObject) => {
+  if (!username || username === undefined) throw 'You must provide an username to search for';
+  if (typeof username !== 'string') throw 'username must be a string';
+  if (username.trim().length === 0)
+    throw 'username cannot be an empty string or just spaces';
+    username = username.trim();
+  const userCollection = await users()
+  const oldUser = await userCollection.findOne(
+    { 'username': username },
+  )
+  if (oldUser === null) throw 'No review with that id';
+  let theUser = null;
+
+  if (updateObject.hasOwnProperty("first")) {
+    if (typeof updateObject.first !== 'string') {
+      throw "must be a string"
+    }
+    updateObject.first = updateObject.first.trim()
+    if (updateObject.first.length < 2 || updateObject.first.length > 25) {
+      throw "must not be empty"
+    }
+    
+  }
+  if (updateObject.hasOwnProperty("last")) {
+    if (typeof updateObject.last !== 'string') {
+      throw "must be a string"
+    }
+    updateObject.last = updateObject.last.trim()
+    if (updateObject.last.length < 2 || updateObject.last.length > 25) {
+      throw "must not be empty"
+    }
+   
+  }
+  if (updateObject.hasOwnProperty("location")) {
+    if (typeof updateObject.location !== 'string') {
+      throw "must be a string"
+    }
+    updateObject.location = updateObject.location.trim()
+    if (updateObject.location.length < 1 || updateObject.location.length > 15) {
+      throw "Invalid size"
+    }
+    
+  }
+  if (updateObject.hasOwnProperty("bio")) {
+    if (typeof updateObject.bio !== 'string') {
+      throw "must be a string"
+    }
+    updateObject.bio = updateObject.bio.trim()
+    if (updateObject.bio.length < 5 || updateObject.bio.length > 50) {
+      throw "must not be empty"
+    }
+    
+  }
+  if (updateObject.hasOwnProperty("favFig")) {
+    if (typeof updateObject.favFig !== 'string') {
+      throw "must be a string"
+    }
+    updateObject.favFig = updateObject.favFig.trim()
+    if (updateObject.favFig.length < 2 || updateObject.bio.length > 20) {
+      throw "must not be empty"
+    }
+    
+  }
+  if (updateObject.hasOwnProperty("picture")) {
+    
+    picture.favFig = picture.favFig.trim()
+    
+    
+  }
+  
+  if (updateObject.hasOwnProperty("first")) {
+    
+    theUser = await userCollection.findOneAndUpdate(
+      { 'username': username },
+      { $set: { 'firstName': updateObject.first } },
+      { returnDocument: 'after' }
+    )
+  }
+  if (updateObject.hasOwnProperty("last")) {
+    
+    theUser = await userCollection.findOneAndUpdate(
+      { 'username': username },
+      { $set: { 'lastName': updateObject.last } },
+      { returnDocument: 'after' }
+    )
+  }
+  if (updateObject.hasOwnProperty("location")) {
+    
+    theUser = await userCollection.findOneAndUpdate(
+      { 'username': username },
+      { $set: { 'location': updateObject.location } },
+      { returnDocument: 'after' }
+    )
+  }
+
+  if (updateObject.hasOwnProperty("bio")) {
+    
+    theUser = await userCollection.findOneAndUpdate(
+      { 'username': username },
+      { $set: { 'bio': updateObject.bio } },
+      { returnDocument: 'after' }
+    )
+  }
+
+  if (updateObject.hasOwnProperty("favFig")) {
+    
+    theUser = await userCollection.findOneAndUpdate(
+      { 'username': username },
+      { $set: { 'favoriteFigurine': updateObject.favFig } },
+      { returnDocument: 'after' }
+    )
+  }
+
+
+  if (updateObject.hasOwnProperty("picture")) {
+    
+    theUser = await userCollection.findOneAndUpdate(
+      { 'username': username },
+      { $set: { 'picture': updateObject.picture } },
+      { returnDocument: 'after' }
+    )
+  }
+  
+  
+  return {success: true}
+ 
+};
+
+

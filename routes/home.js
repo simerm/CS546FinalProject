@@ -34,7 +34,6 @@ router
       if (diff >= 3) {
         eligible = true
       }
-      console.log(diff)
       let exist = false
       try {
         exist = await appExists(req.session.user.username)
@@ -61,7 +60,6 @@ router
       try {
         const figurineInfo = await sortFigurines();
         if (req.session.user) {
-          console.log('logged in')
           res.render('generalCollection', { figurineInfo, loggedIn: true, auth: true }) // trying to make this work
         } else {
           res.render('generalCollection', { figurineInfo, auth: false })
@@ -503,7 +501,15 @@ router
             lastName: user.lastName,
             username: user.username,
             role: user.role,
-            dateCreated: user.dateCreated
+            dateCreated: user.dateCreated,
+            badges: user.badges,
+            wishlist: user.wishlist,
+            favoriteFigurine: user.favoriteFigurine,
+            friends: user.friends,
+            figurineCollection: user.figurineCollection,
+            bio: user.bio,
+            location: user.location,
+            picture: user.picture
           }
         }
         return res.redirect('/profile')
