@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { posts } from '../config/mongoCollections.js';
 
 export const createPost = async (
@@ -79,10 +80,9 @@ export const createComment = async (
     let newComment_obj = {
         comment: comment,
         user: user.username,
-        likes: 0,
-        dislikes: 0,
-        date: new Date()
+        dateAdded: new Date()
     }
-    const post_info = await post_collection.insertOne(newPost_obj);
-    return post_info;
+    postId = new ObjectId(postId);
+    const comment_info = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { comments: newComment_obj } });
+    return comment_info;
 }

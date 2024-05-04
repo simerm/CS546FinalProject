@@ -426,5 +426,10 @@ h1 {
     padding-top: 10px; /* Added padding for spacing */
 }
 
+.comments-hidden #comments {
+    display: none;
+}
+
+
 
 
