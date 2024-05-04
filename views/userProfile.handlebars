@@ -98,9 +98,17 @@
                 <h2>My Wishlist</h2>
                 <button class="addWish" id="addWish">Add Wish</button>
             </div>
-
-
-            <p>You don't have any wishes currently.</p>
+            {{#if hasWishlist}}
+                <div class="wishList">
+                    <ul class="list-group">
+                        {{#each wishlist}}
+                            <li class="list-group-item wishItem">{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{else}}
+                <p>You don't have any wishes currently.</p>
+            {{/if}}
             <div class="overlay" id="overlay"></div>
             <div class="wish-form-popup" id="wishformPopup">
                 <h3>Add New Wish</h3>
@@ -180,7 +188,7 @@
                 {{#if collectionExists}}
                     {{#each figurineInfo}}
                         {{#each this}}
-                                <h5> </h5>
+                        <br></br>
                             <div class="row row-cols-2 row-cols-md-5 g-4">
                                 {{#each this.figurineTypes}}
                                     {{#if owned}}
@@ -198,6 +206,7 @@
                                                             <h5 class="card-title">{{this.modelName}}</h5>
                                                         </div>
                                                         <ul class="list-group list-group-flush">
+                                                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}} Series</span></li>
                                                             <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
                                                         </ul>
                                                     {{else}}
@@ -207,6 +216,7 @@
                                                             <h5 class="card-title">{{this.modelName}}</h5>
                                                         </div>
                                                         <ul class="list-group list-group-flush">
+                                                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}} Series</span></li>
                                                             <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
                                                         </ul>
                                                     {{/if}}

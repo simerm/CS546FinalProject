@@ -335,7 +335,7 @@ export const series = [
                 "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_03.png"
             },
             {
-                "modelName": "Vela'zquez",
+                "modelName": "Velazquez",
                 "rare": false,
                 "image_url": "https://smiski.com/e/wp-content/uploads/2020/12/img_museum_products_04.png"
             },
