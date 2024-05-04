@@ -85,3 +85,26 @@ export const createComment = async (
     return comment_info;
 }
 
+//likes and dislikes (chat the logic seems right but why is it not working)
+// export const incrementLikes = async (postId) => {
+//     try {
+//         const post_collection = await posts();
+//         postId = new ObjectId(postId);
+//         await post_collection.updateOne({ _id: postId }, { $inc: { likes: 1 } });
+//     } catch (error) {
+//         console.error("Error incrementing likes:", error);
+//         // Handle the error as needed, maybe show a message to the user
+//     }
+// }
+
+// export const incrementDislikes = async (postId) => {
+//     try {
+//         const post_collection = await posts();
+//         postId = new ObjectId(postId);
+//         await post_collection.updateOne({ _id: postId }, { $inc: { dislikes: 1 } });
+//     } catch (error) {
+//         console.error("Error incrementing dislikes:", error);
+//         // Handle the error as needed, maybe show a message to the user
+//     }
+// }
+
