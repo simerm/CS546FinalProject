@@ -80,7 +80,8 @@ export const createComment = async (
         comment: comment,
         user: user.username,
         likes: 0,
-        dislikes: 0
+        dislikes: 0,
+        date: new Date()
     }
     const post_info = await post_collection.insertOne(newPost_obj);
     return post_info;
