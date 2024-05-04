@@ -58,7 +58,8 @@ router
       if (req.session.user.favFig != ""){
         favFig = req.session.user.favoriteFigurine
       }
-
+      let figurineInfo = await sortFigurinesUser(req.session.user.username);
+      console.log(figurineInfo)
       res.render('userProfile', {
         figurineInfo,
         collectionExists: figurineInfo ? true : false,
