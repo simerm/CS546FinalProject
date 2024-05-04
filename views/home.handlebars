@@ -1,62 +1,107 @@
-<div class="navbar">
-    <a href="/">Home</a>
-    <a href="/collections">Collections</a>
-    <a href="/profile">My Profile</a>
-</div>
-<div class="body">
-    <h1>Feed</h1>
-    {{#if error}}
-    <p class="error">{{error}}</p>
-    {{/if}}
-    <div class="clientError" id="clientError"></div>
-    <a href="/createpost">Create Post</a>
-    <div class="display">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed</title>
+    <script>
+        function toggleLikesAndDislikes(postId) {
+            var likesAndDislikes = document.getElementById("likes-" + postId);
+            likesAndDislikes.classList.toggle("hidden");
+        }
+
+        function toggleComments(postId) {
+            var commentsSection = document.getElementById("comments-" + postId);
+            commentsSection.classList.toggle("hidden");
+        }
+
+        function searchFriend() {
+            var searchInput = document.getElementById("searchfriend").value.toLowerCase();
+            var posts = document.querySelectorAll(".postDetails");
+
+            posts.forEach(function(post) {
+                var name = post.querySelector(".name").innerText.toLowerCase();
+                if (name.includes(searchInput)) {
+                    post.style.display = "block";
+                } else {
+                    post.style.display = "none";
+                }
+            });
+        }
+    </script>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/collections">Collections</a>
+        <a href="/profile">My Profile</a>
+    </div>
+    <div class="body">
+        <h1>Feed</h1>
+        {{#if error}}
+        <p class="error">{{error}}</p>
+        {{/if}}
+        <div class="clientError" id="clientError"></div>
+        <a href="/createpost">Create Post</a>
         <div>
             <label for="searchfriend">Search for a Friend:</label>
             <input type="text" id="searchfriend" name="searchfriend">
+            <button onclick="searchFriend()">Search</button>
         </div>
-        <div class="post">
+        <div class="display">
+            <div class="post">
                 <div class="right">
-    {{#each posts}}
-    <div class="postDetails">
-        <p>{{name}}</p>
-        <h2>{{title}}</h2>
-    <div class="postDiv">
-        <p>{{caption}}</p>
-        <img src="/public/mockpost.jpg" class="postPicture">
-        <img src="mockpost.jpg" class="postPicture"> {{!idk what to put in here for the photo}}
-    </div>
-        <div class="divider"></div>
-        <div class="button-group">
-                        <button class="thumbsUp">👍</button>
-                        <button class="thumbsDown">👎</button>
-                        <button class="hide-up-down-btn">Hide Likes and Dislikes</button>
-        </div>
-        <div class="previous-comments">
-            <h2>Previous Comments</h2>
-    <ul>
-            {{#each comments}}
-            <li>{{user}}</li>
-            <li>{{comment}}</li>
-            <li>{{likes}}</li>
-            <li>{{dislikes}}</li>
-            {{/each}}
-    </ul>
-    </div>
-    <div class="commentBox">
-        <label for="commentInput">Add a comment:</label>
-        <input type="text" id="commentInput" name="commentInput" data-post-id="{{_id}}">
-        <button class = "add-comment-btn"> Add Comment</button>
-    </div>
-    <button class="hide-comments-btn">Hide comments</button>
-</div>
-{{/each}}
-
+                    {{#each posts}}
+                    <div class="postDetails">
+                        <p class="name"><b>{{name}}</b></p>
+                        <h2>{{title}}</h2>
+                        <div class="postDiv">
+                            <p>{{caption}}</p>
+                            <img src="/public/mockpost.jpg" class="postPicture">
+                        </div>
+                        <div class="divider"></div>
+                        <div class="button-group">
+                            <form id="likes-{{_id}}">
+                                <button class="thumbsUp">👍</button>
+                                <button class="thumbsDown">👎</button>
+                                <p><b>Likes: </b>{{likes}} <b>Dislikes: </b>{{dislikes}}</p>
+                            </form>
+                            <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-up-down-btn">Hide/Show Likes and Dislikes</button>
+                        </div>
+                        <div class="previous-comments" id="comments-{{_id}}">
+                            <h2>Comments</h2>
+                            <ul>
+                                {{#each comments}}
+                                    <p><b>{{user}}</b></p>
+                                    <p>{{comment}}</p>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="commentBox">
+                            <form id="comments-{{_id}}" action="/comments" method="POST">
+                                <input type="hidden" name="postId" value="{{_id}}">
+                                <label for="commentInput">Add a Comment:</label>
+                                <input type="text" id="commentInput" name="commentInput" data-post-id="{{_id}}">
+                                <button class="add-comment-btn">Add Comment</button>
+                            </form>
+                        </div>
+                        <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
+                    </div>
+                    {{/each}}
                 </div>
             </div>
         </div>
     </div>
-</div>
+</body>
+</html>
+
+
+
 
 {{!-- <!DOCTYPE html>
 <html>

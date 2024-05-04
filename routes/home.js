@@ -3,7 +3,7 @@ import { users } from '../config/mongoCollections.js';
 import { sortFigurines } from '../data/genCollection.js';
 const router = Router();
 import { loginUser, registerUser, registerBusiness } from '../data/user.js';
-import { createPost, getAllPosts } from '../data/createposts.js';
+import { createPost, getAllPosts, createComment } from '../data/createposts.js';
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
@@ -62,6 +62,19 @@ router
     }
     return res.redirect('/');
     }),
+  router
+  .route('/comments')
+  .post(async (req, res) =>  {
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
+    let {postId, commentInput} = req.body;
+    let comment = await createComment(commentInput, req.session.user, postId);
+    if (!comment) {
+      return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
   router
   .route('/collections')
   .get(async (req, res) => {
