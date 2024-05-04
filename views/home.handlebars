@@ -98,7 +98,6 @@
                             <img src="/public/mockpost.jpg" class="postPicture">
                         </div>
                         <div class="divider"></div>
-                        {{!likes and dislikes}}
                         <div class="button-group">
                             <form id="likes-{{_id}}">
                                 <button class="thumbsUp" onclick="incrementLikes('{{_id}}')">👍</button>
@@ -127,14 +126,12 @@
                                 <button class="add-comment-btn">Add</button>
                             </form>
                         </div>
-                        {{!delete button info}}
-                       
+                            {{#if (equals ../c_usr name)}}
                             <form id="delete-{{_id}}" action="/delete" method="POST">
                                 <input type="hidden" name="postId" value="{{_id}}">
                                 <button type="submit">Delete</button>
                             </form>
-                        
-                        {{!end of delete button info}}
+                            {{/if}}
                         <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
                     </div>
                     {{/each}}
