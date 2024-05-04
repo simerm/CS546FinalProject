@@ -86,3 +86,4 @@ export const createComment = async (
     const comment_info = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { comments: newComment_obj } });
     return comment_info;
 }
+

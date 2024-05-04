@@ -5,6 +5,8 @@ import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import fileUpload from 'express-fileupload';
 
+import { deletePost } from './data/createposts.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const thename = dirname(__filename);
 
@@ -24,25 +26,32 @@ app.use(session({
   saveUninitialized: false
 }))
 app.use('/public', express.static('public'));
-
-
-// // Middleware #1
-// app.use((req, res, next) => {
-//   if (req.originalUrl === "/") {
-//     if (req.session.user) {
-//       if (req.session.user.role === "business") {
-//         res.redirect("/business");
-//       } else {
-//         res.redirect("/profile");
-//       }
-//     } else {
-//       res.redirect("/login");
-//     }
-//   } else {
-//     next();
-//   }
-// });
-
+//set current user
+const setCurrentUser = (req, res, next) => {
+  if (req.session.user) {
+    res.locals.currentUser = req.session.user;
+    //console.log("Current user:", req.session.user.username);
+  }
+  next();
+};
+// Define route for deleting a post
+app.post('/delete', async (req, res) => {
+  try {
+    let {postId} = req.body;
+    // const postId = req.params.postId;
+    console.log(postId);
+    // Call the deletePost function passing postId
+    const deleted = await deletePost(postId);
+    if (deleted) {
+      res.status(200).json({ message: 'Post deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Post not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
@@ -99,7 +108,8 @@ const requireLogout = (req, res, next) => {
     next();
   }
 };
-
+//set current user for delete button
+app.use(setCurrentUser);
 app.use("/login", redirectAuthenticated);
 app.use("/register", redirectAuthenticatedForRegister);
 app.use("/profile", requireAuthentication);

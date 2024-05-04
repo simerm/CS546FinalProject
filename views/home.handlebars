@@ -81,7 +81,8 @@
                     <div class="postDetails">
                         <p class="name"><b>{{name}}</b>
                         {{#if isAdmin}}
-                            <span class="admin-icon">Admin Icon</span>
+                            {{!<span class="admin-icon">Admin Icon</span>}}
+                            <img src="/public/adminCheck.png" class="adminCheck">
                         {{/if}}</p>
                         <h2>{{title}}</h2>
                         <div class="postDiv">
@@ -114,6 +115,14 @@
                                 <button class="add-comment-btn">Add</button>
                             </form>
                         </div>
+                        {{!delete button info}}
+                
+                                <form action="/delete" method="POST">
+                                    <input type="hidden" name="postId" value="{{_id}}">
+                                    <button type="submit">Delete</button>
+                                </form>
+
+                        {{!end of delete button info}}
                         <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
                     </div>
                     {{/each}}
