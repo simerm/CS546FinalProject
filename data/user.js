@@ -140,7 +140,7 @@ export const loginUser = async (username, password) => {
     throw "invalid length"
   }
   username = username.toLowerCase()
-  if (username.length > 10) {
+  if (username.length > 20) {
     throw "username too long"
   }
   let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
@@ -189,13 +189,13 @@ export const loginUser = async (username, password) => {
       storeName: b.storeName,
       phoneNumber: b.phoneNumber,
       businessId: b.id,
-      street: b.street,
+      street: b.streetAddress,
       city: b.city,
       state: b.state,
       zipcode: b.zipcode,
       username: username,
       figurineStock: b.figurineStock,
-      role: role
+      role: b.role
 
     }
   }
@@ -240,7 +240,8 @@ export const registerBusiness = async (
   const c = await storeCollection.findOne({ businessId: id });
   if (c) throw 'business id already exists';
 
-
+  role = "business"
+  
   const hash = await bcrypt.hash(password, saltRounds);
 
   let newUser = {
@@ -253,6 +254,7 @@ export const registerBusiness = async (
     zipcode: zipcode,
     username: username,
     password: hash,
+    role: role,
     figurineStock: []
   }
 
@@ -313,6 +315,44 @@ export const removeCollection = async (username, figurineName, seriesName, model
     throw 'Error fetching user data!';
   }
 };
+export const addToStock = async (username, series) => { //function to add stock to the business
+  try {
+    const bCollection = await store();
+    const business = await bCollection.findOne({ username: username });
+    if (!business) throw 'Business not found';
+
+    //console.log("made it")
+    if (business.figurineStock.includes(series)) {
+      return { success: false, message: 'This series already exists in the stock' };
+    } else {
+      // Update business' document in the collection
+      //console.log("got to the function")
+      await bCollection.updateOne({ username: username }, { $push: { figurineStock: series } });
+      return { success: true, message: 'Series added to your stock', figurineStock: series };
+    }
+  }catch(e){
+    throw 'Error adding to stock!';
+  }
+};
+
+export const removeFromStock = async (username, series) => { //function to remove stock from the business
+  try {
+    const bCollection = await store();
+    const business = await bCollection.findOne({ username: username });
+    if (!business) throw 'Business not found';
+
+    if (!business.figurineStock.includes(series)) {
+      return { success: false, message: 'This series does not exist in the stock' };
+    } else {
+      // Update business' document in the collection
+      await bCollection.updateOne({ username: username }, { $pull: { figurineStock: series } });
+      return { success: true, message: 'Series removed from your stock', figurineStock: series };
+    }
+  } catch (e) {
+    throw 'Error removing from stock!';
+  }
+};
+
 
 export const updateProfile = async (username, updateObject) => {
   if (!username || username === undefined) throw 'You must provide an username to search for';
