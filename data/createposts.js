@@ -33,8 +33,8 @@ export const createPost = async (
         file: file,
         caption: caption,
         comments: [],
-        likes: 0,
-        dislikes:0,
+        whoLiked: [],
+        whoDisliked: [],
         isAdminPost: isAdminPost,
         dateAdded: new Date(),
 
