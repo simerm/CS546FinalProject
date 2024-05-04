@@ -1,8 +1,9 @@
-import { Router} from 'express';
+import {Router} from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, addCollection, removeCollection } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection, removeCollection, addToStock, removeFromStock } from '../data/user.js';
+import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -61,7 +62,6 @@ router
       try {
         if (req.session.user) {
           if (req.session.user.role == 'business') {
-            console.log(figurineInfo)
             const figurineInfo = await sortFigurines();
             res.render('generalCollection', { figurineInfo })
           } else if (req.session.user.role == 'personal') {
@@ -88,7 +88,8 @@ router
     .post(async (req, res) => {
       let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword } = req.body;
       let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-
+      
+      
       if (!id) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -309,12 +310,14 @@ router
 
         }
       }
+      
       let bool = true
       try {
         let result = await registerBusiness(name, phoneNumber, id, streetAddress, city, state, zipcode, username, password)
         bool = result.signupCompleted
+        
         if (bool) {
-          return res.redirect('/login');
+          return res.redirect('businessProfile');
 
         }
       } catch (e) {
@@ -374,8 +377,8 @@ router
         }
       }
 
-      if (username.length > 10) {
-        return res.status(400).render('register', { error: "Username can't be more than 10 chars" });
+      if (username.length > 20) {
+        return res.status(400).render('register', { error: "Username can't be more than 20 chars" });
       }
 
       let upper = false
@@ -400,8 +403,6 @@ router
       if (!upper || !num || !special) {
         return res.status(400).render('register', { error: "must have uppercase character, number, and special character" });
       }
-
-
 
       if (confirmPassword !== password) {
         return res.status(400).render('register', { error: "passwords must match" });
@@ -445,6 +446,7 @@ router
       if (typeof username !== 'string' || typeof password !== 'string') {
         return res.status(400).render('login', { themePreference: 'light', error: "must provide strings" });
       }
+      
       username = username.trim()
       password = password.trim()
       if (username.length < 5 || password.length < 8) {
@@ -452,7 +454,7 @@ router
 
       }
       username = username.toLowerCase()
-      if (username.length > 10) {
+      if (username.length > 20) {
         return res.status(400).render('login', { themePreference: 'light', error: "username too long" });
 
       }
@@ -463,7 +465,7 @@ router
 
         }
       }
-
+    
     //password checking for special characters and stuff
     let upper = false
     let num = false
@@ -487,7 +489,7 @@ router
       return res.status(400).render('login', { error: "must have uppercase character, number, and special character" });
 
       }
-
+    
     try {
       const user = await loginUser(username, password)
       if (user) {
@@ -514,13 +516,12 @@ router
             dateCreated: user.dateCreated
           }
         }
+        
+        if(user.role == 'business'){
+          return res.redirect('/businessProfile') //if the user is a business, redirect them to here
+        }
         return res.redirect('/profile')
-        //CHANGE WHAT HAPPENS WHEN LOGIN
-        // if (user.role === 'admin') {
-        //   return res.redirect('/admin');
-        // } else {
-        //   return res.redirect('/user');
-        // }
+    
       }
       else {
         return res.status(400).render('login', { error: 'invalid username or password' });
@@ -531,7 +532,7 @@ router
 
       }
 
-    }),
+  }),
 
   router
     .route('/logout')
@@ -548,10 +549,84 @@ router
       }
     }),
 
-  router
-    .route('//business')
+    router
+    .route('/business')
     .get(async (req, res) => {
       res.render('business')
+    }),
+  
+  router 
+    .route('/businessProfile')
+    .get(async (req, res) => {
+      try{
+        const figList = await grabList();
+        res.render('businessProfile', 
+        {username: req.session.user.username,
+        city: req.session.user.city,
+        state: req.session.user.state,
+        role: req.session.user.role,
+        figurineStock: req.session.user.figurineStock,
+        figList})
+      }catch(e){
+        res.status(500).json({error: 'Error while rendering business profile'})
+      }
+      
+    }),
+  
+  router
+    .route('/addToStock/:seriesName')
+    .patch(async (req, res) => {
+      try{ //try to add a series to the company stock
+        //grab all of the necessary parameters for addToStock
+        let username = req.session.user.username; //username 
+        let series = req.params.seriesName //series 
+  
+        const adding = await addToStock(username, series); //call the function to add in the stock
+        
+        if (adding.success) {
+          console.log('success')
+          // Send the updated list as JSON
+          res.status(200).json({ success: true, data: adding });
+          // need to render the business profile page again after calling to show updated stock - using ajax
+  
+        } else {
+          console.log('fail')
+          
+          res.status(400).json({ success: false, message: "Error with adding" });
+        }
+  
+      }catch(e){
+        res.status(500).json({ error: e });
+      }
+  
+    }),
+  
+  router
+    .route('/removeFromStock/:seriesName')
+    .patch(async (req, res) => {
+      try{ //try to add a series to the company stock
+        //grab all of the necessary parameters for addToStock
+        let username = req.session.user.username; //username 
+        let series = req.params.seriesName //series 
+  
+        const removing = await removeFromStock(username, series); //call the function to add in the stock
+        
+        if (removing.success) {
+          console.log('removed')
+          // Send the updated list as JSON
+          res.status(200).json({ success: true, data: removing });
+          // need to render the business profile page again after calling to show updated stock - using ajax
+  
+        } else {
+          console.log('fail')
+          
+          res.status(400).json({ success: false, message: "Error with removing" });
+        }
+  
+      }catch(e){
+        res.status(500).json({ error: e });
+      }
+  
     }),
 
   router

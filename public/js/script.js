@@ -90,9 +90,9 @@ if (document.getElementById('signin-form')) {
             }
             else {
                 username = username.trim()
-                if (username.length < 5 || username.length > 10) {
+                if (username.length < 5 || username.length > 20) {
                     let e = document.createElement("p");
-                    e.innerHTML = 'username should be more than 5 characters and less than 10'
+                    e.innerHTML = 'username should be more than 5 characters and less than 20'
                     error.appendChild(e)
                     valid = false
                 }
@@ -271,9 +271,9 @@ if (document.getElementById('signup-form')) {
             }
             else {
                 username = username.trim()
-                if (username.length < 5 || username.length > 10) {
+                if (username.length < 5 || username.length > 20) {
                     let e = document.createElement("p");
-                    e.innerHTML = 'username should be more than 5 characters and less than 10'
+                    e.innerHTML = 'username should be more than 5 characters and less than 20'
                     error.appendChild(e)
                     valid = false
                 }
@@ -598,9 +598,9 @@ if (document.getElementById('business-signup-form')) {
             }
             else {
                 username = username.trim()
-                if (username.length < 5 || username.length > 10) {
+                if (username.length < 5 || username.length > 20) {
                     let e = document.createElement("p");
-                    e.innerHTML = 'username should be more than 5 characters and less than 10'
+                    e.innerHTML = 'username should be more than 5 characters and less than 20'
                     error.appendChild(e)
                     valid = false
                 }

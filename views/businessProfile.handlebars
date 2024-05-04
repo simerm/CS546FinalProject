@@ -1,0 +1,72 @@
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/collections">Collections</a>
+    <a href="/businessProfile">My Profile</a>
+</div>
+<div class="body">
+<body>
+{{!-- source the info from the businesses  --}}
+
+    <h1>My Profile</h1>
+    <div class="business">
+        <div class="profile">
+
+            <div class="profileDetails">
+                <div class="left">
+                    <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+                    <h3>{{username}}</h3>
+                </div>
+                <div class="right">
+                    <h2>{{name}} </h2>
+                    <div class="locationDiv">
+                        <img src="/public/location.png" class="locationPicture">
+                        <p>{{city}}, {{state}}</p>
+                    </div>
+
+                    <div class="divider"></div>
+                    <p>About Us: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+
+            </div>
+
+        </div>
+        
+        <div class="divider"></div>
+        <div class="collection">
+            <h2>My Stock</h2>
+            <ul id ="stock-list">
+                {{#each figurineStock}}
+                    <li>{{this}}</li>
+                {{/each}} 
+            </ul> <br>
+
+            <form id="addStockForm">
+                <label for="add-stock"><h2>Add Stock</h2></label> <br>
+                <select name="add-stock" id="add-stock">
+                    {{#each figList}}
+                        <option id="fig" value="{{this}}">{{this}}</option>
+                    {{/each}}
+                </select>
+               
+                <button id="AddButton" name="AddButton" type="submit">Add</button>
+            </form> <br>
+
+            <form id="removeStockForm">
+                <label for="remove-stock"><h2>Remove Stock</h2></label> <br>
+                <select name="remove-stock" id="remove-stock">
+                    {{#each figurineStock}}
+                        <option id="figR" value="{{this}}">{{this}}</option>
+                    {{/each}}
+                </select>
+                <button id="RemoveButton" name="RemoveButton" type="submit">Remove</button>
+            </form>
+        </div>
+
+    </div> 
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="../public/js/mainAjax.js"></script>
+
+</body>
+</div>
+</html>
