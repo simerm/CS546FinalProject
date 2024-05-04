@@ -104,10 +104,7 @@ export const registerUser = async (
     favoriteFigurine: "",
     dateCreated: date,
     friends: [],
-    figurineCollection: {},
-    bio: "",
-    location: "",
-    picture: ""
+    figurineCollection: {}
     // { sample object
     // Smiski: {
     //   series1: ["lounging figure", "sleeping figure"],
@@ -217,10 +214,7 @@ export const loginUser = async (username, password) => {
     favoriteFigurine: u.favoriteFigurine,
     dateCreated: u.dateCreated,
     friends: u.friends,
-    figurineCollection: u.figurineCollection,
-    bio: u.bio,
-    location: u.location,
-    picture: u.picture
+    figurineCollection: u.figurineCollection
   }
 
 };
