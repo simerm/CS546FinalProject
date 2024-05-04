@@ -48,7 +48,7 @@ router
       let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword } = req.body;
       let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
       
-      /*
+      
       if (!id) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -175,17 +175,17 @@ router
           }
         }
       }
-      // if (!phoneNumber || typeof phoneNumber !== "string") {
-      //   return res.status(400).render('businessRegister', { error: 'Invalid params' });
+      if (!phoneNumber || typeof phoneNumber !== "string") {
+        return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
-      // }
-      // else {
-      //   let number = parsePhoneNumberFromString(phoneNumber);
-      //   if (!number || !number.isValid()) {
-      //     return res.status(400).render('businessRegister', { error: 'Invalid params' });
+      }
+      else {
+        let number = parsePhoneNumberFromString(phoneNumber);
+        if (!number || !number.isValid()) {
+          return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
-      //   }
-      // }
+        }
+      }
       if (!username) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -264,7 +264,7 @@ router
 
         }
       }
-      */
+      
       let bool = true
       try {
         let result = await registerBusiness(name, phoneNumber, id, streetAddress, city, state, zipcode, username, password)
