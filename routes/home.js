@@ -82,8 +82,86 @@ router
         hasBadges: hasBadges,
         badges: req.session.user.badges,
         hasWishlist: hasWishlist,
-        wishlist: wishlist.wishlist
+        wishlist: wishlist.wishlist,
+        location: location,
+        bio: bio,
+        favFig:favFig
+
       })
+    })
+    .post(async (req, res) => {
+      let { first, last, location, bio, favFig } = req.body;
+      let username = ""
+      if (req.session.user) {
+        username = req.session.user.username
+      }
+  
+      if (!username || typeof username !== 'string' || !isNaN(username)) {
+        return res.status(400).render('userProfile', { error: "Invalid User" });
+      }
+  
+      let update = {}
+  
+      if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0) {
+        return res.status(400).render('userProfile', { error: "Must change a value" });
+      }
+      else {
+        if (first.length != 0 && first.length < 2 || first.length > 25) {
+          return res.status(400).render('userProfile', { error: "Invalid first" });
+        }
+        else if (first.length != 0) {
+          update.first = first
+          req.session.user.firstName = first
+        }
+        if (last.length != 0 && last.length < 2 || last.length > 25) {
+          return res.status(400).render('userProfile', { error: "Invalid last" });
+  
+        }
+        else if (last.length != 0) {
+          update.last = last
+          req.session.user.lastName = last
+        }
+        if (location.length != 0 && location.length < 2 || location.length > 15) {
+          return res.status(400).render('userProfile', { error: "Invalid location" });
+  
+        }
+        else if (location.length != 0){
+          update.location = location
+          req.session.user.location = location
+        }
+        if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
+          return res.status(400).render('userProfile', { error: "Invalid location" });
+        }
+        else if (bio.length != 0){
+          update.bio = bio
+          req.session.user.bio = bio
+        }
+        if (favFig.length != 0 && favFig.length < 2 || favFig.length > 20) {
+          return res.status(400).render('userProfile', { error: "Invalid location" });
+  
+        }
+        else if (favFig.length != 0){
+          update.favFig = favFig
+          req.session.user.favoriteFigurine = favFig
+        }
+  
+      }
+  
+      let bool = true;
+      try {
+        let result = await updateProfile(username, update)
+        bool = result.success
+        if (!bool) {
+          return res.status(400).render('userProfile', { error: "Something went wrong" });
+  
+        }
+        return res.redirect('/profile')
+      } catch (e) {
+        return res.status(500).render('userProfile', { error: e });
+  
+      }
+  
+  
     }),
   router
     .route('/collections')
