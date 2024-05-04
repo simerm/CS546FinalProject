@@ -935,4 +935,14 @@ router
       }
     });
 
+    router
+    .route('/viewUser')
+    .get(async (req, res) => {
+      let val = false
+      if (req.session.user) {
+        val = true
+      }
+      res.render('viewUserProfile', {auth:val})
+    });
+
 export default router;

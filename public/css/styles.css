@@ -436,3 +436,18 @@ h1 {
     border: 1px solid black;
     cursor: pointer;
 }
+
+.alignButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+   
+}
+
+.buttons {
+    display: flex;
+}
+
+.buttons button {
+    margin: 0 15px; 
+}

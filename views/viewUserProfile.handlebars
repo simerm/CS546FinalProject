@@ -1,0 +1,137 @@
+<h1>Profile</h1>
+<div class="alignButtons">
+    <div class="buttons">
+        <button type="button" class="btn btn-outline-success">Friend</button>
+        <button type="button" class="btn btn-outline-danger">Report Account</button>
+    </div>
+</div>
+<div class="personal">
+    <div class="profile">
+
+        <div class="profileDetails">
+            <div class="left">
+                <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+                <h3>{{username}}</h3>
+            </div>
+            <div class="right">
+                <h2>{{firstName}} {{lastName}}</h2>
+                <div class="locationDiv">
+                    <img src="/public/location.png" class="locationPicture">
+                    {{#if location}}
+                    <p>{{location}}</p>
+                    {{else}}
+                    <p>No location specified</p>
+                    {{/if}}
+
+                </div>
+
+                <div class="divider"></div>
+                {{#if bio}}
+                <p>Bio: {{bio}}</p>
+                {{else}}
+                <p>Bio: </p>
+                {{/if}}
+
+                {{#if favFig}}
+                <p>Favorite Figurine: {{favFig}}</p>
+                {{else}}
+                <p>Favorite Figurine: </p>
+
+                {{/if}}
+
+
+            </div>
+
+        </div>
+
+
+
+        <div class="badges">
+            <div class="buttontitle">
+                <h2>Badges</h2>
+
+            </div>
+
+            <p>No badges currently.</p>
+
+
+        </div>
+
+        <div class="wishlist">
+            <div class="wishTitle">
+                <h2>Wishlist</h2>
+
+            </div>
+            {{#if hasWishlist}}
+            <div class="wishList">
+                <ul class="list-group">
+                    {{#each wishlist}}
+                    <li class="list-group-item wishItem">{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{else}}
+            <p>No wishes currently.</p>
+            {{/if}}
+            <div class="overlay" id="overlay"></div>
+        </div>
+
+    </div>
+
+
+    <div class="divider"></div>
+    <div class="collection">
+        <h2>Collections</h2>
+        <br></br>
+        <div class="collectionList">
+            {{#if collectionExists}}
+            {{#each figurineInfo}}
+            {{#each this}}
+            <br></br>
+            <div class="row row-cols-2 row-cols-md-5 g-4">
+                {{#each this.figurineTypes}}
+                {{#if owned}}
+                <div class="col">
+                    <div class="card h-100" style="width: 15rem;">
+                        {{#if rare}}
+                        <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
+                        <div class="overlay-div rounded-2"></div>
+                        <div class="card-img-overlay text-light">
+                            <h5 class="card-title">Secret Figurine</h5>
+                            <p class="card-text">Hover over to see it!</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.modelName}}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}}
+                                    Series</span></li>
+                            <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
+                        </ul>
+                        {{else}}
+                        <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.modelName}}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}}
+                                    Series</span></li>
+                            <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
+                        </ul>
+                        {{/if}}
+                    </div>
+                </div>
+                {{/if}}
+                {{/each}}
+            </div>
+            {{/each}}
+            {{/each}}
+            {{else}}
+            <!-- Display message for empty collection -->
+            <p>No collections currently.</p>
+            {{/if}}
+        </div>
+
+    </div>
+
+</div>
