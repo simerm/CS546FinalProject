@@ -48,7 +48,7 @@ router
       postTitle=xss(postTitle);
       caption= xss(caption);
       let file;
-      if (file != null) {
+      if (req.files.file != null) {
         file = req.files.file;
       }
       if (!postTitle) {
