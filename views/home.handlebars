@@ -16,26 +16,24 @@
             var posts = document.querySelectorAll(".postDetails");
             var seeAllButton = document.getElementById("seeAllButton");
 
-            var anyMatch = false; // Flag to check if any post matches the search
+            var anyMatch = false;
 
             posts.forEach(function(post) {
                 var name = post.querySelector(".name").innerText.toLowerCase();
                 if (name.includes(searchValue)) {
                     post.style.display = "block";
-                    anyMatch = true; // At least one match found
+                    anyMatch = true;
                 } else {
                     post.style.display = "none";
                 }
             });
 
-            // Show/hide "See All Posts" button based on search result
             if (anyMatch) {
-                seeAllButton.style.display = "inline-block"; // Show "See All Posts" button
+                seeAllButton.style.display = "inline-block";
             } else {
-                seeAllButton.style.display = "none"; // Hide "See All Posts" button
+                seeAllButton.style.display = "none";
             }
 
-            // Clear the search input box
             searchInput.value = "";
         }
 
@@ -46,7 +44,7 @@
             posts.forEach(function(post) {
                 post.style.display = "block";
             });
-            seeAllButton.style.display = "none"; // Hide "See All Posts" button
+            seeAllButton.style.display = "none";
         }
     </script>
     <style>
@@ -98,13 +96,11 @@
                             <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-up-down-btn">Hide/Show Likes and Dislikes</button>
                         </div>
                         <div class="previous-comments" id="comments-{{_id}}">
-                            <h2>Comments</h2>
-                            <ul>
+                            <p><b>Comments</b></p>
                                 {{#each comments}}
-                                    <p><b>{{user}}</b></p>
+                                    <h2>[{{user}}]</h2>
                                     <p>{{comment}}</p>
                                 {{/each}}
-                            </ul>
                         </div>
                         <div class="commentBox">
                             <form id="comments-{{_id}}" action="/comments" method="POST">
@@ -123,52 +119,3 @@
     </div>
 </body>
 </html>
-
-
-{{!-- <!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Imgur image upload</title>
-    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
-  </head>
-
-  <body>
-
-		<section class="hero is-fullheight">
-			<div class="hero-body is-centered">
-				<div class="container">
-					<div class="columns is-centered is-vcentered">
-						
-						<div class="column is-6">
-                            <p class="title is-size-1">Imgur image upload</p>
-
-                            <form ref='uploadForm' id='uploadForm' action='/upload' method='post' encType="multipart/form-data">
-
-                                <div class="file">
-                                    <label class="file-label">
-                                        <input class="file-input" type="file" name="sampleFile">
-
-                                        <span class="file-cta">
-                                        <span class="file-label">
-                                            Choose a file and upload it
-                                        </span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <input type='submit' value='Upload!' class="button is-link mt-3" />
-
-                            </form>
-						
-                        </div>
-
-					</div>
-				</div>
-			</div>
-	</section>
-
-  </body> --}}
-
