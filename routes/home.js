@@ -351,7 +351,7 @@ router
         }
         else {
           username = username.trim()
-          if (username.length < 5 || username.length > 10) {
+          if (username.length < 5 || username.length > 20) {
             return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
           }
@@ -561,7 +561,7 @@ router
 
     }
     username = username.toLowerCase()
-    if (username.length > 10) {
+    if (username.length > 20) {
       return res.status(400).render('login', {  error: "username too long" });
 
     }
