@@ -976,6 +976,7 @@ router
       result = await getUserInfo(username)
       notFriends = await areNotFriends(username, req.session.user.username)
       let hasFriends = false
+      result.friends.push(username)
       if (result.friends.length > 0) {
         hasFriends = true
       }
