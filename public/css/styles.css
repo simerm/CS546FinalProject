@@ -98,6 +98,7 @@ h1 {
     /* margin: 0 auto; */
     overflow: auto;
     height: 200px;
+    width: 22%;
    
 }
 
@@ -135,6 +136,7 @@ h1 {
     padding: 20px;
     overflow: auto;
     height: 200px;
+    width: 22%;
 }
 
 .addWish {
@@ -509,4 +511,51 @@ h1 {
 .adminCheck {
     width: 20px; /* Ensures the image doesn't overflow its container */
     height: auto; /* Maintains aspect ratio */
+}
+
+.alignButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+   
+}
+
+.buttons {
+    display: flex;
+}
+
+.buttons button {
+    margin: 0 15px; 
+}
+
+.friends{
+    /* border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    padding: 20px;
+    /* margin-left: 30px; */
+    overflow: auto;
+    height: 200px;
+    width: 40%;
+   
+}
+
+
+.reported{
+    /* border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    padding: 20px;
+    /* margin-left: 30px; */
+    overflow: auto;
+    height: 200px;
+    width: 40%;
+    
+   
+}
+
+.addInfo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }

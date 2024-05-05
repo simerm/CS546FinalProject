@@ -16,7 +16,7 @@
                     {{else}}
                     <p>No location specified</p>
                     {{/if}}
-                    
+
                 </div>
 
                 <div class="divider"></div>
@@ -99,15 +99,15 @@
                 <button class="addWish" id="addWish">Add Wish</button>
             </div>
             {{#if hasWishlist}}
-                <div class="wishList">
-                    <ul class="list-group">
-                        {{#each wishlist}}
-                            <li class="list-group-item wishItem">{{this}}</li>
-                        {{/each}}
-                    </ul>
-                </div>
+            <div class="wishList">
+                <ul class="list-group">
+                    {{#each wishlist}}
+                    <li class="list-group-item wishItem">{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
             {{else}}
-                <p>You don't have any wishes currently.</p>
+            <p>You don't have any wishes currently.</p>
             {{/if}}
             <div class="overlay" id="overlay"></div>
             <div class="wish-form-popup" id="wishformPopup">
@@ -128,6 +128,41 @@
             </div>
         </div>
 
+    </div>
+    <div class="addInfo">
+        <div class="friends">
+            <h2>My Friends</h2>
+            {{#if hasFriends}}
+            <div class="friendsList">
+                <ul class="list-group">
+                    {{#each friends}}
+                    <li class="list-group-item">{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{else}}
+            <p>You don't have any wishes currently.</p>
+            {{/if}}
+
+
+        </div>
+
+        {{#if admin}}
+        <div class="reported">
+            <h2>Reported Users</h2>
+            {{#if reportedUsers}}
+            <div class="reportedList">
+                <ul class="list-group">
+                    {{#each reportedUsers}}
+                    <li class="list-group-item">{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{else}}
+        <p>No reported users.</p>
+        {{/if}}
+        {{/if}}
     </div>
 
     {{#if eligible}}
@@ -185,54 +220,54 @@
         <button class="addCollectionName" onclick="window.location.href='/collections'">Edit Collection</button>
         <br></br>
         <div class="collectionList">
-                {{#if collectionExists}}
-                    {{#each figurineInfo}}
-                        {{#each this}}
-                        <br></br>
-                            <div class="row row-cols-2 row-cols-md-5 g-4">
-                                {{#each this.figurineTypes}}
-                                    {{#if owned}}
-                                        <div class="col">
-                                            <div class="card h-100" style="width: 15rem;">
-                                                    {{#if rare}}
-                                                        <img src={{this.image_url}} class="card-img-top" style="padding: 5px;"
-                                                            alt={{this.modelName}}>
-                                                        <div class="overlay-div rounded-2"></div>
-                                                        <div class="card-img-overlay text-light">
-                                                            <h5 class="card-title">Secret Figurine</h5>
-                                                            <p class="card-text">Hover over to see it!</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">{{this.modelName}}</h5>
-                                                        </div>
-                                                        <ul class="list-group list-group-flush">
-                                                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}} Series</span></li>
-                                                            <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
-                                                        </ul>
-                                                    {{else}}
-                                                        <img src={{this.image_url}} class="card-img-top" style="padding: 5px;"
-                                                            alt={{this.modelName}}>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">{{this.modelName}}</h5>
-                                                        </div>
-                                                        <ul class="list-group list-group-flush">
-                                                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}} Series</span></li>
-                                                            <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
-                                                        </ul>
-                                                    {{/if}}
-                                            </div>
-                                        </div>
-                                    {{/if}}
-                                {{/each}}
-                            </div>
-                        {{/each}}
-                    {{/each}}
-                {{else}}
-                    <!-- Display message for empty collection -->
-                    <p>You don't have any collections currently.</p>
+            {{#if collectionExists}}
+            {{#each figurineInfo}}
+            {{#each this}}
+            <br></br>
+            <div class="row row-cols-2 row-cols-md-5 g-4">
+                {{#each this.figurineTypes}}
+                {{#if owned}}
+                <div class="col">
+                    <div class="card h-100" style="width: 15rem;">
+                        {{#if rare}}
+                        <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
+                        <div class="overlay-div rounded-2"></div>
+                        <div class="card-img-overlay text-light">
+                            <h5 class="card-title">Secret Figurine</h5>
+                            <p class="card-text">Hover over to see it!</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.modelName}}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}}
+                                    Series</span></li>
+                            <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
+                        </ul>
+                        {{else}}
+                        <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.modelName}}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}}
+                                    Series</span></li>
+                            <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
+                        </ul>
+                        {{/if}}
+                    </div>
+                </div>
                 {{/if}}
+                {{/each}}
+            </div>
+            {{/each}}
+            {{/each}}
+            {{else}}
+            <!-- Display message for empty collection -->
+            <p>You don't have any collections currently.</p>
+            {{/if}}
         </div>
-    
+
     </div>
 
 </div>

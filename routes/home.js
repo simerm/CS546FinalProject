@@ -2,16 +2,16 @@ import { Router } from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
+import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
 import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
 import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
-
+import { submitApplication, appExists, reportUser, isReported, getAllReported } from '../data/adminApplication.js';
+import { store } from '../config/mongoCollections.js';
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -39,6 +39,7 @@ Handlebars.registerHelper('equals', function () {
 Handlebars.registerHelper('whichNav', function(role, options){ //gives back the correct nav bar
   return role === 'business'? options.fn(this) : options.inverse(this); //inverse aka else in this case
 });
+
 
 router
   .route('/')
@@ -112,6 +113,16 @@ router
           hasWishlist = true;
         }
       }
+      let hasFriends = false
+      if (req.session.user.friends.length > 0) {
+        hasFriends = true
+      }
+      let admin = false
+      if (req.session.user.role === "admin") {
+        admin = true
+      }
+      let reportedUsers = []
+      reportedUsers = await getAllReported()
 
       // console.log(figurineInfo)
       res.render('userProfile', {
@@ -129,7 +140,11 @@ router
         wishlist: wishlist ? wishlist.wishlist : null,
         location: location,
         bio: bio,
-        favFig: favFig
+        favFig: favFig,
+        hasFriends,
+        friends: req.session.user.friends,
+        admin,
+        reportedUsers
 
       })
     })
@@ -679,7 +694,7 @@ router
   router
     .route('/login')
     .get(async (req, res) => {
-      res.render("login", { themePreference: 'light' })
+      res.render("login")
     })
     .post(async (req, res) => {
       //code here for POST
@@ -781,8 +796,8 @@ router
           return res.redirect('/profile')
 
         }
-        else {
-          return res.status(400).render('login', { error: 'invalid username or password' });
+        else { //THIS IS WHERE THE LOGIN ERROR WONT APPEAR
+          return res.status(400).render('login', { hasError:true, error: "invalid username or password" });
         }
 
       } catch (e) {
@@ -827,6 +842,7 @@ router
         res.render('businessProfile',
           {
             username: req.session.user.username,
+            storeName: req.session.user.storeName,
             city: req.session.user.city,
             state: req.session.user.state,
             role: req.session.user.role,
@@ -838,6 +854,50 @@ router
         res.status(500).json({ error: 'Error while rendering business profile' })
       }
 
+    })
+    .post(async (req, res) => { //to edit the profile info
+      if (req.session.user) {
+        username = req.session.user.username
+      }
+      if (!username || typeof username !== 'string' || !isNaN(username)) {
+        return res.status(400).render('userProfile', { error: "Invalid User" });
+      } //these if statements check if the user is logged in/valid
+
+      let update = {}
+      if (storeName.length == 0 && bio.length == 0) {
+        return res.status(400).render('businessProfile', { error: "Must change a value" });
+      }
+      else {
+        if (storeName.length != 0 && storeName.length < 2 || storeName.length > 25) {
+          return res.status(400).render('businessProfile', { error: "Invalid name" });
+        }
+        if (storeName.length != 0) {
+          update.storeName = storeName
+          req.session.user.storeName = storeName
+        }
+        if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
+          return res.status(400).render('businessProfile', { error: "Invalid about us" });
+        }
+        else if (bio.length != 0) {
+          update.bio = bio
+          req.session.user.bio = bio
+        }
+      }
+        
+      let bool = true;
+      let role = req.session.user.role; //so it can make the necessary changes for each profile
+
+      try {
+        let result = await updateProfile(username, update, role) //UPDATE THIS FUNCTION
+        bool = result.success
+        if (!bool) {
+          return res.status(400).render('businessProfile', { error: "Something went wrong" });
+        }
+        return res.redirect('/businessProfile')
+      } catch (e) {
+        return res.status(500).render('businessProfile', { error: e });
+
+      }
     }),
 
   router
@@ -1086,5 +1146,135 @@ router
         res.status(500).json({ error: e });
       }
     });
+
+router
+  .route('/viewUser/:username')
+  .get(async (req, res) => {
+    let val = false
+    let admin = false
+    let notReported = true
+    let notFriends = true
+    const { username } = req.params;
+    if (req.session.user) {
+      val = true
+      if (req.session.user.role === "admin") {
+        admin = true
+      }
+      if (username === req.session.user.username) {
+        return res.redirect("/profile")
+      }
+    }
+
+    let result;
+    try {
+      notReported = await isReported(username)
+      result = await getUserInfo(username)
+      notFriends = await areNotFriends(username, req.session.user.username)
+      let hasFriends = false
+      if (result.friends.length > 0) {
+        hasFriends = true
+      }
+      res.render('viewUserProfile', {
+        admin: admin,
+        username,
+        notReported,
+        notFriends,
+        auth: val,
+        // figurineInfo,
+        // collectionExists: figurineInfo ? true : false,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        // hasBadges: hasBadges,
+        // badges: result.badges,
+        // hasWishlist: hasWishlist,
+        // wishlist: wishlist.wishlist,
+        location: result.location,
+        bio: result.bio,
+        favFig: result.favoriteFigurine,
+        hasFriends,
+        friends: result.friends
+      })
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
+
+
+  });
+
+router
+  .route('/addFriend')
+  .post(async (req, res) => {
+    const { username } = req.body;
+    let currUser = req.session.user.username
+    if (username === currUser) {
+      return res.status(400).render('viewUser', { auth: true, error: "Can not add self as friend" });
+    }
+    try {
+      let result = await addFriend(currUser, username)
+      if (result.success) {
+        req.session.user.friends.push(username)
+        return res.redirect(`/viewUser/${username}`)
+      }
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
+  });
+
+router
+  .route('/reportUser')
+  .post(async (req, res) => {
+    const { username } = req.body;
+    let currUser = req.session.user.username
+    if (username === currUser) {
+      return res.status(400).render('viewUser', { auth: true, error: "Can not add self as friend" });
+    }
+    try {
+      let result = await reportUser(currUser, username)
+      if (result.success) {
+        return res.redirect(`/viewUser/${username}`)
+      }
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
+  });
+
+router
+  .route('/searchUser')
+  .post(async (req, res) => {
+    let {username} = req.body
+    if (!username) {
+      return res.status(400).render('home', { auth: true, error: "Must provide username" });
+    }
+    else {
+      if (typeof username !== "string" || !isNaN(username)) {
+        return res.status(400).render('home', { auth: true, error: "Invalid type" });
+      }
+      else {
+        username = username.trim()
+        if (username.length < 1) {
+          return res.status(400).render('home', { auth: true, error: "Must provide username" });
+        }
+      }
+    }
+
+    if (username === req.session.user.username){
+      return res.redirect("/profile")
+    }
+    let result;
+    try{
+      result = await userExists(username)
+      if (!result){
+        // return res.status(400).redirect('/?error=User not found');
+        return res.status(400).render('home', { auth: true, error: "User not found" });
+
+      }
+      else{
+        return res.redirect(`/viewUser/${username}`)
+      }
+    } catch(e){
+      res.status(500).json({ error: e });
+    }
+
+  })
 
 export default router;

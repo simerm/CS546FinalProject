@@ -1,3 +1,18 @@
+<div>
+    <form id="searchUser" action="/searchUser" method="POST">
+        <div class="input-group">
+            <input name="username" id="user" type="text" class="form-control" placeholder="Search for a username">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+    <p>{{error}}</p>
+    {{#if error}}
+    <p class="alert alert-danger">{{error}}</p>
+    {{/if}}
+    <div class="alert alert-danger" id="clientError"></div>
+</div>
 <title>Feed</title>
     <script>
         function toggleLikesAndDislikes(postId) {
@@ -136,3 +151,5 @@
     </div>
 </body>
 </html>
+
+

@@ -1,4 +1,4 @@
-import { adminApplicants } from '../config/mongoCollections.js';
+import { adminApplicants, reported, users } from '../config/mongoCollections.js';
 
 export const submitApplication = async (username, email, whyAdmin) => {
     if (!username || typeof username !== 'string' || !isNaN(username)) {
@@ -68,4 +68,46 @@ export const appExists = async (username) => {
     if (!u) return false
     return true
 
-}   
+}
+
+export const reportUser = async (currUser, otherUser) => {
+    if (!currUser || !otherUser) {
+        throw "must include all params"
+    }
+    if (currUser === otherUser) {
+        throw "can't be same user"
+    }
+
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: otherUser });
+    if (!user) throw 'User not found';
+
+    let reportedUser = {
+        username: otherUser
+    }
+
+    const reportedCollection = await reported();
+
+    const newInsertInformation = await reportedCollection.insertOne(reportedUser);
+    if (!newInsertInformation.insertedId) throw 'Insert failed!';
+    return { success: true }
+
+
+}
+
+export const isReported = async (username) => {
+    const reportedCollection = await reported();
+    const user = await reportedCollection.findOne({ username: username });
+    if (!user) return true;
+    return false
+}
+
+export const getAllReported = async () => {
+    const reportedCollection = await reported();
+    let users = await reportedCollection.find({}).project({ _id: 0, username: 1 }).toArray();
+    if (!users) {
+      return []
+    }
+    const usernames = users.map(user => user.username);
+    return usernames;
+}

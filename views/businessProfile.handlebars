@@ -11,17 +11,57 @@
                     <h3>{{username}}</h3>
                 </div>
                 <div class="right">
-                    <h2>{{name}} </h2>
+                    <h2>{{storeName}} </h2>
                     <div class="locationDiv">
                         <img src="/public/location.png" class="locationPicture">
                         <p>{{city}}, {{state}}</p>
                     </div>
 
                     <div class="divider"></div>
-                    <p>About Us: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    {{#if bio}}
+                    <p>About Us: {{bio}}</p>
+                    {{else}}
+                    <p>About Us: N/A</p>
+                    {{/if}}
+
+                    <div class="edit">
+                    <button type="submit" class="btn btn-light align-right" id="editProfileButton"
+                        name="editProfile">Edit
+                        Profile Info</button>
+                    </div>
                 </div>
 
             </div>
+
+        <div class="modal" id="editProfileModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                        <button type="button" id="closeEdit" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{#if error}}
+                        <p class="alert alert-danger">{{error}}</p>
+                        {{/if}}
+                        <div class="alert alert-danger" style="display: none" id="clientError"></div>
+                        <form id="editProfile" action="/profile" method="POST">
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input class="form-control" type="text" id="first" name="first">
+
+                                <label for="bio">Bio:</label>
+                                <textarea class="form-control" rows="5" id="bio" name="bio"></textarea>
+
+                                <button type="submit" class="btn btn-success" id="submitButton"
+                                    name="submitButton">Submit Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
         </div>
         

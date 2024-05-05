@@ -771,10 +771,6 @@ if (document.getElementById('admin-app')) {
         }
     })
 
-
-
-
-
 }
 
 if (document.getElementById('editProfileButton')) {
@@ -792,13 +788,11 @@ if (document.getElementById('editProfileModal')) {
     closeButton.addEventListener('click', function () {
         $(editProfileModal).modal('hide');
     });
-
-
 }
 
 if (document.getElementById('editProfile')) {
     document.getElementById('editProfile').addEventListener('submit', function (event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
         let first = document.getElementById('first').value.trim();
         let last = document.getElementById('last').value.trim();
@@ -835,7 +829,7 @@ if (document.getElementById('editProfile')) {
                 error.appendChild(e)
                 valid = false
             }
-            if ( bio.length != 0 && bio.length < 5 || bio.length > 50) {
+            if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
                 let e = document.createElement("p");
                 e.innerHTML = 'Bio should be at least 5 characters, no more than 50'
                 error.appendChild(e)
@@ -856,4 +850,61 @@ if (document.getElementById('editProfile')) {
             error.style.display = 'block';
         }
     });
+}
+
+if (document.getElementById("friendForm")) {
+    document.getElementById('friendButton').addEventListener('click', function () {
+        let username = document.getElementById('username').textContent;
+        document.getElementById('friendUsername').value = username;
+    });
+
+}
+
+if (document.getElementById("reportForm")) {
+    document.getElementById('reportButton').addEventListener('click', function () {
+        let username = document.getElementById('username').textContent;
+        document.getElementById('reportUsername').value = username;
+    });
+
+}
+
+if (document.getElementById('searchUser')) {
+    document.getElementById('searchUser').addEventListener('submit', function (event) {
+        let username = document.getElementById('user').value;
+        event.preventDefault();
+        let error = document.getElementById('clientError');
+        error.innerHTML = '';
+        error.style.display = 'None'
+        let valid = true;
+        if (!username  ) {
+            let e = document.createElement("p");
+            e.innerHTML = 'Must provide a username'
+            error.appendChild(e)
+            valid = false
+        }
+        else{
+            if (typeof username !== "string" || !isNaN(username)) {
+                let e = document.createElement("p");
+                e.innerHTML = 'Invalid type for username'
+                error.appendChild(e)
+                valid = false
+            }
+            else {
+                username = username.trim()
+                if (username.length < 1) {
+                    let e = document.createElement("p");
+                    e.innerHTML = 'Must provide a username'
+                    error.appendChild(e)
+                    valid = false
+                }
+            }
+        }
+
+        if (valid) {
+            document.getElementById('searchUser').submit();
+        } else {
+            error.style.display = 'block';
+        }
+
+    })
 }
