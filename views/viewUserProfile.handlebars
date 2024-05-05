@@ -1,8 +1,14 @@
 <h1>Profile</h1>
 <div class="alignButtons">
     <div class="buttons">
-        <button type="button" class="btn btn-outline-success">Friend</button>
-        <button type="button" class="btn btn-outline-danger">Report Account</button>
+        <form id="friendForm" action="/addFriend" method="POST">
+            <input type="hidden" id="friendUsername" name="username">
+            <button type="submit" id = "friendButton" class="btn btn-outline-success">Friend</button>
+        </form>
+        <form id="reportForm" action="/reportUser" method="POST">
+            <input type="hidden" id="reportUsername" name="username">
+            <button id = "reportButton" type="submit" class="btn btn-outline-danger">Report Account</button>
+        </form>
     </div>
 </div>
 <div class="personal">
@@ -11,7 +17,7 @@
         <div class="profileDetails">
             <div class="left">
                 <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
-                <h3>{{username}}</h3>
+                <h3 id = "username">{{username}}</h3>
             </div>
             <div class="right">
                 <h2>{{firstName}} {{lastName}}</h2>
@@ -127,7 +133,6 @@
             {{/each}}
             {{/each}}
             {{else}}
-            <!-- Display message for empty collection -->
             <p>No collections currently.</p>
             {{/if}}
         </div>

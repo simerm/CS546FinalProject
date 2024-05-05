@@ -771,10 +771,6 @@ if (document.getElementById('admin-app')) {
         }
     })
 
-
-
-
-
 }
 
 if (document.getElementById('editProfileButton')) {
@@ -792,8 +788,6 @@ if (document.getElementById('editProfileModal')) {
     closeButton.addEventListener('click', function () {
         $(editProfileModal).modal('hide');
     });
-
-
 }
 
 if (document.getElementById('editProfile')) {
@@ -856,4 +850,20 @@ if (document.getElementById('editProfile')) {
             error.style.display = 'block';
         }
     });
+}
+
+if (document.getElementById("friendForm")){
+    document.getElementById('friendButton').addEventListener('click', function() {
+        let username = document.getElementById('username').textContent;
+        document.getElementById('friendUsername').value = username;
+    });
+    
+}
+
+if (document.getElementById("reportForm")){
+    document.getElementById('reportButton').addEventListener('click', function() {
+        let username = document.getElementById('username').textContent;
+        document.getElementById('reportUsername').value = username;
+    });
+    
 }

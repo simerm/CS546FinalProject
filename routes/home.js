@@ -942,7 +942,21 @@ router
       if (req.session.user) {
         val = true
       }
-      res.render('viewUserProfile', {auth:val})
+      res.render('viewUserProfile', {username: "test", auth:val})
+    });
+
+    router
+    .route('/addFriend')
+    .post(async (req, res) => {
+      const { username } = req.body;
+      console.log(username)
+    });
+
+    router
+    .route('/reportUser')
+    .post(async (req, res) => {
+      const { username } = req.body;
+      console.log(username)
     });
 
 export default router;
