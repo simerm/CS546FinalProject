@@ -1,10 +1,22 @@
 import express from 'express';
-const app = express();
-import configRoutes from './routes/index.js';
-import exphbs from 'express-handlebars';
-
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import configRoutes from './routes/index.js';
+import exphbs from 'express-handlebars';
+import fileUpload from 'express-fileupload';
+
+import { deletePost } from './data/createposts.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const thename = dirname(__filename);
+
+const app = express();
+
+app.use(fileUpload());
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+app.use('/public', express.static('public'));
 import session from 'express-session';
 
 app.use(session({
@@ -15,24 +27,6 @@ app.use(session({
 }))
 app.use('/public', express.static('public'));
 app.use(express.static('public'));
-
-// // Middleware #1
-// app.use((req, res, next) => {
-//   if (req.originalUrl === "/") {
-//     if (req.session.user) {
-//       if (req.session.user.role === "business") {
-//         res.redirect("/business");
-//       } else {
-//         res.redirect("/profile");
-//       }
-//     } else {
-//       res.redirect("/login");
-//     }
-//   } else {
-//     next();
-//   }
-// });
-
 
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
@@ -89,6 +83,7 @@ const requireLogout = (req, res, next) => {
     next();
   }
 };
+//set current user for delete button
 
 app.use("/login", redirectAuthenticated);
 app.use("/register", redirectAuthenticatedForRegister);
@@ -114,6 +109,7 @@ app.use(rewriteUnsupportedBrowserMethods);
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
 
 configRoutes(app);
 
