@@ -508,6 +508,7 @@ export const addCollection = async (username, figurineName, seriesName, modelNam
       user.figurineCollection[figurineName][seriesName].push(modelName);
       // Update user's document in the collection
       await userCollection.updateOne({ username: username }, { $set: { figurineCollection: user.figurineCollection } });
+      await removeWishlist(username, figurineName, seriesName, modelName);
       return { success: true, message: 'Model added to collection', userCollection: user.figurineCollection };
     }
   } catch (error) {
