@@ -354,7 +354,7 @@ export const removeFromStock = async (username, series) => { //function to remov
 };
 
 
-export const updateProfile = async (username, updateObject) => {
+export const updateProfile = async (username, updateObject, role) => {
   if (!username || username === undefined) throw 'You must provide an username to search for';
   if (typeof username !== 'string') throw 'username must be a string';
   if (username.trim().length === 0)
