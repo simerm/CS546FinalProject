@@ -494,14 +494,14 @@ export const addWishlist = async (username, figurineName, seriesName, modelName)
     if (!user.wishlist) {
       user.wishlist = [];
     }
-    console.log(user.wishlist);
-    console.log(modelName);
+    // console.log(user.wishlist);
+    // console.log(modelName);
     if (user.wishlist.includes(modelName)) {
       return { success: false, message: 'Model already exists in wishlist' };
     } else {
       user.wishlist.push(modelName);
       // Update user's document in the collection
-      console.log(user.wishlist);
+      // console.log(user.wishlist);
       await userCollection.updateOne({ username: username }, { $set: { wishlist: user.wishlist } });
       return { success: true, message: 'Model added to wishlist', wishlist: user.wishlist };
     }

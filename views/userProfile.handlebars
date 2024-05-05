@@ -87,10 +87,18 @@
                 <h2>My Badges</h2>
 
             </div>
-
-            <p>You don't have any badges currently.</p>
-
-
+            {{#if hasBadges}}
+                {{#each badges}}
+                    {{#if this}}
+                        <p>{{@key}}</p>
+                        {{#each this}}
+                            <p>{{this}}</p>
+                        {{/each}}
+                    {{/if}}
+                {{/each}}
+            {{else}}
+                <p>You don't have any badges currently.</p>
+            {{/if}}
         </div>
 
         <div class="wishlist">

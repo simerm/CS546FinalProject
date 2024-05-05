@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
+import { sortFigurines, sortFigurinesUser, getBadges } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
 import { loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
@@ -65,9 +65,19 @@ router
       let hasBadges = false;
       let hasWishlist = false;
 
+      const badges = await getBadges(req.session.user.username);
+      console.log(badges);
+
+      // Check if badges object has keys for Smiski or Sonny Angel
+      if (badges['Smiski'] || badges['Sonny Angel']) {
+          hasBadges = true;
+      }
+
       if (wishlist.wishlist && wishlist.wishlist.length > 0) {
         hasWishlist = true;
       }
+
+      console.log(hasBadges)
 
       // console.log(figurineInfo)
       res.render('userProfile', {
@@ -80,13 +90,12 @@ router
         auth: val,
         eligible: eligible,
         hasBadges: hasBadges,
-        badges: req.session.user.badges,
         hasWishlist: hasWishlist,
         wishlist: wishlist.wishlist,
         location: location,
         bio: bio,
-        favFig:favFig
-
+        favFig: favFig,
+        badges
       })
     })
     .post(async (req, res) => {
