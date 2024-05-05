@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { submitApplication, appExists, reportUser, isReported, getAllReported } from '../data/adminApplication.js';
+import { store } from '../config/mongoCollections.js';
 
 router
   .route('/')
@@ -693,6 +694,7 @@ router
         res.render('businessProfile',
           {
             username: req.session.user.username,
+            storeName: req.session.user.storeName,
             city: req.session.user.city,
             state: req.session.user.state,
             role: req.session.user.role,
@@ -703,6 +705,50 @@ router
         res.status(500).json({ error: 'Error while rendering business profile' })
       }
 
+    })
+    .post(async (req, res) => { //to edit the profile info
+      if (req.session.user) {
+        username = req.session.user.username
+      }
+      if (!username || typeof username !== 'string' || !isNaN(username)) {
+        return res.status(400).render('userProfile', { error: "Invalid User" });
+      } //these if statements check if the user is logged in/valid
+
+      let update = {}
+      if (storeName.length == 0 && bio.length == 0) {
+        return res.status(400).render('businessProfile', { error: "Must change a value" });
+      }
+      else {
+        if (storeName.length != 0 && storeName.length < 2 || storeName.length > 25) {
+          return res.status(400).render('businessProfile', { error: "Invalid name" });
+        }
+        if (storeName.length != 0) {
+          update.storeName = storeName
+          req.session.user.storeName = storeName
+        }
+        if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
+          return res.status(400).render('businessProfile', { error: "Invalid about us" });
+        }
+        else if (bio.length != 0) {
+          update.bio = bio
+          req.session.user.bio = bio
+        }
+      }
+        
+      let bool = true;
+      let role = req.session.user.role; //so it can make the necessary changes for each profile
+
+      try {
+        let result = await updateProfile(username, update, role) //UPDATE THIS FUNCTION
+        bool = result.success
+        if (!bool) {
+          return res.status(400).render('businessProfile', { error: "Something went wrong" });
+        }
+        return res.redirect('/businessProfile')
+      } catch (e) {
+        return res.status(500).render('businessProfile', { error: e });
+
+      }
     }),
 
   router
