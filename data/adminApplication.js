@@ -94,3 +94,10 @@ export const reportUser = async (currUser, otherUser) => {
 
 
 }
+
+export const isReported = async (username) => {
+    const reportedCollection = await reported();
+    const user = await reportedCollection.findOne({ username: username });
+    if (!user) return true;
+    return false
+}

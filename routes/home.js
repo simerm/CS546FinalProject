@@ -2,12 +2,12 @@ import { Router } from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
+import { getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
 import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { submitApplication, appExists, reportUser } from '../data/adminApplication.js';
+import { submitApplication, appExists, reportUser, isReported } from '../data/adminApplication.js';
 
 router
   .route('/')
@@ -938,17 +938,44 @@ router
     });
 
 router
-  .route('/viewUser')
+  .route('/viewUser/:username')
   .get(async (req, res) => {
     let val = false
     let admin = false
+    let notReported = true
+    const { username } = req.params;
     if (req.session.user) {
       val = true
-      if (req.session.user.role === "admin"){
+      if (req.session.user.role === "admin") {
         admin = true
       }
     }
-    res.render('viewUserProfile', { admin: admin, username: "test", auth: val })
+    let result;
+    try {
+      notReported = await isReported(username)
+      result = await getUserInfo(username)
+      res.render('viewUserProfile', {
+        admin: admin,
+        username,
+        notReported,
+        auth: val,
+        // figurineInfo,
+        // collectionExists: figurineInfo ? true : false,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        // hasBadges: hasBadges,
+        // badges: result.badges,
+        // hasWishlist: hasWishlist,
+        // wishlist: wishlist.wishlist,
+        location: result.location,
+        bio: result.bio,
+        favFig: result.favFig
+      })
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
+
+
   });
 
 router
@@ -962,7 +989,7 @@ router
     try {
       let result = await addFriend(currUser, username)
       if (result.success) {
-        res.render('/viewUser', { auth: true})
+        res.redirect(`/viewUser/${username}}`)
       }
     } catch (e) {
       res.status(500).json({ error: e });
@@ -980,7 +1007,7 @@ router
     try {
       let result = await reportUser(currUser, username)
       if (result.success) {
-        res.render('/viewUser', { auth: true})
+        res.render('/viewUser', { auth: true })
       }
     } catch (e) {
       res.status(500).json({ error: e });

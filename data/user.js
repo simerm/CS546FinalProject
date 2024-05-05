@@ -580,3 +580,24 @@ export const addFriend = async (currUser, otherUser) => {
   return {success: true}
 
 }
+
+export const getUserInfo = async (username) => {
+  const userCollection = await users();
+  const user = await userCollection.findOne({ username: username });
+  if (!user) throw 'User not found';
+  let userInfo = {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    badges: user.badges,
+    wishlist: user.wishlist,
+    favoriteFigurine: user.favoriteFigurine,
+    friends: user.friends,
+    figurineCollection: user.figurineCollection,
+    bio: user.bio,
+    location: user.location,
+    picture: user.picture
+  }
+  return userInfo
+
+
+}

@@ -9,10 +9,12 @@
             <button type="submit" id="friendButton" class="btn btn-outline-success">Friend</button>
         </form>
         {{#if admin}}
+        {{#if notReported}}
         <form id="reportForm" action="/reportUser" method="POST">
             <input type="hidden" id="reportUsername" name="username">
             <button id="reportButton" type="submit" class="btn btn-outline-danger">Report Account</button>
         </form>
+        {{/if}}
         {{/if}}
     </div>
 </div>
