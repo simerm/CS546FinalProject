@@ -19,13 +19,24 @@
 
 <body>
     {{#if auth}}
-        <div class="navbar">
+        {{#whichNav role}}
+            <div class="navbar">
+                <a href="/">Home</a>
+                <a href="/collections">Collections</a>
+                <a href="/businessProfile">My Business Profile</a>
+                <a href="/logout">Logout</a>
+            </div>
+        {{else}}
+            <div class="navbar">
                 <a href="/">Home</a>
                 <a href="/collections">Collections</a>
                 <a href="/profile">My Profile</a>
                 <a href="/logout">Logout</a>
-        </div>
+            </div>
+        {{/whichNav}}
     {{/if}}
+        
+
 
     <div class="body">
         {{{body}}}

@@ -36,6 +36,10 @@ Handlebars.registerHelper('equals', function () {
   return false;
 });
 
+Handlebars.registerHelper('whichNav', function(role, options){ //gives back the correct nav bar
+  return role === 'business'? options.fn(this) : options.inverse(this); //inverse aka else in this case
+});
+
 router
   .route('/')
   .get(async (req, res) => {
@@ -46,7 +50,7 @@ router
 
     if (currentUser) { //if user is logged in
       currentUsername = currentUser.username;
-      res.render('home', { posts: postData, c_usr: currentUsername, auth: true });
+      res.render('home', { posts: postData, c_usr: currentUsername, auth: true, role: req.session.user.role });
     } else { //user isn't logged in
       res.render('login', { auth: false })
     }
@@ -290,7 +294,8 @@ router
         if (req.session.user.role == 'business') {
           // console.log(figurineInfo)
           const figurineInfo = await sortFigurines();
-          res.render('generalCollection', { figurineInfo })
+          
+          res.render('generalCollection', { auth: true, role: req.session.user.role, figurineInfo })
         } else if (req.session.user.role == 'personal' || req.session.user.role == 'admin') {
           const figurineInfo = await sortFigurinesUser(req.session.user.username); // sortFigurinesUser(req) once function works
           res.render('generalCollection', { auth: true, user: true, figurineInfo })
@@ -733,7 +738,9 @@ router
 
       try {
         const user = await loginUser(username, password)
+        let val = false 
         if (user) {
+          //val = true
           if (user.role == 'business') {
             req.session.user = {
               storeName: user.storeName,
@@ -745,7 +752,8 @@ router
               zipcode: user.zipcode,
               username: user.username,
               figurineStock: user.figurineStock,
-              role: user.role
+              role: user.role,
+              //auth: val
             }
           }
           else {
@@ -762,7 +770,8 @@ router
               figurineCollection: user.figurineCollection,
               bio: user.bio,
               location: user.location,
-              picture: user.picture
+              picture: user.picture,
+              //auth: val
             }
           }
 
@@ -809,6 +818,12 @@ router
     .get(async (req, res) => {
       try {
         const figList = await grabList();
+        let val = false; 
+
+        if(req.session.user){
+          val = true;
+        }
+
         res.render('businessProfile',
           {
             username: req.session.user.username,
@@ -816,7 +831,8 @@ router
             state: req.session.user.state,
             role: req.session.user.role,
             figurineStock: req.session.user.figurineStock,
-            figList
+            figList,
+            auth: val
           })
       } catch (e) {
         res.status(500).json({ error: 'Error while rendering business profile' })
