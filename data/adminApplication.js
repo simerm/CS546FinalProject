@@ -101,3 +101,13 @@ export const isReported = async (username) => {
     if (!user) return true;
     return false
 }
+
+export const getAllReported = async () => {
+    const reportedCollection = await reported();
+    let users = await reportedCollection.find({}).project({ _id: 0, username: 1 }).toArray();
+    if (!users) {
+      return []
+    }
+    const usernames = users.map(user => user.username);
+    return usernames;
+}

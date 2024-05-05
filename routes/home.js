@@ -7,7 +7,7 @@ import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { submitApplication, appExists, reportUser, isReported } from '../data/adminApplication.js';
+import { submitApplication, appExists, reportUser, isReported, getAllReported } from '../data/adminApplication.js';
 
 router
   .route('/')
@@ -72,6 +72,12 @@ router
       if (req.session.user.friends.length >0){
         hasFriends = true
       }
+      let admin = false
+      if (req.session.user.role ==="admin"){
+        admin = true
+      }
+      let reportedUsers = []
+      reportedUsers = await getAllReported()
 
       // console.log(figurineInfo)
       res.render('userProfile', {
@@ -91,7 +97,9 @@ router
         bio: bio,
         favFig: favFig,
         hasFriends,
-        friends: req.session.user.friends
+        friends: req.session.user.friends,
+        admin,
+        reportedUsers
 
       })
     })
@@ -956,6 +964,9 @@ router
       if (req.session.user.role === "admin") {
         admin = true
       }
+      if (username === req.session.user.username){
+        return res.redirect("/profile")
+      }
     }
     
     let result;
@@ -983,7 +994,7 @@ router
         // wishlist: wishlist.wishlist,
         location: result.location,
         bio: result.bio,
-        favFig: result.favFig,
+        favFig: result.favoriteFigurine,
         hasFriends,
         friends: result.friends
       })
@@ -1005,7 +1016,7 @@ router
     try {
       let result = await addFriend(currUser, username)
       if (result.success) {
-        res.redirect(`/viewUser/${username}`)
+        return res.redirect(`/viewUser/${username}`)
       }
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1023,7 +1034,7 @@ router
     try {
       let result = await reportUser(currUser, username)
       if (result.success) {
-        res.redirect(`/viewUser/${username}`)
+        return res.redirect(`/viewUser/${username}`)
       }
     } catch (e) {
       res.status(500).json({ error: e });
