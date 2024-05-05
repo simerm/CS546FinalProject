@@ -24,7 +24,17 @@
                     </div>
 
                     <div class="divider"></div>
-                    <p>About Us: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    {{#if bio}}
+                    <p>About Us: {{bio}}</p>
+                    {{else}}
+                    <p>About Us: N/A</p>
+                    {{/if}}
+
+                    <div class="edit">
+                    <button type="submit" class="btn btn-light align-right" id="editProfileButton"
+                        name="editProfile">Edit
+                        Profile Info</button>
+                    </div>
                 </div>
 
             </div>

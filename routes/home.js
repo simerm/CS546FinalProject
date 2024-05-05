@@ -694,6 +694,13 @@ router
         res.status(500).json({ error: 'Error while rendering business profile' })
       }
 
+    })
+    .post(async (req, res) => {
+      try{
+
+      }catch(e){
+        
+      }
     }),
 
   router
