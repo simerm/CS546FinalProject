@@ -8,13 +8,46 @@ import fs from 'fs';
 import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { submitApplication, appExists } from '../data/adminApplication.js';
+import { ObjectId } from 'mongodb';
+import { users } from '../config/mongoCollections.js';
+import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
+
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fileUpload from 'express-fileupload';
+import xss from 'xss';
+import Handlebars from 'handlebars';
+
+const __filename = fileURLToPath(import.meta.url);
+const thename = dirname(__filename);
+
+const app = express();
+
+app.use(fileUpload());
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+Handlebars.registerHelper('equals', function() {
+  var args = [].slice.apply(arguments);
+  if (args[0] === args[1]) {
+      return true;
+  }
+  return false;
+});
 
 router
   .route('/')
   .get(async (req, res) => {
-    if (req.session.user) {
-      res.render('home', { auth: true })
-    } else {
+    const postData = await getAllPosts();
+    //retrieve logged in user to keep track of posts
+    let currentUser = req.session.user;
+    let currentUsername;
+
+    if (currentUser) { //if user is logged in
+      currentUsername= currentUser.username;
+      res.render('home', {posts: postData, c_usr: currentUsername, auth: true});
+    } else { //user isn't logged in
       res.render('login', { auth: false })
     }
     
@@ -163,6 +196,85 @@ router
   
   
     }),
+  //createpost/forum router
+  router
+    .route('/createpost')
+    .get(async(req, res)=>{
+      if (!req.session.user) {
+        return res.redirect('/login');
+      }
+      res.render('createpost')
+    })
+    .post(async (req, res) => {
+      let {postTitle, caption} = req.body;
+      //xss stuff
+      postTitle=xss(postTitle);
+      caption= xss(caption);
+      let file;
+      if (req.files.file != null) {
+        file = req.files.file;
+      }
+      if (!postTitle) {
+        return res.status(400).render('createpost', { error: 'Must provide a post title' });
+      }
+      if (typeof postTitle !== 'string' || typeof caption !== 'string') {
+        return res.status(400).render('createpost', { error: 'Invalid params' });
+      }
+    postTitle = postTitle.trim();
+    caption = caption.trim();
+      if (postTitle.length < 1 || postTitle.length > 25) {
+        return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
+      }
+    const user_info = await createPost(req.session.user, postTitle, file, caption);
+    if (!user_info) {
+      return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
+    }
+    return res.redirect('/');
+    }),
+  router
+  .route('/delete')
+  .post(async (req, res) => {
+    try {
+      let postId = req.body.postId;
+      postId = new ObjectId(postId);
+      // Call the deletePost function passing postId
+      const deleted = await deletePost(postId);
+      if (!deleted) {
+        res.status(404).json({ error: 'Post not found' });
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    return res.redirect('/');
+  }),
+  // router
+  // .route('/likes')
+  // .post(async (req, res) =>  {
+  //   if (!req.session.user) {
+  //     return res.redirect('/login');
+  //   }
+  //   let {postId} = req.body;
+  //   let like = await incrementLikes(req.session.user, postId);
+  //   if (!like) {
+  //     return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
+  //   }
+  //   return res.redirect('/');
+  // });
+  router
+  .route('/comments')
+  .post(async (req, res) =>  {
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
+    let {postId, commentInput} = req.body;
+    commentInput=xss(commentInput);
+    let comment = await createComment(commentInput, req.session.user, postId);
+    if (!comment) {
+      return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
   router
     .route('/collections')
     .get(async (req, res) => {
@@ -195,6 +307,14 @@ router
     })
     .post(async (req, res) => {
       let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword } = req.body;
+      name = xss(name);
+      streetAddress = xss(streetAddress);
+      city = xss(city);
+      state = xss(state);
+      zipcode = xss(zipcode);
+      username = xss(username);
+      password = xss(password);
+      confirmPassword = xss(confirmPassword);
       let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
       
       
@@ -445,6 +565,11 @@ router
       //code here for POST
       let { firstName, lastName, username, password, confirmPassword } = req.body;
       let role = "personal"
+      firstName= xss(firstName);
+      lastName= xss(lastName);
+      username=xss(username)
+      password= xss(password);
+      confirmPassword=xss(confirmPassword);
       if (!firstName || !lastName || !username || !confirmPassword || !password || !role) {
         return res.status(400).render('register', { error: 'Must have all fields' });
       }
@@ -547,6 +672,8 @@ router
   .post(async (req, res) => {
     //code here for POST
     let { username, password } = req.body;
+    username=xss(username);
+    password=xss(password);
     if (!username || !password || !isNaN(username) || !isNaN(password)) {
       return res.status(400).render('login', {  error: "username and password must be provided" });
     }

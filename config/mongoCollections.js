@@ -17,5 +17,5 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn('users');
 export const store = getCollectionFn('store');
 export const adminApplicants = getCollectionFn('adminApplicants');
-
+export const posts = getCollectionFn('posts');
 
