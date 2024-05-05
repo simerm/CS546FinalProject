@@ -35,7 +35,7 @@
                         <h2>{{title}}</h2>
                         <div class="postDiv">
                             <p>{{caption}}</p>
-                            <img src="/public/mockpost.jpg" class="postPicture">
+                            <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
                         </div>
                         <div class="divider"></div>
                         
@@ -100,6 +100,7 @@
                 });
         });
          });
+        
         //end accumulator
         function toggleLikesAndDislikes(postId) {
             var likesAndDislikes = document.getElementById("likes-" + postId);
