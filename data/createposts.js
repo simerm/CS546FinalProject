@@ -27,6 +27,13 @@ export const createPost = async (
         isAdminPost = false;
     }
 
+    let isBusinessPost;
+    if (user.role === 'business') {
+        isBusinessPost = true;
+    } else {
+        isBusinessPost = false;
+    }
+
     let newPost_obj = {
         name: user.username,
         title: postTitle,
@@ -36,6 +43,7 @@ export const createPost = async (
         whoLiked: [],
         whoDisliked: [],
         isAdminPost: isAdminPost,
+        isBusinessPost: isBusinessPost,
         dateAdded: new Date(),
 
     }

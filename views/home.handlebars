@@ -86,7 +86,11 @@
                         <p class="name"><b>{{name}}</b>
                         {{#if isAdminPost}}
                             <img src="/public/verified.png" class="adminCheck">
-                        {{/if}}</p>
+                        {{/if}}
+                        {{#if isBusinessPost}}
+                            <img src="/public/business icon.png" class="businessIcon">
+                        {{/if}}
+                        </p>
                         <h2>{{title}}</h2>
                         <div class="postDiv">
                             <p>{{caption}}</p>
