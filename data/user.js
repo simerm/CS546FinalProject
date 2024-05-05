@@ -615,7 +615,7 @@ export const areNotFriends = async (first, sec) => {
 
 export const userExists = async (user) => {
   const userCollection = await users();
-  const user = await userCollection.findOne({ username: user });
-  if (!user) return false;
+  const u = await userCollection.findOne({ username: user });
+  if (!u) return false;
   return true
 }

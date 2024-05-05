@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
+import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
 import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
@@ -12,8 +12,9 @@ import { submitApplication, appExists, reportUser, isReported, getAllReported } 
 router
   .route('/')
   .get(async (req, res) => {
+    // const { error } = req.query;
     if (req.session.user) {
-      res.render('home', { auth: true })
+      res.render('home', { auth: true})
     } else {
       res.render('login', { auth: false })
     }
@@ -556,7 +557,7 @@ router
   router
     .route('/login')
     .get(async (req, res) => {
-      res.render("login", { themePreference: 'light' })
+      res.render("login")
     })
     .post(async (req, res) => {
       //code here for POST
@@ -653,7 +654,7 @@ router
 
         }
         else {
-          return res.status(400).render('login', { error: 'invalid username or password' });
+          return res.status(400).render('login', { hasError:true, error: "invalid username or password" });
         }
 
       } catch (e) {
@@ -1044,7 +1045,7 @@ router
 router
   .route('/searchUser')
   .post(async (req, res) => {
-    const username = req.body.username
+    let {username} = req.body
     if (!username) {
       return res.status(400).render('home', { auth: true, error: "Must provide username" });
     }
@@ -1063,11 +1064,13 @@ router
     if (username === req.session.user.username){
       return res.redirect("/profile")
     }
-    let res;
+    let result;
     try{
-      res = await userExists(username)
-      if (!res){
+      result = await userExists(username)
+      if (!result){
+        // return res.status(400).redirect('/?error=User not found');
         return res.status(400).render('home', { auth: true, error: "User not found" });
+
       }
       else{
         return res.redirect(`/viewUser/${username}`)
