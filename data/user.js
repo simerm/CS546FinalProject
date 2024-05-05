@@ -59,6 +59,8 @@ export const registerUser = async (
   username = username.toLowerCase()
   const u = await userCollection.findOne({ username: username });
   if (u) throw 'username already exists';
+  const b = await storeCollection.findOne({ username: username });
+  if (b) throw 'username already exists';
   let upper = false
   let num = false
   let special = false
@@ -206,7 +208,7 @@ export const loginUser = async (username, password) => {
     if (!compare) {
       throw "Either the username or password is invalid"
     }
-    role = "personal"
+    
   }
 
   return {
@@ -365,17 +367,17 @@ export const registerBusiness = async (
     }
   }
   //phone number error handling
-  if (!phoneNumber || typeof phoneNumber !== "string") {
-    throw"Provide a phonenumber"
+  // if (!phoneNumber || typeof phoneNumber !== "string") {
+  //   throw"Provide a phonenumber"
 
-  }
-  else {
-    let number = parsePhoneNumberFromString(phoneNumber);
-    if (!number || !number.isValid()) {
-      throw"Number is not valid"
+  // }
+  // else {
+  //   let number = parsePhoneNumberFromString(phoneNumber);
+  //   if (!number || !number.isValid()) {
+  //     throw"Number is not valid"
 
-    }
-  }
+  //   }
+  // }
   //username error handling
   if (!username) {
     throw"Provide a username"
@@ -453,6 +455,9 @@ export const registerBusiness = async (
   if (u) throw 'username already exists';
   const c = await storeCollection.findOne({ businessId: id });
   if (c) throw 'business id already exists';
+  const userCollection = await users();
+  const b = await userCollection.findOne({ username: username });
+  if (b) throw 'username already exists';
 
   let role = "business"
   

@@ -1,4 +1,4 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
@@ -28,10 +28,10 @@ app.use(fileUpload());
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-Handlebars.registerHelper('equals', function() {
+Handlebars.registerHelper('equals', function () {
   var args = [].slice.apply(arguments);
   if (args[0] === args[1]) {
-      return true;
+    return true;
   }
   return false;
 });
@@ -45,12 +45,12 @@ router
     let currentUsername;
 
     if (currentUser) { //if user is logged in
-      currentUsername= currentUser.username;
-      res.render('home', {posts: postData, c_usr: currentUsername, auth: true});
+      currentUsername = currentUser.username;
+      res.render('home', { posts: postData, c_usr: currentUsername, auth: true });
     } else { //user isn't logged in
       res.render('login', { auth: false })
     }
-    
+
   }),
   router
     .route('/profile')
@@ -59,47 +59,54 @@ router
       if (req.session.user) {
         val = true
       }
-      let date = req.session.user.dateCreated
-      const [year, month, day] = date.split('/').map(Number);
-      let dobj = new Date(year, month - 1, day);
-      let currentDate = new Date();
-      const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
-      let eligible = false
-      if (diff >= 3) {
-        eligible = true
-      }
-      let exist = false
-      try {
-        exist = await appExists(req.session.user.username)
-
-        if (exist) {
-          eligible = false
-        }
-      } catch (e) {
-        res.status(500).json({ error: 'Error: Loading info' })
-      }
-      let location = null
-      let bio = null
-      let favFig = null
-
-      if (req.session.user.location != ""){
-        location = req.session.user.location
-      }
-      if (req.session.user.bio != ""){
-        bio = req.session.user.bio
-      }
-      if (req.session.user.favFig != ""){
-        favFig = req.session.user.favoriteFigurine
-      }
-
-      const figurineInfo = await sortFigurinesUser(req.session.user.username);
-      const wishlist = await getWishlist(req.session.user.username);
 
       let hasBadges = false;
       let hasWishlist = false;
 
-      if (wishlist.wishlist && wishlist.wishlist.length > 0) {
-        hasWishlist = true;
+      let figurineInfo;
+      let wishlist;
+      let eligible = false
+      let location = null
+      let bio = null
+      let favFig = null
+      if (req.session.user.role == "personal" || req.session.user.role == "admin") {
+        let date = req.session.user.dateCreated
+        const [year, month, day] = date.split('/').map(Number);
+        let dobj = new Date(year, month - 1, day);
+        let currentDate = new Date();
+        const diff = (currentDate - dobj) / (1000 * 60 * 60 * 24 * 365);
+
+        if (diff >= 3) {
+          eligible = true
+        }
+        let exist = false
+        try {
+          exist = await appExists(req.session.user.username)
+
+          if (exist) {
+            eligible = false
+          }
+        } catch (e) {
+          res.status(500).json({ error: 'Error: Loading info' })
+        }
+
+
+        if (req.session.user.location != "") {
+          location = req.session.user.location
+        }
+        if (req.session.user.bio != "") {
+          bio = req.session.user.bio
+        }
+        if (req.session.user.favoriteFigurine != "") {
+          favFig = req.session.user.favoriteFigurine
+        }
+
+        figurineInfo = await sortFigurinesUser(req.session.user.username);
+        wishlist = await getWishlist(req.session.user.username);
+
+        if (wishlist.wishlist && wishlist.wishlist.length > 0) {
+          hasWishlist = true;
+        }
       }
 
       // console.log(figurineInfo)
@@ -115,10 +122,10 @@ router
         hasBadges: hasBadges,
         badges: req.session.user.badges,
         hasWishlist: hasWishlist,
-        wishlist: wishlist.wishlist,
+        wishlist: wishlist ? wishlist.wishlist : null,
         location: location,
         bio: bio,
-        favFig:favFig
+        favFig: favFig
 
       })
     })
@@ -128,13 +135,13 @@ router
       if (req.session.user) {
         username = req.session.user.username
       }
-  
+
       if (!username || typeof username !== 'string' || !isNaN(username)) {
         return res.status(400).render('userProfile', { error: "Invalid User" });
       }
-  
+
       let update = {}
-  
+
       if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0) {
         return res.status(400).render('userProfile', { error: "Must change a value" });
       }
@@ -148,7 +155,7 @@ router
         }
         if (last.length != 0 && last.length < 2 || last.length > 25) {
           return res.status(400).render('userProfile', { error: "Invalid last" });
-  
+
         }
         else if (last.length != 0) {
           update.last = last
@@ -156,60 +163,60 @@ router
         }
         if (location.length != 0 && location.length < 2 || location.length > 15) {
           return res.status(400).render('userProfile', { error: "Invalid location" });
-  
+
         }
-        else if (location.length != 0){
+        else if (location.length != 0) {
           update.location = location
           req.session.user.location = location
         }
         if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
           return res.status(400).render('userProfile', { error: "Invalid location" });
         }
-        else if (bio.length != 0){
+        else if (bio.length != 0) {
           update.bio = bio
           req.session.user.bio = bio
         }
         if (favFig.length != 0 && favFig.length < 2 || favFig.length > 20) {
           return res.status(400).render('userProfile', { error: "Invalid location" });
-  
+
         }
-        else if (favFig.length != 0){
+        else if (favFig.length != 0) {
           update.favFig = favFig
           req.session.user.favoriteFigurine = favFig
         }
-  
+
       }
-  
+
       let bool = true;
       try {
         let result = await updateProfile(username, update)
         bool = result.success
         if (!bool) {
           return res.status(400).render('userProfile', { error: "Something went wrong" });
-  
+
         }
         return res.redirect('/profile')
       } catch (e) {
         return res.status(500).render('userProfile', { error: e });
-  
+
       }
-  
-  
+
+
     }),
   //createpost/forum router
   router
     .route('/createpost')
-    .get(async(req, res)=>{
+    .get(async (req, res) => {
       if (!req.session.user) {
         return res.redirect('/login');
       }
       res.render('createpost')
     })
     .post(async (req, res) => {
-      let {postTitle, caption} = req.body;
+      let { postTitle, caption } = req.body;
       //xss stuff
-      postTitle=xss(postTitle);
-      caption= xss(caption);
+      postTitle = xss(postTitle);
+      caption = xss(caption);
       let file;
       if (req.files.file != null) {
         file = req.files.file;
@@ -220,34 +227,34 @@ router
       if (typeof postTitle !== 'string' || typeof caption !== 'string') {
         return res.status(400).render('createpost', { error: 'Invalid params' });
       }
-    postTitle = postTitle.trim();
-    caption = caption.trim();
+      postTitle = postTitle.trim();
+      caption = caption.trim();
       if (postTitle.length < 1 || postTitle.length > 25) {
         return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
       }
-    const user_info = await createPost(req.session.user, postTitle, file, caption);
-    if (!user_info) {
-      return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
-    }
-    return res.redirect('/');
+      const user_info = await createPost(req.session.user, postTitle, file, caption);
+      if (!user_info) {
+        return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
+      }
+      return res.redirect('/');
     }),
   router
-  .route('/delete')
-  .post(async (req, res) => {
-    try {
-      let postId = req.body.postId;
-      postId = new ObjectId(postId);
-      // Call the deletePost function passing postId
-      const deleted = await deletePost(postId);
-      if (!deleted) {
-        res.status(404).json({ error: 'Post not found' });
+    .route('/delete')
+    .post(async (req, res) => {
+      try {
+        let postId = req.body.postId;
+        postId = new ObjectId(postId);
+        // Call the deletePost function passing postId
+        const deleted = await deletePost(postId);
+        if (!deleted) {
+          res.status(404).json({ error: 'Post not found' });
+        }
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).json({ error: 'Internal server error' });
       }
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-    return res.redirect('/');
-  }),
+      return res.redirect('/');
+    }),
   // router
   // .route('/likes')
   // .post(async (req, res) =>  {
@@ -262,44 +269,44 @@ router
   //   return res.redirect('/');
   // });
   router
-  .route('/comments')
-  .post(async (req, res) =>  {
-    if (!req.session.user) {
-      return res.redirect('/login');
-    }
-    let {postId, commentInput} = req.body;
-    commentInput=xss(commentInput);
-    let comment = await createComment(commentInput, req.session.user, postId);
-    if (!comment) {
-      return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
-    }
-    return res.redirect('/');
-  });
-  router
-    .route('/collections')
-    .get(async (req, res) => {
-      try {
-        if (req.session.user) {
-          if (req.session.user.role == 'business') {
-            // console.log(figurineInfo)
-            const figurineInfo = await sortFigurines();
-            res.render('generalCollection', { figurineInfo })
-          } else if (req.session.user.role == 'personal') {
-            const figurineInfo = await sortFigurinesUser(req.session.user.username); // sortFigurinesUser(req) once function works
-            res.render('generalCollection', { auth: true, user: true, figurineInfo })
-          }
-        } else {
-          const figurineInfo = await sortFigurines();
+    .route('/comments')
+    .post(async (req, res) => {
+      if (!req.session.user) {
+        return res.redirect('/login');
+      }
+      let { postId, commentInput } = req.body;
+      commentInput = xss(commentInput);
+      let comment = await createComment(commentInput, req.session.user, postId);
+      if (!comment) {
+        return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
+      }
+      return res.redirect('/');
+    });
+router
+  .route('/collections')
+  .get(async (req, res) => {
+    try {
+      if (req.session.user) {
+        if (req.session.user.role == 'business') {
           // console.log(figurineInfo)
+          const figurineInfo = await sortFigurines();
           res.render('generalCollection', { figurineInfo })
+        } else if (req.session.user.role == 'personal' || req.session.user.role == 'admin') {
+          const figurineInfo = await sortFigurinesUser(req.session.user.username); // sortFigurinesUser(req) once function works
+          res.render('generalCollection', { auth: true, user: true, figurineInfo })
         }
+      } else {
+        const figurineInfo = await sortFigurines();
+        // console.log(figurineInfo)
+        res.render('generalCollection', { figurineInfo })
       }
-      catch (e) {
-        console.error(e); // Log the error to the console
-        res.status(500).json({ error: e })
-      }
-    
-    }),
+    }
+    catch (e) {
+      console.error(e); // Log the error to the console
+      res.status(500).json({ error: e })
+    }
+
+  }),
   router
     .route('/businessRegister')
     .get(async (req, res) => {
@@ -316,8 +323,8 @@ router
       password = xss(password);
       confirmPassword = xss(confirmPassword);
       let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-      
-      
+
+
       if (!id) {
         return res.status(400).render('businessRegister', { error: 'Invalid params' });
 
@@ -538,12 +545,12 @@ router
 
         }
       }
-      
+
       let bool = true
       try {
         let result = await registerBusiness(name, phoneNumber, id, streetAddress, city, state, zipcode, username, password)
         bool = result.signupCompleted
-        
+
         if (bool) {
           return res.redirect('/login');
         }
@@ -565,11 +572,11 @@ router
       //code here for POST
       let { firstName, lastName, username, password, confirmPassword } = req.body;
       let role = "personal"
-      firstName= xss(firstName);
-      lastName= xss(lastName);
-      username=xss(username)
-      password= xss(password);
-      confirmPassword=xss(confirmPassword);
+      firstName = xss(firstName);
+      lastName = xss(lastName);
+      username = xss(username)
+      password = xss(password);
+      confirmPassword = xss(confirmPassword);
       if (!firstName || !lastName || !username || !confirmPassword || !password || !role) {
         return res.status(400).render('register', { error: 'Must have all fields' });
       }
@@ -664,42 +671,42 @@ router
 
     }),
 
-router
-  .route('/login')
-  .get(async (req, res) => {
-    res.render("login", { themePreference: 'light' })
-  })
-  .post(async (req, res) => {
-    //code here for POST
-    let { username, password } = req.body;
-    username=xss(username);
-    password=xss(password);
-    if (!username || !password || !isNaN(username) || !isNaN(password)) {
-      return res.status(400).render('login', {  error: "username and password must be provided" });
-    }
-    if (typeof username !== 'string' || typeof password !== 'string') {
-      return res.status(400).render('login', {  error: "must provide strings" });
-    }
-      
-    username = username.trim()
-    password = password.trim()
-    if (username.length < 5 || password.length < 8) {
-      return res.status(400).render('login', {  error: "invalid length" });
+  router
+    .route('/login')
+    .get(async (req, res) => {
+      res.render("login", { themePreference: 'light' })
+    })
+    .post(async (req, res) => {
+      //code here for POST
+      let { username, password } = req.body;
+      username = xss(username);
+      password = xss(password);
+      if (!username || !password || !isNaN(username) || !isNaN(password)) {
+        return res.status(400).render('login', { error: "username and password must be provided" });
+      }
+      if (typeof username !== 'string' || typeof password !== 'string') {
+        return res.status(400).render('login', { error: "must provide strings" });
+      }
 
-    }
-    username = username.toLowerCase()
-    if (username.length > 20) {
-      return res.status(400).render('login', {  error: "username too long" });
+      username = username.trim()
+      password = password.trim()
+      if (username.length < 5 || password.length < 8) {
+        return res.status(400).render('login', { error: "invalid length" });
 
-    }
-    let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    for (let x of username) {
-      if (n.includes(x)) {
-        return res.status(400).render('login', {  error: "no numbers allowed" });
+      }
+      username = username.toLowerCase()
+      if (username.length > 20) {
+        return res.status(400).render('login', { error: "username too long" });
+
+      }
+      let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+      for (let x of username) {
+        if (n.includes(x)) {
+          return res.status(400).render('login', { error: "no numbers allowed" });
 
         }
       }
-    
+
       //password checking for special characters and stuff
       let upper = false
       let num = false
@@ -723,58 +730,58 @@ router
         return res.status(400).render('login', { error: "must have uppercase character, number, and special character" });
 
       }
-    
-    try {
-      const user = await loginUser(username, password)
-      if (user) {
-        if (user.role == 'business') {
-          req.session.user = {
-            storeName: user.storeName,
-            phoneNumber: user.phoneNumber,
-            businessId: user.id,
-            streetAddress: user.streetAddress,
-            city: user.city,
-            state: user.state,
-            zipcode: user.zipcode,
-            username: user.username,
-            figurineStock: user.figurineStock,
-            role: user.role
+
+      try {
+        const user = await loginUser(username, password)
+        if (user) {
+          if (user.role == 'business') {
+            req.session.user = {
+              storeName: user.storeName,
+              phoneNumber: user.phoneNumber,
+              businessId: user.id,
+              streetAddress: user.streetAddress,
+              city: user.city,
+              state: user.state,
+              zipcode: user.zipcode,
+              username: user.username,
+              figurineStock: user.figurineStock,
+              role: user.role
+            }
           }
+          else {
+            req.session.user = {
+              firstName: user.firstName,
+              lastName: user.lastName,
+              username: user.username,
+              role: user.role,
+              dateCreated: user.dateCreated,
+              badges: user.badges,
+              wishlist: user.wishlist,
+              favoriteFigurine: user.favoriteFigurine,
+              friends: user.friends,
+              figurineCollection: user.figurineCollection,
+              bio: user.bio,
+              location: user.location,
+              picture: user.picture
+            }
+          }
+
+          if (user.role == 'business') {
+            return res.redirect('/businessProfile') //if the user is a business, redirect them to here
+          }
+          return res.redirect('/profile')
+
         }
         else {
-          req.session.user = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            role: user.role,
-            dateCreated: user.dateCreated,
-            badges: user.badges,
-            wishlist: user.wishlist,
-            favoriteFigurine: user.favoriteFigurine,
-            friends: user.friends,
-            figurineCollection: user.figurineCollection,
-            bio: user.bio,
-            location: user.location,
-            picture: user.picture
-          }
+          return res.status(400).render('login', { error: 'invalid username or password' });
         }
-        
-        if(user.role == 'business'){
-          return res.redirect('/businessProfile') //if the user is a business, redirect them to here
-        }
-        return res.redirect('/profile')
-    
-      }
-      else {
-        return res.status(400).render('login', { error: 'invalid username or password' });
-      }
 
       } catch (e) {
         return res.status(400).render('login', { error: e });
 
       }
 
-  }),
+    }),
 
   router
     .route('/logout')
@@ -791,84 +798,86 @@ router
       }
     }),
 
-    router
+  router
     .route('/business')
     .get(async (req, res) => {
       res.render('business')
     }),
-  
-  router 
+
+  router
     .route('/businessProfile')
     .get(async (req, res) => {
-      try{
+      try {
         const figList = await grabList();
-        res.render('businessProfile', 
-        {username: req.session.user.username,
-        city: req.session.user.city,
-        state: req.session.user.state,
-        role: req.session.user.role,
-        figurineStock: req.session.user.figurineStock,
-        figList})
-      }catch(e){
-        res.status(500).json({error: 'Error while rendering business profile'})
+        res.render('businessProfile',
+          {
+            username: req.session.user.username,
+            city: req.session.user.city,
+            state: req.session.user.state,
+            role: req.session.user.role,
+            figurineStock: req.session.user.figurineStock,
+            figList
+          })
+      } catch (e) {
+        res.status(500).json({ error: 'Error while rendering business profile' })
       }
-      
+
     }),
-  
+
   router
     .route('/addToStock/:seriesName')
     .patch(async (req, res) => {
-      try{ //try to add a series to the company stock
+      try { //try to add a series to the company stock
         //grab all of the necessary parameters for addToStock
         let username = req.session.user.username; //username 
         let series = req.params.seriesName //series 
-  
+
         const adding = await addToStock(username, series); //call the function to add in the stock
-        
+
         if (adding.success) {
           console.log('success')
           // Send the updated list as JSON
           res.status(200).json({ success: true, data: adding });
           // need to render the business profile page again after calling to show updated stock - using ajax
-  
+
         } else {
           console.log('fail')
-          
+
           res.status(400).json({ success: false, message: "Error with adding" });
         }
-  
-      }catch(e){
+
+      } catch (e) {
         res.status(500).json({ error: e });
       }
-  
+
     }),
-  
+
   router
     .route('/removeFromStock/:seriesName')
     .patch(async (req, res) => {
-      try{ //try to add a series to the company stock
+      try { //try to add a series to the company stock
         //grab all of the necessary parameters for addToStock
         let username = req.session.user.username; //username 
         let series = req.params.seriesName //series 
-  
+
         const removing = await removeFromStock(username, series); //call the function to add in the stock
-        
+
         if (removing.success) {
           console.log('removed')
           // Send the updated list as JSON
           res.status(200).json({ success: true, data: removing });
           // need to render the business profile page again after calling to show updated stock - using ajax
-  
+
         } else {
           console.log('fail')
-          
+
           res.status(400).json({ success: false, message: "Error with removing" });
         }
-  
-      }catch(e){
+
+      } catch (e) {
         res.status(500).json({ error: e });
       }
-  
+
     }),
 
   router
@@ -1038,16 +1047,16 @@ router
         res.status(500).json({ error: e });
       }
     }),
-  
+
   router
     .route('/removeWishlist/:figurineName/:seriesName/:modelName')
     .patch(async (req, res) => {
-      try {  
+      try {
         let figurineName = req.params.figurineName
         let seriesName = req.params.seriesName
         let modelName = req.params.modelName
         let wishlist = await removeWishlist(req.session.user.username, figurineName, seriesName, modelName)
-  
+
         if (wishlist.success) {
           console.log('success')
           res.status(200).json({ success: true, message: wishlist.message });
