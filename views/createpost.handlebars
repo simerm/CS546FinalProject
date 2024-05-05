@@ -12,27 +12,6 @@
         <div>
             <label for="file">Image/Video File</label>
             <input type="file" id="file" name="file">
-            <img src="https://i.imgur.com/Uym14pL.jpeg" id="img">
-            <p id="url"></p>
-            <script>
-                const file = document.getElementById("file");
-                const img = document.getElementById("img");
-                const url = document.getElementById("url");
-                file.addEventListener("change", ev => {
-                    const formData = new FormData();
-                    formData.append("image", ev.target.files[0]);
-                    fetch("https://api.imgur.com/3/image/", {
-                        method: "POST",
-                        headers: {
-                            Authorization:"Client-ID 354370c4e05e3d6"
-                        }
-                        ,body:formData
-                    }).then(data => data.json()).then(data => {
-                        img.src=data.data.link;
-                        url.innerText=data.data.link;
-                    });
-                });
-            </script>
         </div>
         <div>
             <label for="caption">Caption:</label>

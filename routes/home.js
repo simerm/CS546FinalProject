@@ -101,8 +101,19 @@ router
     }
     return res.redirect('/');
   }),
-
-
+  // router
+  // .route('/likes')
+  // .post(async (req, res) =>  {
+  //   if (!req.session.user) {
+  //     return res.redirect('/login');
+  //   }
+  //   let {postId} = req.body;
+  //   let like = await incrementLikes(req.session.user, postId);
+  //   if (!like) {
+  //     return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
+  //   }
+  //   return res.redirect('/');
+  // });
   router
   .route('/comments')
   .post(async (req, res) =>  {
