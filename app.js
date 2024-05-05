@@ -26,6 +26,28 @@ app.use(session({
 app.use('/public', express.static('public'));
 app.use(express.static('public'));
 
+// app.get('/createpost', (req, res) => {
+//   if (!req.session.user) {
+//     return res.redirect('/login');
+//   }
+//   res.render('createpost');
+// });
+
+
+// app.post('/createpost', (req, res) => {
+//   if (!req.files) {
+//     return res.status(400).send('No files were uploaded');
+//   }
+//   let sampleFile = req.files.sampleFile;
+//   let uploadPath = thename + '/uploads/' + sampleFile.name;
+//   sampleFile.mv(uploadPath, function (err) {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//   return res.redirect('/');
+//   });
+// });
+
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
   if (req.session.user) {

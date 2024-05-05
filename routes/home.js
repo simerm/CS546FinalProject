@@ -1070,5 +1070,4 @@ router
         res.status(500).json({ error: e });
       }
     });
-
 export default router;

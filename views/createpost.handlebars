@@ -1,23 +1,33 @@
 <h1>Create a Post</h1>
-{{#if error}}
-<p class="error">{{error}}</p>
-{{/if}}
-<div id="clientError"></div>
-<div class="display">
-    <form id="createpost" name="createpost" action="/createpost" method="POST" encType="multipart/form-data">
-        <div>
-            <label for="postTitle">Post Title:</label>
-            <input type="text" id="postTitle" name="postTitle">
-        </div>
-        <div>
-            <label for="file">Image/Video File</label>
-            <input type="file" id="file" name="file">
-        </div>
-        <div>
-            <label for="caption">Caption:</label>
-            <input type="text" id="caption" name="caption">
-        </div>
-        <button class="postButton" type="post" id="postButton" name="postButton">Post</button>
-</div>
-</form>
-</div>
+    <!-- {{#if error}}
+    <p class="error">{{error}}</p>
+    {{/if}} -->
+    <div id="clientError"></div>
+    <div class="display">
+        <form id="createpost" name="createpost" action="/createpost" method="POST" enctype="multipart/form-data">
+            <div>
+                <label for="postTitle">Post Title:</label>
+                <input type="text" id="postTitle" name="postTitle">
+            </div>
+            <div>
+                <div>
+                <label for="caption">Caption:</label>
+                <input type="text" id="caption" name="caption">
+            </div>
+            <form ref='uploadForm' id='uploadForm' action='/createpost' method='POST' encType="multipart/form-data">
+                <div class="file">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="sampleFile">
+                        <span class="file-cta">
+                        <span class="file-label">
+                        </span>
+                        </span>
+                    </label>
+                </div>
+                <input type='submit' value='Upload!' class="button is-link mt-3" />
+            </form>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
