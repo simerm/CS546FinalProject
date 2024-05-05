@@ -90,10 +90,11 @@
             {{#if hasBadges}}
                 {{#each badges}}
                     {{#if this}}
-                        <p>{{@key}}</p>
+                        <h5><span class="badge badge-info">{{@key}}</span></h5>
                         {{#each this}}
-                            <p>{{this}}</p>
+                            <span class="badge badge-pill badge-light text-dark">{{this}}</span>
                         {{/each}}
+                        <h1></h1>
                     {{/if}}
                 {{/each}}
             {{else}}
