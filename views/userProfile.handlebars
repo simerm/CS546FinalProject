@@ -150,6 +150,7 @@
         {{#if admin}}
         <div class="reported">
             <h2>Reported Users</h2>
+            {{#if reportedUsers}}
             <div class="reportedList">
                 <ul class="list-group">
                     {{#each reportedUsers}}
@@ -160,6 +161,7 @@
         </div>
         {{else}}
         <p>No reported users.</p>
+        {{/if}}
         {{/if}}
     </div>
 
