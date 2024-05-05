@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
+import {Router} from 'express';
+import { sortFigurines, sortFigurinesUser, getBadges } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
 import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
@@ -109,6 +109,14 @@ router
         figurineInfo = await sortFigurinesUser(req.session.user.username);
         wishlist = await getWishlist(req.session.user.username);
 
+      const badges = await getBadges(req.session.user.username);
+      // console.log(badges);
+
+      // Check if badges object has keys for Smiski or Sonny Angel
+      if (badges['Smiski'] || badges['Sonny Angel']) {
+          hasBadges = true;
+      }
+
         if (wishlist.wishlist && wishlist.wishlist.length > 0) {
           hasWishlist = true;
         }
@@ -135,7 +143,6 @@ router
         auth: val,
         eligible: eligible,
         hasBadges: hasBadges,
-        badges: req.session.user.badges,
         hasWishlist: hasWishlist,
         wishlist: wishlist ? wishlist.wishlist : null,
         location: location,
@@ -144,8 +151,8 @@ router
         hasFriends,
         friends: req.session.user.friends,
         admin,
-        reportedUsers
-
+        reportedUsers,
+        badges
       })
     })
     .post(async (req, res) => {
@@ -911,14 +918,14 @@ router
         const adding = await addToStock(username, series); //call the function to add in the stock
 
         if (adding.success) {
-          console.log('success')
+          // console.log('success')
           // Send the updated list as JSON
           res.status(200).json({ success: true, data: adding });
           // need to render the business profile page again after calling to show updated stock - using ajax
 
         } else {
-          console.log('fail')
-
+          // console.log('fail')
+          
           res.status(400).json({ success: false, message: "Error with adding" });
         }
 
@@ -939,14 +946,14 @@ router
         const removing = await removeFromStock(username, series); //call the function to add in the stock
 
         if (removing.success) {
-          console.log('removed')
+          // console.log('removed')
           // Send the updated list as JSON
           res.status(200).json({ success: true, data: removing });
           // need to render the business profile page again after calling to show updated stock - using ajax
 
         } else {
-          console.log('fail')
-
+          // console.log('fail')
+          
           res.status(400).json({ success: false, message: "Error with removing" });
         }
 
@@ -970,7 +977,7 @@ router
 
         if (collection.success) {
           // console.log('success');
-          console.log(collection.userCollection);
+          // console.log(collection.userCollection);
           // Instead of redirecting, send a JSON response with updated collection data
           res.status(200).json({ success: true, userCollection: collection.userCollection });
 
@@ -1108,18 +1115,18 @@ router
         let wishlist = await addWishlist(req.session.user.username, figurineName, seriesName, modelName);
 
         if (wishlist.success) {
-          console.log('success');
+          // console.log('success');
           // console.log(collection.userCollection); edit for wishlist
           // Instead of redirecting, send a JSON response with updated collection data
           res.status(200).json({ success: true, message: wishlist.message });
 
         } else {
-          console.log('fail');
+          // console.log('fail');
           // console.log(collection.message);
           res.status(400).json({ success: false, message: wishlist.message });
         }
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         res.status(500).json({ error: e });
       }
     }),
@@ -1134,15 +1141,15 @@ router
         let wishlist = await removeWishlist(req.session.user.username, figurineName, seriesName, modelName)
 
         if (wishlist.success) {
-          console.log('success')
+          // console.log('success')
           res.status(200).json({ success: true, message: wishlist.message });
         } else {
-          console.log('fail')
-          console.log(wishlist.message)
+          // console.log('fail')
+          // console.log(wishlist.message)
           res.status(400).json({ success: false, message: wishlist.message });
         }
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         res.status(500).json({ error: e });
       }
     });

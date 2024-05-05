@@ -111,3 +111,40 @@ export const sortFigurinesUser = async (username) => {
         throw e;
     }
 };
+
+export const getBadges = async (username) => {
+    try {
+        const userCollection = await users();
+        const user = await userCollection.findOne({ username: username });
+        if (!user) throw 'User not found';
+
+        const generalCollection = await sortFigurinesUser(username);
+
+        let badges = {};
+        // Iterate through each figurine series in the general collection
+        Object.values(generalCollection).forEach(figurineSeries => {
+            let completedSeries = []; // Initialize an array to store completed series for this figurine model
+            let currentSeries = "";
+            figurineSeries.forEach(series => {
+                let completed = true; // Assume the series is completed until proven otherwise
+                series.figurineTypes.forEach(figurine => {
+                    currentSeries = series.seriesName;
+                    if (!figurine.owned) { // If any figurine in the series is not owned
+                        completed = false; // Series is not completed
+                        return; // Exit early from the forEach loop
+                    }
+                });
+                if (completed) { // If all figurines in the series are owned
+                    completedSeries.push(currentSeries); // Add the series name to the completed series array
+                }
+            });
+            // Add the completed series for this figurine model to the badges object
+            badges[figurineSeries[0].figurineName] = completedSeries;
+        });
+
+        return badges;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+};
