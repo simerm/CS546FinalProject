@@ -485,12 +485,6 @@ h1 {
     margin: 0; /* Removed margin-top to maintain consistent spacing */
 }
 
-.thumbsUp,
-.thumbsDown{
-    background-color: transparent;
-    border:none;
-    padding: 0;
-}
 .previous-comments h2{
     font-size:medium;
 }
@@ -514,4 +508,27 @@ h1 {
 .businessIcon{
     width:20px;
     height: auto;
+}
+
+.countRatings{
+	cursor: default;
+}
+
+.ratingSelected > .thumbIcon,
+.ratingSelected> .rateCount
+{
+   text-decoration: underline;
+}
+
+.thumbIcon{
+    background-color: transparent;
+    border:none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-block;
+    
+}
+
+.countRatings:not(.ratingSelected) > .thumbIcon:hover {
+	background-color:#a7c0cd;
 }

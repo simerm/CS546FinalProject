@@ -5,6 +5,7 @@ export const createPost = async (
     user,
     postTitle,
     file,
+    //rsvp,
     caption
   ) => {
     if (!postTitle) {
@@ -33,7 +34,12 @@ export const createPost = async (
     } else {
         isBusinessPost = false;
     }
-
+    // let postRsvp;
+    // if (rsvp = 'yes') {
+    //     postRsvp = true;
+    // } else {
+    //     postRsvp = false;
+    // }
     let newPost_obj = {
         name: user.username,
         title: postTitle,
@@ -42,6 +48,7 @@ export const createPost = async (
         comments: [],
         whoLiked: [],
         whoDisliked: [],
+        //postRsvp:postRsvp,
         isAdminPost: isAdminPost,
         isBusinessPost: isBusinessPost,
         dateAdded: new Date(),
