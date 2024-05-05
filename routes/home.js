@@ -684,6 +684,7 @@ router
         res.render('businessProfile',
           {
             username: req.session.user.username,
+            storeName: req.session.user.storeName,
             city: req.session.user.city,
             state: req.session.user.state,
             role: req.session.user.role,
@@ -695,8 +696,44 @@ router
       }
 
     })
-    .post(async (req, res) => {
-      try{
+    .post(async (req, res) => { //to edit the profile info
+      let update = {}
+      try{ //try and update the profile
+        if (storeName.length == 0 && bio.length == 0) {
+          return res.status(400).render('businessProfile', { error: "Must change a value" });
+        }
+        else {
+          if (first.length != 0 && first.length < 2 || first.length > 25) {
+            return res.status(400).render('userProfile', { error: "Invalid first" });
+          }
+          
+          if (first.length != 0) {
+            update.first = first
+            req.session.user.firstName = first
+          }
+          if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
+            return res.status(400).render('userProfile', { error: "Invalid location" });
+          }
+          else if (bio.length != 0) {
+            update.bio = bio
+            req.session.user.bio = bio
+          }
+
+        }
+
+      let bool = true;
+      try {
+        let result = await updateProfile(username, update)
+        bool = result.success
+        if (!bool) {
+          return res.status(400).render('userProfile', { error: "Something went wrong" });
+
+        }
+        return res.redirect('/profile')
+      } catch (e) {
+        return res.status(500).render('userProfile', { error: e });
+
+      }
 
       }catch(e){
         

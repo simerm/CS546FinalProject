@@ -12,14 +12,18 @@
                     <h3>{{username}}</h3>
                 </div>
                 <div class="right">
-                    <h2>{{name}} </h2>
+                    <h2>{{storeName}} </h2>
                     <div class="locationDiv">
                         <img src="/public/location.png" class="locationPicture">
                         <p>{{city}}, {{state}}</p>
                     </div>
 
                     <div class="divider"></div>
-                    <p>About Us: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    {{#if bio}}
+                    <p>About Us: {{bio}}</p>
+                    {{else}}
+                    <p>About Us: N/A</p>
+                    {{/if}}
                 </div>
 
             </div>
