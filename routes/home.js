@@ -70,6 +70,7 @@ router
 
       let figurineInfo;
       let wishlist;
+      let badges;
       let eligible = false
       let location = null
       let bio = null
@@ -108,8 +109,7 @@ router
 
         figurineInfo = await sortFigurinesUser(req.session.user.username);
         wishlist = await getWishlist(req.session.user.username);
-
-      const badges = await getBadges(req.session.user.username);
+        badges = await getBadges(req.session.user.username);
       // console.log(badges);
 
       // Check if badges object has keys for Smiski or Sonny Angel
@@ -152,7 +152,7 @@ router
         friends: req.session.user.friends,
         admin,
         reportedUsers,
-        badges
+        badges: badges ? badges : null
       })
     })
     .post(async (req, res) => {
@@ -687,6 +687,7 @@ router
 
         }
       } catch (e) {
+        console.log(e)
         return res.status(400).render('register', { error: e });
 
       }

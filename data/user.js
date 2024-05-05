@@ -56,6 +56,7 @@ export const registerUser = async (
     throw "username can't be more than 20 characters"
   }
   const userCollection = await users();
+  const storeCollection = await store();
   username = username.toLowerCase()
   const u = await userCollection.findOne({ username: username });
   if (u) throw 'username already exists';
