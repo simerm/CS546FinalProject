@@ -5,8 +5,6 @@ import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import fileUpload from 'express-fileupload';
 
-import { deletePost } from './data/createposts.js';
-
 const __filename = fileURLToPath(import.meta.url);
 const thename = dirname(__filename);
 
