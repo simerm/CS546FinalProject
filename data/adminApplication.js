@@ -88,7 +88,7 @@ export const reportUser = async (currUser, otherUser) => {
 
     const reportedCollection = await reported();
 
-    const newInsertInformation = await reportedCollection.reportedCollection(reportedUser);
+    const newInsertInformation = await reportedCollection.insertOne(reportedUser);
     if (!newInsertInformation.insertedId) throw 'Insert failed!';
     return { success: true }
 

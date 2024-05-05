@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { sortFigurines, sortFigurinesUser } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
+import { areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
 import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
@@ -943,6 +943,7 @@ router
     let val = false
     let admin = false
     let notReported = true
+    let notFriends = true
     const { username } = req.params;
     if (req.session.user) {
       val = true
@@ -954,10 +955,12 @@ router
     try {
       notReported = await isReported(username)
       result = await getUserInfo(username)
+      notFriends = await areNotFriends(username, req.session.user.username)
       res.render('viewUserProfile', {
         admin: admin,
         username,
         notReported,
+        notFriends,
         auth: val,
         // figurineInfo,
         // collectionExists: figurineInfo ? true : false,
@@ -989,7 +992,7 @@ router
     try {
       let result = await addFriend(currUser, username)
       if (result.success) {
-        res.redirect(`/viewUser/${username}}`)
+        res.redirect(`/viewUser/${username}`)
       }
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1007,7 +1010,7 @@ router
     try {
       let result = await reportUser(currUser, username)
       if (result.success) {
-        res.render('/viewUser', { auth: true })
+        res.redirect(`/viewUser/${username}`)
       }
     } catch (e) {
       res.status(500).json({ error: e });

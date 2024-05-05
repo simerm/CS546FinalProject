@@ -601,3 +601,14 @@ export const getUserInfo = async (username) => {
 
 
 }
+
+export const areNotFriends = async (first, sec) => {
+  const userCollection = await users();
+  const user = await userCollection.findOne({ username: first });
+  if (!user) throw 'User not found';
+
+  if (user.friends.includes (sec)){
+    return false
+  }
+  return true
+}

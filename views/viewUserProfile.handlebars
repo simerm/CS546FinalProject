@@ -4,10 +4,12 @@
     <p class="alert alert-danger">{{error}}</p>
     {{/if}}
     <div class="buttons">
+        {{#if notFriends}}
         <form id="friendForm" action="/addFriend" method="POST">
             <input type="hidden" id="friendUsername" name="username">
             <button type="submit" id="friendButton" class="btn btn-outline-success">Friend</button>
         </form>
+        {{/if}}
         {{#if admin}}
         {{#if notReported}}
         <form id="reportForm" action="/reportUser" method="POST">
