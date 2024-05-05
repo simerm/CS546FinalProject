@@ -14,9 +14,17 @@
             <input type="file" id="file" name="file">
         </div>
         <div>
+            <label for="rsvpSelect"  id="rsvpLabel">Is for an event that needs RSVP?</label>
+                <select id="rsvpSelect" name="rsvp">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                </select>
+        </div>
+        <div>
             <label for="caption">Caption:</label>
             <input type="text" id="caption" name="caption">
         </div>
+        
         <button class="postButton" type="post" id="postButton" name="postButton">Post</button>
 </div>
 </form>
