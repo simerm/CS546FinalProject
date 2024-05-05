@@ -69,11 +69,11 @@ router
         hasWishlist = true;
       }
       let hasFriends = false
-      if (req.session.user.friends.length >0){
+      if (req.session.user.friends.length > 0) {
         hasFriends = true
       }
       let admin = false
-      if (req.session.user.role ==="admin"){
+      if (req.session.user.role === "admin") {
         admin = true
       }
       let reportedUsers = []
@@ -964,18 +964,18 @@ router
       if (req.session.user.role === "admin") {
         admin = true
       }
-      if (username === req.session.user.username){
+      if (username === req.session.user.username) {
         return res.redirect("/profile")
       }
     }
-    
+
     let result;
     try {
       notReported = await isReported(username)
       result = await getUserInfo(username)
       notFriends = await areNotFriends(username, req.session.user.username)
       let hasFriends = false
-      if (result.friends.length >0){
+      if (result.friends.length > 0) {
         hasFriends = true
       }
       res.render('viewUserProfile', {
@@ -1040,5 +1040,42 @@ router
       res.status(500).json({ error: e });
     }
   });
+
+router
+  .route('/searchUser')
+  .post(async (req, res) => {
+    const username = req.body.username
+    if (!username) {
+      return res.status(400).render('home', { auth: true, error: "Must provide username" });
+    }
+    else {
+      if (typeof username !== "string" || !isNaN(username)) {
+        return res.status(400).render('home', { auth: true, error: "Invalid type" });
+      }
+      else {
+        username = username.trim()
+        if (username.length < 1) {
+          return res.status(400).render('home', { auth: true, error: "Must provide username" });
+        }
+      }
+    }
+
+    if (username === req.session.user.username){
+      return res.redirect("/profile")
+    }
+    let res;
+    try{
+      res = await userExists(username)
+      if (!res){
+        return res.status(400).render('home', { auth: true, error: "User not found" });
+      }
+      else{
+        return res.redirect(`/viewUser/${username}`)
+      }
+    } catch(e){
+      res.status(500).json({ error: e });
+    }
+
+  })
 
 export default router;

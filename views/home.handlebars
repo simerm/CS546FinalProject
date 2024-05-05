@@ -1,3 +1,13 @@
+<form id="searchUser" action="/searchUser" method="POST">
+    <div class="input-group">
+        <input id = "user" type="text" class="form-control" placeholder="Search for a username">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">Submit</button>
+        </div>
+    </div>
+</form>
 
-
-    <p>i am in home</p>
+{{#if error}}
+<p class="alert alert-danger">{{error}}</p>
+{{/if}}
+<div class="alert alert-danger" id="clientError"></div>

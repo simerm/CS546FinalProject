@@ -612,3 +612,10 @@ export const areNotFriends = async (first, sec) => {
   }
   return true
 }
+
+export const userExists = async (user) => {
+  const userCollection = await users();
+  const user = await userCollection.findOne({ username: user });
+  if (!user) return false;
+  return true
+}
