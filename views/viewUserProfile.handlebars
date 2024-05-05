@@ -93,6 +93,22 @@
 
     </div>
 
+    <div class="friends">
+        <h2>Friends</h2>
+        {{#if hasFriends}}
+        <div class="friendsList">
+            <ul class="list-group">
+                {{#each friends}}
+                <li class="list-group-item">{{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+        {{else}}
+        <p>You don't have any wishes currently.</p>
+        {{/if}}
+
+
+    </div>
 
     <div class="divider"></div>
     <div class="collection">

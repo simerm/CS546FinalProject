@@ -68,6 +68,10 @@ router
       if (wishlist.wishlist && wishlist.wishlist.length > 0) {
         hasWishlist = true;
       }
+      let hasFriends = false
+      if (req.session.user.friends.length >0){
+        hasFriends = true
+      }
 
       // console.log(figurineInfo)
       res.render('userProfile', {
@@ -85,7 +89,9 @@ router
         wishlist: wishlist.wishlist,
         location: location,
         bio: bio,
-        favFig: favFig
+        favFig: favFig,
+        hasFriends,
+        friends: req.session.user.friends
 
       })
     })
@@ -951,11 +957,16 @@ router
         admin = true
       }
     }
+    
     let result;
     try {
       notReported = await isReported(username)
       result = await getUserInfo(username)
       notFriends = await areNotFriends(username, req.session.user.username)
+      let hasFriends = false
+      if (result.friends.length >0){
+        hasFriends = true
+      }
       res.render('viewUserProfile', {
         admin: admin,
         username,
@@ -972,7 +983,9 @@ router
         // wishlist: wishlist.wishlist,
         location: result.location,
         bio: result.bio,
-        favFig: result.favFig
+        favFig: result.favFig,
+        hasFriends,
+        friends: result.friends
       })
     } catch (e) {
       res.status(500).json({ error: e });
