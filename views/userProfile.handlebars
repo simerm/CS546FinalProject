@@ -211,13 +211,11 @@
     <div class="collection">
         <h2>My Collections</h2>
         <button class="addCollectionName" onclick="window.location.href='/collections'">Edit Collection</button>
-        <br></br>
         <div class="collectionList">
             {{#if collectionExists}}
             {{#each figurineInfo}}
             {{#each this}}
-            <br></br>
-            <div class="row row-cols-2 row-cols-md-5 g-4">
+            <div class="row row-cols-2 row-cols-md-5 g-4 mb-4">
                 {{#each this.figurineTypes}}
                 {{#if owned}}
                 <div class="col">

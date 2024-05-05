@@ -1182,20 +1182,36 @@ router
       if (result.friends.length > 0) {
         hasFriends = true
       }
+
+      const figurineInfo = await sortFigurinesUser(username);
+      const badges = await getBadges(username);
+      const wishlist = await getWishlist(username);
+
+      let hasBadges = false;
+      let hasWishlist = false;
+      if (badges['Smiski'] || badges['Sonny Angel']) {
+        hasBadges = true;
+      }
+
+      if (wishlist.wishlist && wishlist.wishlist.length > 0) {
+        hasWishlist = true;
+      }
+
+
       res.render('viewUserProfile', {
         admin: admin,
         username,
         notReported,
         notFriends,
         auth: val,
-        // figurineInfo,
-        // collectionExists: figurineInfo ? true : false,
+        figurineInfo,
+        collectionExists: figurineInfo ? true : false,
         firstName: result.firstName,
         lastName: result.lastName,
-        // hasBadges: hasBadges,
-        // badges: result.badges,
-        // hasWishlist: hasWishlist,
-        // wishlist: wishlist.wishlist,
+        hasBadges: hasBadges,
+        badges: badges ? badges : null,
+        hasWishlist: hasWishlist,
+        wishlist: wishlist ? wishlist.wishlist : null,
         location: result.location,
         bio: result.bio,
         favFig: result.favoriteFigurine,
