@@ -105,7 +105,7 @@
         <div class="wishlist">
             <div class="wishTitle">
                 <h2>My Wishlist</h2>
-                <button class="addWish" id="addWish">Add Wish</button>
+                <a href="/collections" class="btn btn-secondary addWish" id="addWish">Add Wish</a>
             </div>
             {{#if hasWishlist}}
                 <div class="wishList">
@@ -118,23 +118,7 @@
             {{else}}
                 <p>You don't have any wishes currently.</p>
             {{/if}}
-            <div class="overlay" id="overlay"></div>
-            <div class="wish-form-popup" id="wishformPopup">
-                <h3>Add New Wish</h3>
-                <div class="alert alert-danger" id="wishclientError"></div>
-                <form id="wishForm" class="wishForm" action='/wishlist' method="POST">
-                    <label class="wishLabel" id="wishLabel" for="wishName">Item:</label>
-                    <input class="wishName" type="text" id="wishName" name="wishName" placeholder="Enter Wish Name">
-                    <div class="closeButton">
-                        <button class="wishSubmit" type="submit">Submit</button>
-                    </div>
-                </form>
-                <div class="closeButton">
-
-                    <button id="closeButton" class="wishClose">Close</button>
-                </div>
-
-            </div>
+            
         </div>
 
     </div>
