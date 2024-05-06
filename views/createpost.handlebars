@@ -1,23 +1,36 @@
-<h1>Create a Post</h1>
-{{#if error}}
-<p class="error">{{error}}</p>
-{{/if}}
-<div id="clientError"></div>
-<div class="display">
-    <form id="createpost" name="createpost" action="/createpost" method="POST" encType="multipart/form-data">
-        <div>
-            <label for="postTitle">Post Title:</label>
-            <input type="text" id="postTitle" name="postTitle">
-        </div>
-        <div>
-            <label for="file">Image/Video File</label>
-            <input type="file" id="file" name="file">
-        </div>
-        <div>
-            <label for="caption">Caption:</label>
-            <input type="text" id="caption" name="caption">
-        </div>
-        <button class="postButton" type="post" id="postButton" name="postButton">Post</button>
-</div>
-</form>
-</div>
+
+    <h1>Create a Post</h1>
+    <div class="display">
+        <form id="createpost" name="createpost" action="/createpost" method="POST" enctype="multipart/form-data">
+            <div>
+                   {{#if error}}
+                        <p class="error">{{error}}</p>
+                    {{/if}}
+    <div id="clientError"></div>
+                <label for="postTitle">Title:</label>
+                <input type="text" id="postTitle" name="postTitle">
+            </div>
+            <div>
+                <label for="caption">Caption:</label>
+                <input type="text" id="caption" name="caption">
+            </div>
+            <div>
+                <label for="rsvpSelect">Is for an event that needs RSVP?</label>
+                <select id="rsvpSelect" name="rsvp">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                </select>
+            </div>
+                <div class="file">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="file">
+                        <span class="file-cta">
+                        <span class="file-label">
+                        </span>
+                        </span>
+                    </label>
+                </div>
+                <input type='submit' value='Upload Post' class="button is-link mt-3" />
+            </div>
+        </form>
+    </div>

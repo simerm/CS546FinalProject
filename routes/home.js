@@ -9,9 +9,10 @@ import path from 'path';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
-import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
 import { submitApplication, appExists, reportUser, isReported, getAllReported } from '../data/adminApplication.js';
-import { store } from '../config/mongoCollections.js';
+import { posts, store } from '../config/mongoCollections.js';
+import { getAllPosts, createComment, editPost, deletePost, createRating, createRsvp } from '../data/createposts.js';
+
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -40,6 +41,10 @@ Handlebars.registerHelper('whichNav', function(role, options){ //gives back the 
   return role === 'business'? options.fn(this) : options.inverse(this); //inverse aka else in this case
 });
 
+
+Handlebars.registerHelper('encodeURIComponent', function(str) {
+  return encodeURIComponent(str);
+});
 
 router
   .route('/')
@@ -240,41 +245,45 @@ router
 
 
     }),
-  //createpost/forum router
   router
-    .route('/createpost')
+  .route('/edit')
     .get(async (req, res) => {
-      if (!req.session.user) {
-        return res.redirect('/login');
-      }
-      res.render('createpost')
+      return res.render('edit', {postId: req.query.postId});
     })
     .post(async (req, res) => {
-      let { postTitle, caption } = req.body;
-      //xss stuff
-      postTitle = xss(postTitle);
-      caption = xss(caption);
-      let file;
-      if (req.files.file != null) {
-        file = req.files.file;
+      const postCollection = await posts();
+      
+      let currentUser = req.session.user;
+      let currentUsername;
+  
+      if (currentUser) { //if user is logged in
+        currentUsername = currentUser.username;
       }
-      if (!postTitle) {
-        return res.status(400).render('createpost', { error: 'Must provide a post title' });
+
+      let postId = req.body.postId;
+      postId = new ObjectId(postId);
+      let { newCaption } = req.body;
+      newCaption = xss(newCaption);
+    
+      if (!newCaption) {
+        return res.status(400).render('edit', { error: 'Must provide a caption', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
-      if (typeof postTitle !== 'string' || typeof caption !== 'string') {
-        return res.status(400).render('createpost', { error: 'Invalid params' });
+      newCaption = newCaption.trim();
+      if (newCaption.length < 1 || newCaption.length > 100) {
+        return res.status(400).render('edit', { error: 'Must provide a caption between 1-100 characters', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
-      postTitle = postTitle.trim();
-      caption = caption.trim();
-      if (postTitle.length < 1 || postTitle.length > 25) {
-        return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
+    
+      const post = await postCollection.findOne({ _id: postId });
+      if (!post) {
+        return res.status(400).render('edit', { error: 'Comment not found', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
-      const user_info = await createPost(req.session.user, postTitle, file, caption);
-      if (!user_info) {
-        return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
+      let edit = await editPost(newCaption, postId);
+      if (!edit) {
+        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
       return res.redirect('/');
-    }),
+    });
+
   router
     .route('/delete')
     .post(async (req, res) => {
@@ -292,30 +301,53 @@ router
       }
       return res.redirect('/');
     }),
-  // router
-  // .route('/likes')
-  // .post(async (req, res) =>  {
-  //   if (!req.session.user) {
-  //     return res.redirect('/login');
-  //   }
-  //   let {postId} = req.body;
-  //   let like = await incrementLikes(req.session.user, postId);
-  //   if (!like) {
-  //     return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
-  //   }
-  //   return res.redirect('/');
-  // });
+  router
+  .route('/ratings')
+  .post(async (req, res) =>  {
+    let {rating, postId} = req.body;
+    let rate = await createRating(rating, req.session.user, postId);
+    if (!rate) {
+      return res.status(400).render('home', { error: 'Rate post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
+
+  router
+  .route('/rsvps')
+  .post(async (req, res) =>  {
+    let {rsvpMe, postId} = req.body;
+    let userRsvp = await createRsvp(rsvpMe, req.session.user, postId);
+    if (!userRsvp) {
+      return res.status(400).render('home', { error: 'RSVP post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
   router
     .route('/comments')
     .post(async (req, res) => {
-      if (!req.session.user) {
-        return res.redirect('/login');
+      const postData = await getAllPosts();
+      //retrieve logged in user to keep track of posts
+      let currentUser = req.session.user;
+      let currentUsername;
+  
+      if (currentUser) { //if user is logged in
+        currentUsername = currentUser.username;
       }
       let { postId, commentInput } = req.body;
       commentInput = xss(commentInput);
-      let comment = await createComment(commentInput, req.session.user, postId);
-      if (!comment) {
-        return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
+      if (!commentInput) {
+        return res.status(400).render('home', { error: 'Must provide a comment', posts: postData, c_usr: currentUsername, auth: true });
+     }
+     if (typeof commentInput !== 'string') {
+      return res.status(400).render('home', { error: 'Must provide a string', posts: postData, c_usr: currentUsername, auth: true });
+     }
+    commentInput = commentInput.trim();
+    if (commentInput.length < 1 || commentInput.length > 50) {
+      return res.status(400).render('home', { error: 'Comment must be between 1-50 characters long', posts: postData, c_usr: currentUsername, auth: true });
+    }
+      let comments = await createComment(commentInput, req.session.user, postId);
+      if (!comments) {
+        return res.status(400).render('home', { error: 'Comment post was unsuccessful', posts: postData, c_usr: currentUsername, auth: true });
       }
       return res.redirect('/');
     });
