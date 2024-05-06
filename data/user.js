@@ -888,3 +888,24 @@ export const addTrade = async (username, figurineName, seriesName, modelName, tr
     return { success: false, message: e }; // Return error message
   }
 }
+
+export const removeTrade = async (username, figurineName, seriesName, modelName) => {
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.tradingList || !user.tradingList[figurineName] || !user.tradingList[figurineName][seriesName]) {
+      return { success: true, message: 'Trading list is empty, no need to delete figurine' };
+    }
+
+    if (user.tradingList[figurineName][seriesName].includes(modelName)) {
+      user.tradingList[figurineName][seriesName] = user.tradingList[figurineName][seriesName].filter(model => model !== modelName);
+      // Update user's document in the collection
+      await userCollection.updateOne({ username: username }, { $set: { tradingList: user.tradingList } });
+      return { success: true, message: 'Model removed from trading list', trade: user.tradingList };
+    }
+  } catch (e) {
+    return { success: false, message: e }; // Return error message
+  }
+}

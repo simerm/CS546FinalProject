@@ -90,7 +90,7 @@ export const sortFigurinesUser = async (username) => {
                                 owned: owned,
                                 inWishlist: inWishlist,
                                 seriesName: series.seriesName,
-                                trading: trading
+                                inTradingList: trading
                             }
                         })
                     };

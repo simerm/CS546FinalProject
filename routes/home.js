@@ -2,7 +2,7 @@ import {Router} from 'express';
 import { sortFigurines, sortFigurinesUser, getBadges } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist, addTrade } from '../data/user.js';
+import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist, addTrade, removeTrade } from '../data/user.js';
 import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
