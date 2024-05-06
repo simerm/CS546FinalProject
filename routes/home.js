@@ -158,7 +158,8 @@ router
         reportedUsers,
         badges: badges ? badges : null,
         hasPicture,
-        picture: req.session.user.picture
+        picture: req.session.user.picture,
+        tradingList: req.session.user.tradingList
       })
     })
     .post(async (req, res) => {
@@ -804,6 +805,7 @@ router
               bio: user.bio,
               location: user.location,
               picture: user.picture,
+              tradingList: user.tradingList
               //auth: val
             }
           }
@@ -1232,7 +1234,8 @@ router
         hasFriends,
         friends: result.friends,
         hasPicture,
-        picture:result.picture
+        picture: result.picture,
+        tradingList: result.tradingList
       })
     } catch (e) {
       res.status(500).json({ error: e });
