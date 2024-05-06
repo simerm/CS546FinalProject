@@ -1405,6 +1405,28 @@ router
       let seriesName = req.params.seriesName
       let modelName = req.params.modelName
       let username = req.session.user.username
+
+      const figurineInfo = await sortFigurines();
+      // console.log(figurineInfo)
+
+      // Check if the provided figurineName exists in the object
+      const figurineData = figurineInfo[figurineName];
+      if (!figurineData) {
+        return res.status(400).json({ success: false, message: 'Figurine name not found' });
+      }
+
+      // Check if the provided seriesName exists in the found figurineData
+      const seriesData = figurineData.find(series => series.seriesName === seriesName);
+      if (!seriesData) {
+        return res.status(400).json({ success: false, message: 'Series name not found' });
+      }
+
+      // Check if the provided modelName exists in the found seriesData
+      const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+      if (!modelData) {
+        return res.status(400).json({ success: false, message: 'Model name not found' });
+      }
+
       let trade = await addTrade(username, figurineName, seriesName, modelName)
 
       if (trade.success) {
@@ -1427,6 +1449,28 @@ router
       let seriesName = req.params.seriesName
       let modelName = req.params.modelName
       let username = req.session.user.username
+
+      const figurineInfo = await sortFigurines();
+      // console.log(figurineInfo)
+
+      // Check if the provided figurineName exists in the object
+      const figurineData = figurineInfo[figurineName];
+      if (!figurineData) {
+        return res.status(400).json({ success: false, message: 'Figurine name not found' });
+      }
+
+      // Check if the provided seriesName exists in the found figurineData
+      const seriesData = figurineData.find(series => series.seriesName === seriesName);
+      if (!seriesData) {
+        return res.status(400).json({ success: false, message: 'Series name not found' });
+      }
+
+      // Check if the provided modelName exists in the found seriesData
+      const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+      if (!modelData) {
+        return res.status(400).json({ success: false, message: 'Model name not found' });
+      }
+
       let trade = await removeTrade(username, figurineName, seriesName, modelName)
 
       if (trade.success) {
