@@ -19,6 +19,28 @@ try {
 }
 
 try {
+    const user = await createPost(
+        "jfaustin",
+        "Joey's Event",
+        null,
+        "At 3pm I am trading Smiskis at Mitsuwa",
+        [],
+        [],
+        [],
+        true,
+        [],
+        false,
+        false,
+        false,
+        false,
+        "2024-05-06T21:46:37.350+00:00"
+    )
+    console.log(user);
+} catch (e) {
+    console.log(e);
+}
+
+try {
     const login = await loginUser("graffixnyc", "Dajoma141");
     console.log(login);
 } catch (e) {
