@@ -999,8 +999,28 @@ router
         let figurineName = req.params.figurineName;
         let seriesName = req.params.seriesName;
         let modelName = req.params.modelName;
+        
+        const figurineInfo = await sortFigurines();
+        // console.log(figurineInfo)
 
-        // Add to collection
+        // Check if the provided figurineName exists in the object
+        const figurineData = figurineInfo[figurineName];
+        if (!figurineData) {
+          return res.status(400).json({ success: false, message: 'Figurine name not found' });
+        }
+
+        // Check if the provided seriesName exists in the found figurineData
+        const seriesData = figurineData.find(series => series.seriesName === seriesName);
+        if (!seriesData) {
+          return res.status(400).json({ success: false, message: 'Series name not found' });
+        }
+
+        // Check if the provided modelName exists in the found seriesData
+        const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+        if (!modelData) {
+          return res.status(400).json({ success: false, message: 'Model name not found' });
+        }
+            // Add to collection
         let collection = await addCollection(req.session.user.username, figurineName, seriesName, modelName);
 
         if (collection.success) {
@@ -1031,6 +1051,28 @@ router
         let figurineName = req.params.figurineName
         let seriesName = req.params.seriesName
         let modelName = req.params.modelName
+
+        const figurineInfo = await sortFigurines();
+        // console.log(figurineInfo)
+
+        // Check if the provided figurineName exists in the object
+        const figurineData = figurineInfo[figurineName];
+        if (!figurineData) {
+          return res.status(400).json({ success: false, message: 'Figurine name not found' });
+        }
+
+        // Check if the provided seriesName exists in the found figurineData
+        const seriesData = figurineData.find(series => series.seriesName === seriesName);
+        if (!seriesData) {
+          return res.status(400).json({ success: false, message: 'Series name not found' });
+        }
+
+        // Check if the provided modelName exists in the found seriesData
+        const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+        if (!modelData) {
+          return res.status(400).json({ success: false, message: 'Model name not found' });
+        }
+
         let collection = await removeCollection(req.session.user.username, figurineName, seriesName, modelName)
 
         if (collection.success) {
@@ -1366,14 +1408,14 @@ router
       let trade = await addTrade(username, figurineName, seriesName, modelName)
 
       if (trade.success) {
-        console.log(trade.message)
+        // console.log(trade.message)
         res.status(200).json({ success: true, message: trade.message });
       } else {
-        console.log(trade.message)
+        // console.log(trade.message)
         res.status(400).json({ success: false, message: trade.message });
       }
     } catch (e) {
-      console.log(e)
+      // console.log(e)
       res.status(500).json({ error: e });
     }
   }),
