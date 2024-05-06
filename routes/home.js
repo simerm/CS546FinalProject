@@ -223,26 +223,27 @@ router
       if (currentUser) { //if user is logged in
         currentUsername = currentUser.username;
       }
-      let { newCaption, postId } = req.body;
-      console.log(req.body);
-      newCaption = xss(newCaption);
+
+      let postId = req.body.postId;
       postId = new ObjectId(postId);
+      let { newCaption } = req.body;
+      newCaption = xss(newCaption);
     
       if (!newCaption) {
-        return res.status(400).render('edit', { error: 'Must provide a caption', postCollection, c_usr: currentUsername, auth: true });
+        return res.status(400).render('edit', { error: 'Must provide a caption', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
       newCaption = newCaption.trim();
       if (newCaption.length < 1 || newCaption.length > 100) {
-        return res.status(400).render('edit', { error: 'Must provide a caption between 1-100 characters', postCollection, c_usr: currentUsername, auth: true });
+        return res.status(400).render('edit', { error: 'Must provide a caption between 1-100 characters', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
     
       const post = await postCollection.findOne({ _id: postId });
       if (!post) {
-        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, auth: true });
+        return res.status(400).render('edit', { error: 'Comment not found', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
       let edit = await editPost(newCaption, postId);
       if (!edit) {
-        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, auth: true });
+        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, postId: postId, auth: true });
       }
       return res.redirect('/');
     });

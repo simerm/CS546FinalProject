@@ -39,7 +39,10 @@
                         <img src="/public/business icon.png" class="businessIcon">
                         {{/if}}
                     </p>
-                    <h2>{{title}}</h2>
+                    <h2><b>{{title}}</b></h2>
+                    {{#if isRsvp}}
+                    <h4>[RSVP Post]</h4>
+                    {{/if}}
                     <div class="postDiv">
                         <p>{{caption}}</p>
                         {{#if isVideo}}
@@ -87,8 +90,8 @@
                         <input type="hidden" name="rsvpMe" value="yes">
                         <input type="hidden" name="postId" value="{{_id}}">
                         <div class="countRsvp">
-                            <button type="submit" class="rsvpButton">I want to RSVP to this event</button>
-                            <label>Number of RSVP</label>
+                            <button type="submit" class="rsvpButton">RSVP to This Event</button>
+                            <label><b>RSVP Count: </b></label>
                         <span class="rsvpCount">{{whoRSVP.length}}</span>
                     </div>
                     </form>
