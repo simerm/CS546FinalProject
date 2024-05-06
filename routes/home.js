@@ -818,7 +818,7 @@ router
           return res.redirect('/profile')
 
         }
-        else { //THIS IS WHERE THE LOGIN ERROR WONT APPEAR
+        else { 
           return res.status(400).render('login', { hasError:true, error: "invalid username or password" });
         }
 
