@@ -1,4 +1,9 @@
-<h1>Create a Post</h1>
+
+
+<title>Create a Post</title>
+
+<body>
+    <h1>Create a Post</h1>
     <!-- {{#if error}}
     <p class="error">{{error}}</p>
     {{/if}} -->
@@ -10,31 +15,26 @@
                 <input type="text" id="postTitle" name="postTitle">
             </div>
             <div>
-                <div>
                 <label for="caption">Caption:</label>
                 <input type="text" id="caption" name="caption">
             </div>
             <div>
-            <label for="rsvpSelect"  id="rsvpLabel">Is for an event that needs RSVP?</label>
+                <label for="rsvpSelect">Is for an event that needs RSVP?</label>
                 <select id="rsvpSelect" name="rsvp">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
                 </select>
             </div>
-            <form ref='uploadForm' id='uploadForm' action='/createpost' method='POST' encType="multipart/form-data">
-                <div class="file">
-                    <label class="file-label">
-                        <input class="file-input" type="file" name="sampleFile">
-                        <span class="file-cta">
-                        <span class="file-label">
-                        </span>
-                        </span>
-                    </label>
-                </div>
-                <input type='submit' value='Upload!' class="button is-link mt-3" />
-            </form>
+            <div class="file">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="sampleFile">
+                    <span class="file-cta">
+                        <span class="file-label"></span>
+                    </span>
+                </label>
             </div>
+            <input type="submit" value="Create Post" class="button is-link mt-3" />
         </form>
     </div>
 </body>
-</html>
+
