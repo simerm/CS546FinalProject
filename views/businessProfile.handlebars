@@ -1,4 +1,4 @@
-<body>
+<div class="body">
 {{!-- source the info from the businesses  --}}
 
     <h1>My Profile</h1>
@@ -13,17 +13,13 @@
                 <div class="right">
                     <h2>{{storeName}} </h2>
                     <div class="locationDiv">
-                        <img src="/public/location.png" class="locationPicture">
+                        <img src="/public/location.png" alt="Location" class="locationPicture">
                         <p>{{city}}, {{state}}</p>
                     </div>
 
                     <div class="divider"></div>
-                    {{!-- {{#if bio}} --}}
                     <p>About Us: {{bio}}</p>
-                    {{!-- {{else}}
-                    <p>About Us: N/A</p>
-                    {{/if}} --}}
-
+                   
                     <div class="edit">
                     <button type="submit" class="btn btn-light align-right" id="editProfileButton"
                         name="editProfile">Edit
@@ -47,7 +43,7 @@
                         <div class="alert alert-danger" style="display: none" id="clientError"></div>
                         <form id="editBusinessProfile" action="/businessProfile" method="POST">
                             <div class="form-group">
-                                <label for="name">Store Name:</label>
+                                <label for="storeName">Store Name:</label>
                                 <input class="form-control" type="text" id="storeName" name="storeName">
 
                                 <label for="bio">About Us:</label>
@@ -64,43 +60,51 @@
         </div>
 
         </div>
+    </div>   
+
+
+
+    <div class="divider"></div>
+    
+    <h2>My Stock</h2>
+    
+    <div id ="stock-list">
+        {{#each figurineStock}}
+            <ul>
+            <li>{{this}}</li>
+            </ul>
+        {{/each}}  
+    </div> <br>
+    
+    <form id="addStockForm">
+        <h2>Add Stock</h2>
+        <label for="add-stock">Select Figurine:</label> <br>
+
+        <select name="add-stock" id="add-stock" class="dropbtn">
+            {{#each figList}}
+                <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+
+        <button id="AddButton" name="AddButton" type="submit" class="addButton">Add</button>
+
+    </form> <br>
+
+    <form id="removeStockForm">
+        <h2>Remove Stock</h2>
+        <label for="remove-stock">Select Figurine:</label> <br>
+        <select name="remove-stock" id="remove-stock" class="dropbtn">
+            {{#each figurineStock}}
+                <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+        <button id="RemoveButton" name="RemoveButton" type="submit" class="addButton">Remove</button>
+    </form>
         
-        <div class="divider"></div>
-        <div class="collection">
-            <h2>My Stock</h2>
-            <ul id ="stock-list">
-                {{#each figurineStock}}
-                    <li>{{this}}</li>
-                {{/each}} 
-            </ul> <br>
 
-            <form id="addStockForm">
-                <label for="add-stock"><h2>Add Stock</h2></label> <br>
-                <select name="add-stock" id="add-stock" class="dropbtn">
-                    {{#each figList}}
-                        <option id="fig" value="{{this}}">{{this}}</option>
-                    {{/each}}
-                </select>
-               
-                <button id="AddButton" name="AddButton" type="submit" class="addButton">Add</button>
-            </form> <br>
-
-            <form id="removeStockForm">
-                <label for="remove-stock"><h2>Remove Stock</h2></label> <br>
-                <select name="remove-stock" id="remove-stock" class="dropbtn">
-                    {{#each figurineStock}}
-                        <option id="figR" value="{{this}}">{{this}}</option>
-                    {{/each}}
-                </select>
-                <button id="RemoveButton" name="RemoveButton" type="submit" class="addButton">Remove</button>
-            </form>
-        </div>
-
-    </div> 
+   
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script src="../public/js/mainAjax.js"></script>
 
-</body>
 </div>
-</html>

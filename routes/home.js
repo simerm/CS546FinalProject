@@ -40,6 +40,15 @@ Handlebars.registerHelper('whichNav', function(role, options){ //gives back the 
   return role === 'business'? options.fn(this) : options.inverse(this); //inverse aka else in this case
 });
 
+// Handlebars.registerHelper('whichPic', function(selected, options){
+//   if(selected === 'cat')
+//   if(selected === 'frog')
+//   if(selected === 'lion')
+//   if(selected === 'panda')
+//   if(selected === 'unicorn')
+//   if(selected === 'profile')
+// });
+
 
 router
   .route('/')
@@ -1237,6 +1246,7 @@ router
         if (badges['Smiski'] || badges['Sonny Angel']) {
           hasBadges = true;
         }
+
         let hasPicture = false
         if (result.picture !== "" && result.picture !== "None"){
           hasPicture = true
