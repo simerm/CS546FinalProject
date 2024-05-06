@@ -41,7 +41,6 @@ Handlebars.registerHelper('encodeURIComponent', function(str) {
   return encodeURIComponent(str);
 });
 
-
 router
   .route('/')
   .get(async (req, res) => {
