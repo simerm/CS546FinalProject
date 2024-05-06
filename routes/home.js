@@ -215,24 +215,33 @@ router
       return res.render('edit', {postId: req.query.postId});
     })
     .post(async (req, res) => {
-    let { postId, newCaption } = req.body;
-    postId = new ObjectId(postId);
-    newCaption = xss(newCaption);
-    if (!newCaption) {
-      return res.status(400).render('edit', { error: 'Caption cannot be empty', postId: req.query.postId});
-    }
-    newCaption = newCaption.trim();
-    if (newCaption.length < 1 || newCaption.length > 100) {
-      return res.status(400).render('edit', { error: 'Caption must be between 1-100 characters long', postId: req.query.postId });
-    }
-    const postCollection = await posts();
-    const post = await postCollection.findOne({ _id: postId });
-    if (!post) {
-      return res.status(400).render('edit', { error: 'Post not found', postId: req.query.postId });
-    }
+      const postCollection = await posts();
+      
+      let currentUser = req.session.user;
+      let currentUsername;
+  
+      if (currentUser) { //if user is logged in
+        currentUsername = currentUser.username;
+      }
+      let { postId, newCaption } = req.body;
+      newCaption = xss(newCaption);
+      postId = new ObjectId(postId);
+    
+      if (!newCaption) {
+        return res.status(400).render('edit', { error: 'Must provide a caption', postCollection, c_usr: currentUsername, auth: true });
+      }
+      newCaption = newCaption.trim();
+      if (newCaption.length < 1 || newCaption.length > 100) {
+        return res.status(400).render('edit', { error: 'Must provide a caption between 1-100 characters', postCollection, c_usr: currentUsername, auth: true });
+      }
+    
+      const post = await postCollection.findOne({ _id: postId });
+      if (!post) {
+        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, auth: true });
+      }
       let edit = await editPost(newCaption, postId);
       if (!edit) {
-        return res.status(400).render('edit', { error: 'Edit post was unsuccessful', postId: req.query.postId });
+        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, auth: true });
       }
       return res.redirect('/');
     });

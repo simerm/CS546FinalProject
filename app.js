@@ -4,7 +4,7 @@ import { dirname } from 'path';
 import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import fileUpload from 'express-fileupload';
-import { createPost ,createComment} from './data/createposts.js';
+import { createPost} from './data/createposts.js';
 import xss from 'xss';
 
 const __filename = fileURLToPath(import.meta.url);
