@@ -707,7 +707,7 @@ router
 
         }
       } catch (e) {
-        console.log(e)
+        //console.log(e)
         return res.status(400).render('register', { error: e });
 
       }
@@ -929,7 +929,7 @@ router
         
       let bool = true;
       let role = req.session.user.role; //so it can make the necessary changes for each profile
-      console.log(role);
+      //console.log(role);
 
       try {
         let result = await updateProfile(username, update, role) 
@@ -945,59 +945,44 @@ router
     }),
 
   router
-    .route('/addToStock/:seriesName')
-    .patch(async (req, res) => {
-      try { //try to add a series to the company stock
-        //grab all of the necessary parameters for addToStock
-        let username = req.session.user.username; //username 
-        let series = req.params.seriesName //series 
-
-        const adding = await addToStock(username, series); //call the function to add in the stock
-
-        if (adding.success) {
-          // console.log('success')
-          // Send the updated list as JSON
-          res.status(200).json({ success: true, data: adding });
-          // need to render the business profile page again after calling to show updated stock - using ajax
-
-        } else {
-          // console.log('fail')
-          
-          res.status(400).json({ success: false, message: "Error with adding" });
-        }
-
-      } catch (e) {
-        res.status(500).json({ error: e });
+  .route('/addToStock/:seriesName')
+  .patch(async (req, res) => {
+    try {
+      // Grab all of the necessary parameters for addToStock
+      let username = req.session.user.username; // Username
+      let series = req.params.seriesName; // Series
+      // Call the function to add in the stock and update session data
+      const adding = await addToStock(username, series, req);
+      if (adding.success) {
+        //console.log("Added",req.session.user);
+        // Send the updated list as JSON
+        res.status(200).json({ success: true, data: adding });
+        // Need to render the business profile page again after calling to show updated stock - using ajax
+        //return res.status(400).render('businessProfile')
+      } else {
+        res.status(400).json({ success: false, message: "Error with adding" });
       }
-
-    }),
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
+  }),
 
   router
     .route('/removeFromStock/:seriesName')
     .patch(async (req, res) => {
-      try { //try to add a series to the company stock
-        //grab all of the necessary parameters for addToStock
-        let username = req.session.user.username; //username 
-        let series = req.params.seriesName //series 
-
-        const removing = await removeFromStock(username, series); //call the function to add in the stock
-
+      try {
+        let username = req.session.user.username; // Username from session
+        let series = req.params.seriesName; // Series name from request parameters
+        const removing = await removeFromStock(username, series, req); // Call the function to remove from stock and pass the request object
         if (removing.success) {
-          // console.log('removed')
-          // Send the updated list as JSON
+          //console.log("Removed", req.session.user);
           res.status(200).json({ success: true, data: removing });
-          // need to render the business profile page again after calling to show updated stock - using ajax
-
         } else {
-          // console.log('fail')
-          
           res.status(400).json({ success: false, message: "Error with removing" });
         }
-
       } catch (e) {
         res.status(500).json({ error: e });
       }
-
     }),
 
   router
@@ -1426,6 +1411,7 @@ router
     username = username.trim().toLowerCase();
 
     if (username === req.session.user.username){ //if they look up themselves
+      if(req.session.user.role === 'business') return res.redirect("/businessProfile");
       return res.redirect("/profile")
     }
 
