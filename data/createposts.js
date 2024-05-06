@@ -101,10 +101,7 @@ export const getAllPosts = async () => {
 };
 
 export const editPost = async (newCaption, postId) => {
-    if (!ObjectId.isValid(postId)) {
-        throw "Invalid postId";
-    }
-    if (newCaption.length === 0) {
+    if (!newCaption) {
         throw "New caption cannot be empty";
     }
     if (newCaption.length < 1 || newCaption.length > 100) {
@@ -153,9 +150,6 @@ export const createComment = async (
     comment = comment.trim();
     if (comment.length < 1 || comment.length > 50) {
         throw "Post title must be between 1-50 characters long";
-    }
-    if (!ObjectId.isValid(postId)) {
-        throw "Invalid postId";
     }
     const post_collection = await posts();
 

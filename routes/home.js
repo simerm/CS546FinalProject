@@ -208,41 +208,6 @@ router
 
 
     }),
-  //createpost/forum router
-  // router
-  //   .route('/createpost')
-  //   .get(async (req, res) => {
-  //     if (!req.session.user) {
-  //       return res.redirect('/login');
-  //     }
-  //     res.render('createpost')
-  //   })
-  //   .post(async (req, res) => {
-  //     let { postTitle, caption } = req.body;
-  //     //xss stuff
-  //     postTitle = xss(postTitle);
-  //     caption = xss(caption);
-  //     let file;
-  //     if (req.files.file != null) {
-  //       file = req.files.file;
-  //     }
-  //     if (!postTitle) {
-  //       return res.status(400).render('createpost', { error: 'Must provide a post title' });
-  //     }
-  //     if (typeof postTitle !== 'string' || typeof caption !== 'string') {
-  //       return res.status(400).render('createpost', { error: 'Invalid params' });
-  //     }
-  //     postTitle = postTitle.trim();
-  //     caption = caption.trim();
-  //     if (postTitle.length < 1 || postTitle.length > 25) {
-  //       return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
-  //     }
-  //     const user_info = await createPost(req.session.user, postTitle, file, caption);
-  //     if (!user_info) {
-  //       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
-  //     }
-  //     return res.redirect('/');
-  //   }),
   router
   .route('/edit')
     .get(async (req, res) => {
@@ -250,22 +215,23 @@ router
     })
     .post(async (req, res) => {
     let { postId, newCaption } = req.body;
-    if (newCaption.length === 0) {
-      return res.status(400).render('edit', { error: 'Caption cannot be empty' });
+    postId = new ObjectId(postId);
+    newCaption = xss(newCaption);
+    if (!newCaption) {
+      return res.status(400).render('edit', { error: 'Caption cannot be empty', postId: req.query.postId});
     }
+    newCaption = newCaption.trim();
     if (newCaption.length < 1 || newCaption.length > 100) {
-      return res.status(400).render('edit', { error: 'Caption must be between 1-100 characters long' });
+      return res.status(400).render('edit', { error: 'Caption must be between 1-100 characters long', postId: req.query.postId });
     }
     const postCollection = await posts();
     const post = await postCollection.findOne({ _id: postId });
     if (!post) {
-      return res.status(400).render('edit', { error: 'Post not found' });
+      return res.status(400).render('edit', { error: 'Post not found', postId: req.query.postId });
     }
-      postId = new ObjectId(postId);
-      newCaption = xss(newCaption);
       let edit = await editPost(newCaption, postId);
       if (!edit) {
-        return res.status(400).render('edit', { error: 'Edit post was unsuccessful' });
+        return res.status(400).render('edit', { error: 'Edit post was unsuccessful', postId: req.query.postId });
       }
       return res.redirect('/');
     });
@@ -303,14 +269,29 @@ router
   router
     .route('/comments')
     .post(async (req, res) => {
-      if (!req.session.user) {
-        return res.redirect('/login');
+      const postData = await getAllPosts();
+      //retrieve logged in user to keep track of posts
+      let currentUser = req.session.user;
+      let currentUsername;
+  
+      if (currentUser) { //if user is logged in
+        currentUsername = currentUser.username;
       }
-      let { postId, commentInput } = req.body;
+      let { comment, postId, commentInput } = req.body;
       commentInput = xss(commentInput);
-      let comment = await createComment(commentInput, req.session.user, postId);
       if (!comment) {
-        return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
+        return res.status(400).render('home', { error: 'Must provide a comment', posts: postData, c_usr: currentUsername, auth: true });
+     }
+     if (typeof comment !== 'string') {
+      return res.status(400).render('home', { error: 'Must provide a string', posts: postData, c_usr: currentUsername, auth: true });
+     }
+    comment = comment.trim();
+    if (comment.length < 1 || comment.length > 50) {
+      return res.status(400).render('home', { error: 'Comment must be between 1-50 characters long', posts: postData, c_usr: currentUsername, auth: true });
+    }
+      let comments = await createComment(commentInput, req.session.user, postId);
+      if (!comments) {
+        return res.status(400).render('home', { error: 'Comment post was unsuccessful', posts: postData, c_usr: currentUsername, auth: true });
       }
       return res.redirect('/');
     });
