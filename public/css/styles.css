@@ -496,6 +496,22 @@ h1 {
     padding-top: 10px; /* Added padding for spacing */
 }
 
+.hide-btn {
+    /* Set a specific width */
+    width: 350px; /* Adjust the width as needed */
+    
+    /* Or use max-width to limit the width */
+    /* max-width: 150px; */
+}
+
+.user-post {
+    /* Set a specific width */
+    width: 165px; /* Adjust the width as needed */
+    
+    /* Or use max-width to limit the width */
+    /* max-width: 150px; */
+}
+
 .comments-hidden #comments {
     display: none;
 }
@@ -531,4 +547,18 @@ h1 {
 
 .countRatings:not(.ratingSelected) > .thumbIcon:hover {
 	background-color:#a7c0cd;
+}
+
+.image-container {
+    text-align: center;
+}
+
+.image-container img {
+    height: 500px; /* Set a fixed height for each image */
+    width: auto; /* Maintain aspect ratio */
+}
+
+.button-container {
+    display: flex; /* Set the container to flex to horizontally align items */
+    gap: 10px; /* Add spacing between the buttons */
 }

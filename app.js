@@ -36,49 +36,52 @@ app.get('/createpost', (req, res) => {
 });
 
 app.post('/createpost', async (req, res) => {
-  if (!req.files) {
-    return res.status(400).send('No files were uploaded');
+  let file = null;
+  if (req.files && req.files.file) {
+    file = req.files.file;
+  }
+  // console.log("This is fileType: " + req.body.fileType)
+  // console.log(req);
+  let uploadPath = null;
+  if (file) {
+    uploadPath = thename + '/public/' + file.name;
+
+    file.mv(uploadPath, async function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+    });
   }
 
-  let file = req.files.file;
-  let uploadPath = thename + '/public/' + file.name;
+  let { postTitle, caption } = req.body;
+  //xss stuff
+  postTitle = xss(postTitle);
+  caption = xss(caption);
 
-  file.mv(uploadPath, async function (err) {
-    if (err) {
-      return res.status(500).send(err);
+  if (!postTitle) {
+    return res.status(400).render('createpost', { error: 'Must provide a post title' });
+  }
+
+  if (typeof postTitle !== 'string' || typeof caption !== 'string') {
+    return res.status(400).render('createpost', { error: 'Invalid params' });
+  }
+
+  postTitle = postTitle.trim();
+  caption = caption.trim();
+
+  if (postTitle.length < 1 || postTitle.length > 25) {
+    return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
+  }
+
+  try {
+    const user_info = await createPost(req.session.user, postTitle, file, req.body.rsvp, req.body.fileSelect, caption);
+    if (!user_info) {
+      return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
     }
-
-    let { postTitle, caption } = req.body;
-    //xss stuff
-    postTitle = xss(postTitle);
-    caption = xss(caption);
-    let file = req.files.file;
-    
-    if (!postTitle) {
-      return res.status(400).render('createpost', { error: 'Must provide a post title' });
-    }
-
-    if (typeof postTitle !== 'string' || typeof caption !== 'string') {
-      return res.status(400).render('createpost', { error: 'Invalid params' });
-    }
-
-    postTitle = postTitle.trim();
-    caption = caption.trim();
-
-    if (postTitle.length < 1 || postTitle.length > 25) {
-      return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
-    }
-
-    try {
-      const user_info = await createPost(req.session.user, postTitle, file, caption);
-      if (!user_info) {
-        return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
-      }
-      return res.redirect('/');
-    } catch (error) {
-      return res.status(500).send(error.message);
-    }
-  });
+    return res.redirect('/');
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
 });
 
 // Middleware #2

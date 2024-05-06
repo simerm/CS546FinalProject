@@ -10,7 +10,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
-import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
+import { createPost, getAllPosts, createComment, editPost, deletePost } from '../data/createposts.js';
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -242,6 +242,22 @@ router
   //     }
   //     return res.redirect('/');
   //   }),
+  router
+  .route('/edit')
+    .get(async (req, res) => {
+      return res.render('edit', {postId: req.query.postId});
+    })
+    .post(async (req, res) => {
+      let { postId, newCaption } = req.body;
+      postId = new ObjectId(postId);
+      newCaption = xss(newCaption);
+      let edit = await editPost(newCaption, postId);
+      if (!edit) {
+        return res.status(400).render('edit', { error: 'Edit post was unsuccessful' });
+      }
+      return res.redirect('/');
+    });
+
   router
     .route('/delete')
     .post(async (req, res) => {
