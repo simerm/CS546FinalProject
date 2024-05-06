@@ -75,6 +75,7 @@ router
       let location = null
       let bio = null
       let favFig = null
+      let hasPicture = false
       if (req.session.user.role == "personal" || req.session.user.role == "admin") {
         let date = req.session.user.dateCreated
         const [year, month, day] = date.split('/').map(Number);
@@ -105,6 +106,9 @@ router
         }
         if (req.session.user.favoriteFigurine != "") {
           favFig = req.session.user.favoriteFigurine
+        }
+        if (req.session.user.picture !== "" && req.session.user.picture !== "None"){
+          hasPicture = true
         }
 
         figurineInfo = await sortFigurinesUser(req.session.user.username);
@@ -152,11 +156,13 @@ router
         friends: req.session.user.friends,
         admin,
         reportedUsers,
-        badges: badges ? badges : null
+        badges: badges ? badges : null,
+        hasPicture,
+        picture: req.session.user.picture
       })
     })
     .post(async (req, res) => {
-      let { first, last, location, bio, favFig } = req.body;
+      let { first, last, location, bio, favFig, picture } = req.body;
       let username = ""
       if (req.session.user) {
         username = req.session.user.username
@@ -168,7 +174,7 @@ router
 
       let update = {}
 
-      if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0) {
+      if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0 && picture === "None") {
         return res.status(400).render('userProfile', { error: "Must change a value" });
       }
       else {
@@ -210,12 +216,16 @@ router
           update.favFig = favFig
           req.session.user.favoriteFigurine = favFig
         }
+        if (picture !== "None"){
+          update.picture = picture
+          req.session.user.picture = picture
+        }
 
       }
 
       let bool = true;
       try {
-        let result = await updateProfile(username, update)
+        let result = await updateProfile(username, update, req.session.user.role)
         bool = result.success
         if (!bool) {
           return res.status(400).render('userProfile', { error: "Something went wrong" });
@@ -1192,6 +1202,10 @@ router
       if (badges['Smiski'] || badges['Sonny Angel']) {
         hasBadges = true;
       }
+      let hasPicture = false
+      if (result.picture !== "" && result.picture !== "None"){
+        hasPicture = true
+      }
 
       if (wishlist.wishlist && wishlist.wishlist.length > 0) {
         hasWishlist = true;
@@ -1216,7 +1230,9 @@ router
         bio: result.bio,
         favFig: result.favoriteFigurine,
         hasFriends,
-        friends: result.friends
+        friends: result.friends,
+        hasPicture,
+        picture:result.picture
       })
     } catch (e) {
       res.status(500).json({ error: e });

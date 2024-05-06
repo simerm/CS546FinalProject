@@ -201,7 +201,7 @@ export const loginUser = async (username, password) => {
     if (!compare) {
       throw "Either the username or password is invalid"
     }
-    
+
   }
 
   return {
@@ -229,8 +229,8 @@ export const registerBusiness = async (
 ) => {
   let n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
   //id error handling
-  if(!id){
-    throw"Must provide an id"
+  if (!id) {
+    throw "Must provide an id"
   }
   else {
     if (typeof id !== "string" || !isNaN(id)) {
@@ -244,7 +244,7 @@ export const registerBusiness = async (
       else {
         for (let i = 0; i < id.length; i++) {
           if (i != 2 && isNaN(parseInt(id[i]))) {
-            throw"Invalid parameters"
+            throw "Invalid parameters"
 
           }
         }
@@ -281,18 +281,18 @@ export const registerBusiness = async (
   //street error handling
   street = street.trim();
   if (!street) {
-    throw"Must provide a street"
+    throw "Must provide a street"
 
   }
   else {
     if (typeof street !== "string" || !isNaN(street)) {
-      throw"Invalid street"
+      throw "Invalid street"
 
     }
     else {
       street = street.trim()
       if (street.length < 5 || street.length > 25) {
-        throw"Street must be between 5 to 25 characters"
+        throw "Street must be between 5 to 25 characters"
 
       }
 
@@ -301,12 +301,12 @@ export const registerBusiness = async (
   //city error handling
   city = city.trim();
   if (!city) {
-    throw"Must provide a city"
+    throw "Must provide a city"
 
   }
   else {
     if (typeof city !== "string" || !isNaN(city)) {
-      throw"Must provide a valid city"
+      throw "Must provide a valid city"
 
     }
     else {
@@ -317,7 +317,7 @@ export const registerBusiness = async (
       else {
         for (let x of city) {
           if (n.includes(x)) {
-            throw"City should not include numbers"
+            throw "City should not include numbers"
 
           }
         }
@@ -333,7 +333,7 @@ export const registerBusiness = async (
     'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
   ];
   if (!state || typeof state !== "string") {
-    throw"Provide a valid state"
+    throw "Provide a valid state"
 
   }
   else {
@@ -341,57 +341,62 @@ export const registerBusiness = async (
     state = state.toUpperCase()
 
     if (!stateAbbreviations.includes(state)) {
-      throw"Not a valid state"
+      throw "Not a valid state"
 
     }
   }
   //zipcode error handling
   if (!zipcode || typeof zipcode !== "string") {
-    throw"Provide a valid zipcode"
+    throw "Provide a valid zipcode"
 
   }
   else {
     if ((zipcode.length === 5 || zipcode.length === 9)) {
       for (let i = 0; i < zipcode.length; i++) {
         if (isNaN(parseInt(zipcode[i]))) {
-          throw"Make sure your zipcode is 5 numbers"
+          throw "Make sure your zipcode is 5 numbers"
 
         }
       }
     }
   }
   //phone number error handling
-  // if (!phoneNumber || typeof phoneNumber !== "string") {
-  //   throw"Provide a phonenumber"
+  if (!phoneNumber || typeof phoneNumber !== "string") {
+    throw "invalid phone number"
 
-  // }
-  // else {
-  //   let number = parsePhoneNumberFromString(phoneNumber);
-  //   if (!number || !number.isValid()) {
-  //     throw"Number is not valid"
+  }
+  else {
+    if (phoneNumber.length != 12 || phoneNumber[0] !== "+" || phoneNumber[1] !== "1") {
+      throw "invalid phone number"
 
-  //   }
-  // }
+    }
+    for (let i = 2; i < 12; i++) {
+      if (isNaN(parseInt(phoneNumber[i]))) {
+        throw "invalid phone number"
+
+      }
+    }
+  }
   //username error handling
   if (!username) {
-    throw"Provide a username"
+    throw "Provide a username"
 
   }
   else {
     if (typeof username !== "string" || !isNaN(username)) {
-      throw"Must provide a valid username"
+      throw "Must provide a valid username"
 
     }
     else {
       username = username.trim()
       if (username.length < 5 || username.length > 10) {
-        throw"Username has to be between 5-10 letters"
+        throw "Username has to be between 5-10 letters"
 
       }
       else {
         for (let x of username) {
           if (n.includes(x)) {
-            throw"Username should not include numbers"
+            throw "Username should not include numbers"
           }
         }
       }
@@ -399,18 +404,18 @@ export const registerBusiness = async (
   }
   //password error handling
   if (!password) {
-    throw"Must provide a password"
+    throw "Must provide a password"
 
   }
   else {
     if (typeof password !== "string" || !isNaN(password)) {
-      throw"Must provide a valid password"
+      throw "Must provide a valid password"
 
     }
     else {
       password = password.trim()
       if (password.length < 8) {
-        throw"Password must be at least 8 characters"
+        throw "Password must be at least 8 characters"
 
       }
       else {
@@ -436,7 +441,7 @@ export const registerBusiness = async (
           }
         }
         if (!upper || !num || !special) {
-          throw"Password must have an uppercase letter, number, and special character"
+          throw "Password must have an uppercase letter, number, and special character"
 
         }
       }
@@ -583,7 +588,7 @@ export const updateProfile = async (username, updateObject, role) => {
   let theUser = null;
   //^ what is this stuff? 
 
-  if(role === 'business'){
+  if (role === 'business') {
     if (updateObject.hasOwnProperty("storeName")) {
       if (typeof updateObject.first !== 'string') {
         throw "must be a string"
@@ -603,7 +608,7 @@ export const updateProfile = async (username, updateObject, role) => {
         throw "must not be empty"
       }
     }
-  } else{
+  } else {
     if (updateObject.hasOwnProperty("first")) {
       if (typeof updateObject.first !== 'string') {
         throw "must be a string"
@@ -655,10 +660,9 @@ export const updateProfile = async (username, updateObject, role) => {
 
     }
     if (updateObject.hasOwnProperty("picture")) {
-
-      picture.favFig = picture.favFig.trim()
-
-
+      if (typeof updateObject.picture !== 'string') {
+        throw "must be a string"
+      }
     }
 
     if (updateObject.hasOwnProperty("first")) {
@@ -715,7 +719,7 @@ export const updateProfile = async (username, updateObject, role) => {
     }
   }
 
-    return { success: true }
+  return { success: true }
 
 };
 
@@ -785,7 +789,7 @@ export const addFriend = async (currUser, otherUser) => {
   if (!currUser || !otherUser) {
     throw "must include all params"
   }
-  if (currUser === otherUser){
+  if (currUser === otherUser) {
     throw "can't be same user"
   }
   const userCollection = await users();
@@ -795,23 +799,23 @@ export const addFriend = async (currUser, otherUser) => {
   const friend = await userCollection.findOne({ username: otherUser });
   if (!friend) throw 'User not found';
 
-  if (user.friends.includes (otherUser)){
+  if (user.friends.includes(otherUser)) {
     throw "friend already added"
   }
 
   let first = await userCollection.findOneAndUpdate(
     { 'username': currUser },
-    { $push: { 'friends': otherUser} },
+    { $push: { 'friends': otherUser } },
     { returnDocument: 'after' }
   )
 
   let sec = await userCollection.findOneAndUpdate(
     { 'username': otherUser },
-    { $push: { 'friends': currUser} },
+    { $push: { 'friends': currUser } },
     { returnDocument: 'after' }
   )
 
-  return {success: true}
+  return { success: true }
 
 }
 
@@ -840,7 +844,7 @@ export const areNotFriends = async (first, sec) => {
   const user = await userCollection.findOne({ username: first });
   if (!user) throw 'User not found';
 
-  if (user.friends.includes (sec)){
+  if (user.friends.includes(sec)) {
     return false
   }
   return true

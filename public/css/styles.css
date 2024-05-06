@@ -97,7 +97,7 @@ h1 {
     padding: 20px;
     /* margin: 0 auto; */
     overflow: auto;
-    height: 200px;
+    height: 250px;
     width: 22%;
    
 }
@@ -135,7 +135,7 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     overflow: auto;
-    height: 200px;
+    height: 250px;
     width: 22%;
 }
 
@@ -537,6 +537,7 @@ h1 {
     overflow: auto;
     height: 200px;
     width: 40%;
+    margin: auto;
    
 }
 
@@ -550,7 +551,7 @@ h1 {
     overflow: auto;
     height: 200px;
     width: 40%;
-    
+    margin: auto;
    
 }
 
@@ -558,4 +559,17 @@ h1 {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+
+.chosenPicture{
+    width:120px;
+}
+
+.profileHeader{
+    margin-bottom:50px;
+    margin-top:40px;
+}
+
+.custom-select{
+    margin-bottom:20px;
 }
