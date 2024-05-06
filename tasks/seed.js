@@ -10,13 +10,7 @@ try { //create a normal user
     "Faustino",  
     "jfaustin", 
     "Dajoma141!!!",
-    "",
-    {role: "personal", 
-    favoriteFigurine: "Morning Glory",
-    wishlist: ["Looking Back", "Hiding"],
-    friends: ["pat_hill"],
-    location: "NYC",
-    picture: "lion"});
+    "personal")
 
     console.log(user);
 } catch (e) {
@@ -28,13 +22,13 @@ try { //create a 2nd normal user
     "Hill",  
     "pat_hill", 
     "Pandas12!",
-    "",
-    {role: "personal", 
-    favoriteFigurine: "Bok Choy",
-    friends: ["jfaustin"],
-    picture: "cat"});
+    "personal");
 
     console.log(user);
+} catch(e){
+    console.log(e);
+}
+
 try {
     const post = await createPost(
         "jfaustin",
@@ -57,12 +51,6 @@ try {
     console.log(e);
 }
 
-try {
-    const login = await loginUser("graffixnyc", "Dajoma141");
-    console.log(login);
-} catch (e) {
-    console.log(e);
-}
 
 
 console.log("Done seeding database.");
