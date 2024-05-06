@@ -1194,6 +1194,9 @@ router
       if (result.friends.length > 0) {
         hasFriends = true
       }
+      if (req.session.user.role === "business"){
+        notFriends = false
+      }
 
       const figurineInfo = await sortFigurinesUser(username);
       const badges = await getBadges(username);
