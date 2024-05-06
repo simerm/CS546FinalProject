@@ -10,7 +10,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
-import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
+import { createPost, getAllPosts, createComment, editPost, deletePost } from '../data/createposts.js';
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -34,6 +34,10 @@ Handlebars.registerHelper('equals', function () {
     return true;
   }
   return false;
+});
+
+Handlebars.registerHelper('encodeURIComponent', function(str) {
+  return encodeURIComponent(str);
 });
 
 router
@@ -204,40 +208,56 @@ router
 
     }),
   //createpost/forum router
+  // router
+  //   .route('/createpost')
+  //   .get(async (req, res) => {
+  //     if (!req.session.user) {
+  //       return res.redirect('/login');
+  //     }
+  //     res.render('createpost')
+  //   })
+  //   .post(async (req, res) => {
+  //     let { postTitle, caption } = req.body;
+  //     //xss stuff
+  //     postTitle = xss(postTitle);
+  //     caption = xss(caption);
+  //     let file;
+  //     if (req.files.file != null) {
+  //       file = req.files.file;
+  //     }
+  //     if (!postTitle) {
+  //       return res.status(400).render('createpost', { error: 'Must provide a post title' });
+  //     }
+  //     if (typeof postTitle !== 'string' || typeof caption !== 'string') {
+  //       return res.status(400).render('createpost', { error: 'Invalid params' });
+  //     }
+  //     postTitle = postTitle.trim();
+  //     caption = caption.trim();
+  //     if (postTitle.length < 1 || postTitle.length > 25) {
+  //       return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
+  //     }
+  //     const user_info = await createPost(req.session.user, postTitle, file, caption);
+  //     if (!user_info) {
+  //       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
+  //     }
+  //     return res.redirect('/');
+  //   }),
   router
-    .route('/createpost')
+  .route('/edit')
     .get(async (req, res) => {
-      if (!req.session.user) {
-        return res.redirect('/login');
-      }
-      res.render('createpost')
+      return res.render('edit', {postId: req.query.postId});
     })
     .post(async (req, res) => {
-      let { postTitle, caption } = req.body;
-      //xss stuff
-      postTitle = xss(postTitle);
-      caption = xss(caption);
-      let file;
-      if (req.files.file != null) {
-        file = req.files.file;
-      }
-      if (!postTitle) {
-        return res.status(400).render('createpost', { error: 'Must provide a post title' });
-      }
-      if (typeof postTitle !== 'string' || typeof caption !== 'string') {
-        return res.status(400).render('createpost', { error: 'Invalid params' });
-      }
-      postTitle = postTitle.trim();
-      caption = caption.trim();
-      if (postTitle.length < 1 || postTitle.length > 25) {
-        return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
-      }
-      const user_info = await createPost(req.session.user, postTitle, file, caption);
-      if (!user_info) {
-        return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
+      let { postId, newCaption } = req.body;
+      postId = new ObjectId(postId);
+      newCaption = xss(newCaption);
+      let edit = await editPost(newCaption, postId);
+      if (!edit) {
+        return res.status(400).render('edit', { error: 'Edit post was unsuccessful' });
       }
       return res.redirect('/');
-    }),
+    });
+
   router
     .route('/delete')
     .post(async (req, res) => {

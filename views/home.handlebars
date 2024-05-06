@@ -35,7 +35,19 @@
                         <h2>{{title}}</h2>
                         <div class="postDiv">
                             <p>{{caption}}</p>
-                            <img src="/public/mockpost.jpg" class="postPicture">
+                            {{#if isVideo}}
+                            <div class="image-container">
+                                <video controls>
+                                <source src="/public/{{encodeURIComponent file.name}}" class="postVideoOrAudio">
+                                Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            {{/if}}
+                            {{#if isImage}}
+                            <div class="image-container">
+                                <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
+                            </div>
+                            {{/if}}
                         </div>
                         <div class="divider"></div>
                         
@@ -50,7 +62,7 @@
                             </div>
                                 
                             </form>
-                                <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-up-down-btn">Hide/Show Likes and Dislikes</button>
+                                <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
                         
                         <div class="previous-comments" id="comments-{{_id}}">
                             <p><b>Comments</b></p>
@@ -67,13 +79,20 @@
                                 <button class="add-comment-btn">Add</button>
                             </form>
                         </div>
-                            
-                        <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
+                        <button onclick="toggleComments('{{_id}}')" class="hide-btn">Hide/Show Comments</button>
+                        <p></p>
                         {{#if (equals ../c_usr name)}}
+                            <div class="button-container">
+                            <form id="edit-{{_id}}" action="/edit" method="GET">
+                                <input type="hidden" name="postId" value="{{_id}}">
+                                <button type="submit" class="user-post">Edit Your Post</button>
+                            </form>
+                            <p></p>
                             <form id="delete-{{_id}}" action="/delete" method="POST">
                                 <input type="hidden" name="postId" value="{{_id}}">
-                                <button type="submit">Delete Your Post</button>
+                                <button type="submit" class="user-post">Delete Your Post</button>
                             </form>
+                            </div>
                         {{/if}}
                     </div>
                     
@@ -100,6 +119,7 @@
                 });
         });
          });
+        
         //end accumulator
         function toggleLikesAndDislikes(postId) {
             var likesAndDislikes = document.getElementById("likes-" + postId);
