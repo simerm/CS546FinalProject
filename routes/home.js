@@ -11,7 +11,7 @@ import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
 import { posts } from '../config/mongoCollections.js';
-import { getAllPosts, createComment, editPost, deletePost, createRating } from '../data/createposts.js';
+import { getAllPosts, createComment, editPost, deletePost, createRating, createRsvp } from '../data/createposts.js';
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -41,10 +41,6 @@ Handlebars.registerHelper('encodeURIComponent', function(str) {
   return encodeURIComponent(str);
 });
 
-// Handlebars.registerHelper('ratings', async function(rating, user, postId) {
-//   let rate = await createRating(rating, user, postId);
-//   return rate;
-// });
 
 router
   .route('/')
@@ -219,24 +215,34 @@ router
       return res.render('edit', {postId: req.query.postId});
     })
     .post(async (req, res) => {
-    let { postId, newCaption } = req.body;
-    postId = new ObjectId(postId);
-    newCaption = xss(newCaption);
-    if (!newCaption) {
-      return res.status(400).render('edit', { error: 'Caption cannot be empty', postId: req.query.postId});
-    }
-    newCaption = newCaption.trim();
-    if (newCaption.length < 1 || newCaption.length > 100) {
-      return res.status(400).render('edit', { error: 'Caption must be between 1-100 characters long', postId: req.query.postId });
-    }
-    const postCollection = await posts();
-    const post = await postCollection.findOne({ _id: postId });
-    if (!post) {
-      return res.status(400).render('edit', { error: 'Post not found', postId: req.query.postId });
-    }
+      const postCollection = await posts();
+      
+      let currentUser = req.session.user;
+      let currentUsername;
+  
+      if (currentUser) { //if user is logged in
+        currentUsername = currentUser.username;
+      }
+      let { newCaption, postId } = req.body;
+      console.log(req.body);
+      newCaption = xss(newCaption);
+      postId = new ObjectId(postId);
+    
+      if (!newCaption) {
+        return res.status(400).render('edit', { error: 'Must provide a caption', postCollection, c_usr: currentUsername, auth: true });
+      }
+      newCaption = newCaption.trim();
+      if (newCaption.length < 1 || newCaption.length > 100) {
+        return res.status(400).render('edit', { error: 'Must provide a caption between 1-100 characters', postCollection, c_usr: currentUsername, auth: true });
+      }
+    
+      const post = await postCollection.findOne({ _id: postId });
+      if (!post) {
+        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, auth: true });
+      }
       let edit = await editPost(newCaption, postId);
       if (!edit) {
-        return res.status(400).render('edit', { error: 'Edit post was unsuccessful', postId: req.query.postId });
+        return res.status(400).render('edit', { error: 'Comment post was unsuccessful', postCollection, c_usr: currentUsername, auth: true });
       }
       return res.redirect('/');
     });
@@ -264,7 +270,18 @@ router
     let {rating, postId} = req.body;
     let rate = await createRating(rating, req.session.user, postId);
     if (!rate) {
-      return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
+      return res.status(400).render('home', { error: 'Rate post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
+
+  router
+  .route('/rsvps')
+  .post(async (req, res) =>  {
+    let {rsvpMe, postId} = req.body;
+    let userRsvp = await createRsvp(rsvpMe, req.session.user, postId);
+    if (!userRsvp) {
+      return res.status(400).render('home', { error: 'RSVP post was unsuccessful' });
     }
     return res.redirect('/');
   });

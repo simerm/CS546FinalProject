@@ -181,10 +181,27 @@ export const createRating = async (
     return true;
 }
 
-// export const incrementDislikes = async (user, postId) => {
-//     const post_collection = await posts();
-//     postId = new ObjectId(postId);
-//     const dislikes = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoDisliked: user } });
-//     return dislikes;
-// }
+export const createRsvp = async (
+    rsvpMe,
+    user,
+    postId
+  ) => {
+    if (!ObjectId.isValid(postId)) {
+        throw "Invalid postId";
+    }
+    const post_collection = await posts();
+    postId = new ObjectId(postId);
+    const post = await post_collection.findOne({ _id: postId });
+    if(!post){
+        throw "Post not found";
+    }
+    if (rsvpMe === 'yes') {
+        if (post.whoRSVP.includes(user.username)) {
+            const yes_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoRSVP: user.username } });
+        } else {
+            const yes_push = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoRSVP: user.username } });
+        }
+    }
+    return true;
+}
 
