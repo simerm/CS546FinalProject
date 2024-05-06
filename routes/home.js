@@ -1423,6 +1423,7 @@ router
     username = username.trim().toLowerCase();
 
     if (username === req.session.user.username){ //if they look up themselves
+      if(req.session.user.role === 'business') return res.redirect("/businessProfile");
       return res.redirect("/profile")
     }
 
