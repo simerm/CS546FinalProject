@@ -1,15 +1,25 @@
 import { ObjectId } from 'mongodb';
 import { posts } from '../config/mongoCollections.js';
+import express from 'express';
 
 export const createPost = async (
     user,
     postTitle,
     file,
+    rsvp,
+    image,
+    audio,
+    video,
     caption
   ) => {
-    if (!postTitle) {
-        throw "Must provide a post title";
-    }
+    if (!postTitle && !caption) {
+        throw 'Must provide a post title and caption'
+      } else if (!postTitle) {
+        throw 'Must provide a post title' 
+      } else if (!caption) {
+        throw'Must provide a post caption'
+      }
+      
     if (typeof postTitle !== 'string' || typeof caption !== 'string') {
         throw "Must provide a string";
     }
@@ -17,6 +27,10 @@ export const createPost = async (
     caption = caption.trim();
     if (postTitle.length < 1 || postTitle.length > 25) {
         throw "Post title must be between 1-25 characters long";
+    }
+    
+    if (caption.length < 1 || caption.length > 100) {
+        throw "Caption must be between 1-00 characters long";
     }
     const post_collection = await posts();
 
@@ -27,6 +41,20 @@ export const createPost = async (
         isAdminPost = false;
     }
 
+    let isBusinessPost;
+    if (user.role === 'business') {
+        isBusinessPost = true;
+    } else {
+        isBusinessPost = false;
+    }
+
+    let isRsvp;
+    if (rsvp === 'Yes') {
+        isRsvp = true;
+    } else {
+        isRsvp = false;
+    }
+
     let newPost_obj = {
         name: user.username,
         title: postTitle,
@@ -35,7 +63,13 @@ export const createPost = async (
         comments: [],
         whoLiked: [],
         whoDisliked: [],
+        isRsvp: isRsvp,
+        whoRSVP: [],
         isAdminPost: isAdminPost,
+        isBusinessPost: isBusinessPost,
+        isImage: image,
+        isVideo: video,
+        isAudio: audio,
         dateAdded: new Date(),
 
     }
@@ -51,7 +85,30 @@ export const getAllPosts = async () => {
     return post_list;
 };
 
+export const editPost = async (newCaption, postId) => {
+    if (!newCaption) {
+        throw "New caption cannot be empty";
+    }
+    if (newCaption.length < 1 || newCaption.length > 100) {
+        throw "New caption must be between 1-00 characters long";
+    }
+    postId = new ObjectId(postId);
+    const postCollection = await posts();
+    const post = await postCollection.findOne({ _id: postId });
+    if (!post) {
+        throw "Post not found";
+    }
+    const edit_info = await postCollection.findOneAndUpdate( { _id : postId },{ $set: { caption: newCaption } }, {returnDocument: 'after'});
+    if (!edit_info) {
+        throw "Failed to delete post";
+    }
+    return edit_info;
+}
+
 export const deletePost = async (postId) => {
+    if (!ObjectId.isValid(postId)) {
+        throw "Invalid postId";
+    }
     const postCollection = await posts();
     const post = await postCollection.findOne({ _id: postId });
     if (!post) {
@@ -91,17 +148,60 @@ export const createComment = async (
     return comment_info;
 }
 
-// export const incrementLikes = async (user, postId) => {
-//     const post_collection = await posts();
-//     postId = new ObjectId(postId);
-//     const likes = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoLiked: user } });
-//     return likes;
-// }
+export const createRating = async (
+    rating,
+    user,
+    postId
+  ) => {
+    if (!ObjectId.isValid(postId)) {
+        throw "Invalid postId";
+    }
+    const post_collection = await posts();
+    postId = new ObjectId(postId);
+    const post = await post_collection.findOne({ _id: postId });
+    if(!post){
+        throw "Post not found";
+    }
+    if (rating === 'like') {
+        if (post.whoLiked.includes(user.username)) {
+            const like_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoLiked: user.username } });
+        } else {
+            const dislike_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoDisliked: user.username } });
+            const like_push = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoLiked: user.username } });
+        }
+    }
+    else if (rating === 'dislike') {
+        if (post.whoDisliked.includes(user.username)) {
+            const dislike_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoDisliked: user.username } });
+        } else {
+            const like_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoLiked: user.username } });
+            const dislike_push = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoDisliked: user.username } });
+        }
+    }
+    return true;
+}
 
-// export const incrementDislikes = async (user, postId) => {
-//     const post_collection = await posts();
-//     postId = new ObjectId(postId);
-//     const dislikes = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoDisliked: user } });
-//     return dislikes;
-// }
+export const createRsvp = async (
+    rsvpMe,
+    user,
+    postId
+  ) => {
+    if (!ObjectId.isValid(postId)) {
+        throw "Invalid postId";
+    }
+    const post_collection = await posts();
+    postId = new ObjectId(postId);
+    const post = await post_collection.findOne({ _id: postId });
+    if(!post){
+        throw "Post not found";
+    }
+    if (rsvpMe === 'yes') {
+        if (post.whoRSVP.includes(user.username)) {
+            const yes_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoRSVP: user.username } });
+        } else {
+            const yes_push = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoRSVP: user.username } });
+        }
+    }
+    return true;
+}
 
