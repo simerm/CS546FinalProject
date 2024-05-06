@@ -857,22 +857,42 @@ export const addFriend = async (currUser, otherUser) => {
 }
 
 export const getUserInfo = async (username) => {
+  username = username.trim().toLowerCase();
+
   const userCollection = await users();
+  const storeCollection = await store();
+
+  let userInfo;
   const user = await userCollection.findOne({ username: username });
-  if (!user) throw 'User not found';
-  let userInfo = {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    badges: user.badges,
-    wishlist: user.wishlist,
-    favoriteFigurine: user.favoriteFigurine,
-    friends: user.friends,
-    figurineCollection: user.figurineCollection,
-    bio: user.bio,
-    location: user.location,
-    picture: user.picture,
-    tradingList: user.tradingList
+  const b_user = await storeCollection.findOne({ username: username });
+
+  if (!user && !b_user) throw 'User not found';
+  if(user !== null && !b_user){
+    userInfo = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      badges: user.badges,
+      wishlist: user.wishlist,
+      favoriteFigurine: user.favoriteFigurine,
+      friends: user.friends,
+      figurineCollection: user.figurineCollection,
+      bio: user.bio,
+      location: user.location,
+      picture: user.picture,
+      tradingList: user.tradingList,
+      role: user.role
+    }
+  } else { //NOT in personal/admin but in business
+    userInfo = {
+      storeName: b_user.storeName,
+      figurineStock: b_user.figurineStock,
+      bio: b_user.bio,
+      city: b_user.city,
+      state: b_user.state,
+      role: b_user.role
+    }
   }
+
   return userInfo
 }
 
@@ -888,18 +908,19 @@ export const areNotFriends = async (first, sec) => {
 }
 
 export const userExists = async (user) => {
-  const storeCollection = await store();
+  user = user.trim().toLowerCase();
+
   const userCollection = await users();
+  const storeCollection = await store();
 
   const u = await userCollection.findOne({ username: user });
   const b = await storeCollection.findOne({username: user});
-
-  if (!u && !b) return false; //there's no username for any of the businesses and user profiles
-  if( u && !b){ //exists in the user and NOT in business
-    return true;
-  }else{ //exists in business and NOT in user -- ALSO exists in user and business it seems in this case
-    return true;
-  }
+  // console.log("user")
+  // console.log(u)
+  // console.log("business")
+  // console.log(b)
+  if (u === null && b === null) return false; //there's no username for any of the businesses and user profiles
+  return true; //exists in either the store or user database
   
 }
 

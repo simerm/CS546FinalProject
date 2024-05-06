@@ -1189,7 +1189,10 @@ router
     let admin = false
     let notReported = true
     let notFriends = true
-    const { username } = req.params;
+
+    let { username } = req.params;
+    username = username.toLowerCase();
+    
     if (req.session.user) {
       val = true
       if (req.session.user.role === "admin") {
@@ -1199,40 +1202,51 @@ router
         return res.redirect("/profile")
       }
     }
-
+    
     let result;
     try {
-      notReported = await isReported(username)
       result = await getUserInfo(username)
-      notFriends = await areNotFriends(username, req.session.user.username)
-      let hasFriends = false
-      if (result.friends.length > 0) {
-        hasFriends = true
-      }
-      if (req.session.user.role === "business"){
-        notFriends = false
-      }
+      
+      if(result.role === 'business'){
+        res.render('viewBusinessProfile',{
+          username: result.username,
+          storeName: result.storeName,
+          city: result.city,
+          state: result.state,
+          bio: result.bio,
+          figurineStock: result.figurineStock,
+          auth: val
+        })
+      } else {
+        notReported = await isReported(username)
+        notFriends = await areNotFriends(username, req.session.user.username)
+        let hasFriends = false
+        if (result.friends.length > 0) {
+          hasFriends = true
+        }
+        if (req.session.user.role === "business"){
+          notFriends = false
+        }
+  
+        const figurineInfo = await sortFigurinesUser(username);
+        const badges = await getBadges(username);
+        const wishlist = await getWishlist(username);
+  
+        let hasBadges = false;
+        let hasWishlist = false;
+        if (badges['Smiski'] || badges['Sonny Angel']) {
+          hasBadges = true;
+        }
+        let hasPicture = false
+        if (result.picture !== "" && result.picture !== "None"){
+          hasPicture = true
+        }
+  
+        if (wishlist.wishlist && wishlist.wishlist.length > 0) {
+          hasWishlist = true;
+        }
 
-      const figurineInfo = await sortFigurinesUser(username);
-      const badges = await getBadges(username);
-      const wishlist = await getWishlist(username);
-
-      let hasBadges = false;
-      let hasWishlist = false;
-      if (badges['Smiski'] || badges['Sonny Angel']) {
-        hasBadges = true;
-      }
-      let hasPicture = false
-      if (result.picture !== "" && result.picture !== "None"){
-        hasPicture = true
-      }
-
-      if (wishlist.wishlist && wishlist.wishlist.length > 0) {
-        hasWishlist = true;
-      }
-
-
-      res.render('viewUserProfile', {
+        res.render('viewUserProfile', {
         admin: admin,
         username,
         notReported,
@@ -1254,9 +1268,10 @@ router
         hasPicture,
         picture: result.picture,
         tradingList: result.tradingList
-      })
+        })
+      }
     } catch (e) {
-      res.status(500).json({ error: e });
+      res.status(500).json({ error: e }); 
     }
 
 
@@ -1317,6 +1332,8 @@ router
         }
       }
     }
+
+    username = username.trim().toLowerCase();
 
     if (username === req.session.user.username){ //if they look up themselves
       return res.redirect("/profile")
