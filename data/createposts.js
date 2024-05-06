@@ -9,9 +9,14 @@ export const createPost = async (
     fileSelect,
     caption
   ) => {
-    if (!postTitle) {
-        throw "Must provide a post title";
-    }
+    if (!postTitle && !caption) {
+        throw 'Must provide a post title and caption'
+      } else if (!postTitle) {
+        throw 'Must provide a post title' 
+      } else if (!caption) {
+        throw'Must provide a post caption'
+      }
+      
     if (typeof postTitle !== 'string' || typeof caption !== 'string') {
         throw "Must provide a string";
     }
@@ -20,6 +25,7 @@ export const createPost = async (
     if (postTitle.length < 1 || postTitle.length > 25) {
         throw "Post title must be between 1-25 characters long";
     }
+    
     if (caption.length < 1 || caption.length > 100) {
         throw "Caption must be between 1-00 characters long";
     }
@@ -163,12 +169,28 @@ export const createComment = async (
     return comment_info;
 }
 
-// export const incrementLikes = async (user, postId) => {
-//     const post_collection = await posts();
-//     postId = new ObjectId(postId);
-//     const likes = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoLiked: user } });
-//     return likes;
-// }
+export const createRating = async (
+    rating,
+    user,
+    postId
+  ) => {
+    if (!ObjectId.isValid(postId)) {
+        throw "Invalid postId";
+    }
+    const post_collection = await posts();
+
+    let newRating_obj = {
+        rating: rating,
+        user: user.username,
+    }
+    postId = new ObjectId(postId);
+    const post = await post_collection.findOne({ _id: postId });
+    if(!post){
+        throw "Post not found";
+    }
+    const rating_info = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { rating: newRating_obj } });
+    return rating_info;
+}
 
 // export const incrementDislikes = async (user, postId) => {
 //     const post_collection = await posts();

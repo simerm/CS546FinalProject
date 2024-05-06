@@ -1,12 +1,12 @@
 
     <h1>Create a Post</h1>
-    {{#if error}}
-    <p class="error">{{error}}</p>
-    {{/if}}
-    <div id="clientError"></div>
     <div class="display">
         <form id="createpost" name="createpost" action="/createpost" method="POST" enctype="multipart/form-data">
             <div>
+                   {{#if error}}
+                        <p class="error">{{error}}</p>
+                    {{/if}}
+    <div id="clientError"></div>
                 <label for="postTitle">Post Title:</label>
                 <input type="text" id="postTitle" name="postTitle">
             </div>
@@ -22,7 +22,7 @@
                 </select>
             </div>
             <div>
-            <label for="fileSelect"  id="fileSelect">Is you file an image or video/audio?</label>
+            <label for="fileSelect"  id="fileSelect">Is your file an image or video/audio?</label>
                 <select id="fileSelect" name="fileSelect">
                 <option value="Image">Image</option>
                 <option value="Video">Video/Audio</option>
