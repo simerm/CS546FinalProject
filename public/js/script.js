@@ -307,7 +307,7 @@ if (document.getElementById('signup-form')) {
                 password = password.trim()
                 if (password.length < 8) {
                     let e = document.createElement("p");
-                    e.innerHTML = 'password should be more than 5 characters and less than 10'
+                    e.innerHTML = 'password should be more than 8 characters'
                     error.appendChild(e)
                     valid = false
                 }

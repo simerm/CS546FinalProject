@@ -3,7 +3,8 @@
     {{#if error}}
     <p class="alert alert-danger">{{error}}</p>
     {{/if}}
-    
+        <div class="alert alert-danger" style="display: none" id="clientError"></div>
+
     <form id="signup-form" name="signup-form" action="/register" method="POST">
         <div>
             <label for="firstName">First Name:</label>
