@@ -348,11 +348,14 @@ router
   router
     .route('/businessRegister')
   .get(async (req, res) => {
-      if (req.session.user.role == 'business') {
-        return res.redirect('/businessProfile');
-      } else if (req.session.user.role == 'personal' || req.session.user.role == 'admin') {
-        return res.redirect('/profile');
-      } else {
+      if (req.session.user){
+        if (req.session.user.role == 'business') {
+          return res.redirect('/businessProfile');
+        } else if (req.session.user.role == 'personal' || req.session.user.role == 'admin') {
+          return res.redirect('/profile');
+        }
+      }
+       else {
         res.render('businessRegister')
       }
     })
