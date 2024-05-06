@@ -19,9 +19,6 @@
     </style>
     <div class="body">
         <h1>Feed</h1>
-        {{#if error}}
-        <p class="error">{{error}}</p>
-        {{/if}}
         <div class="clientError" id="clientError"></div>
         <form id="createpost" action="/createpost" method="GET">
             <button type="submit">Create Post</button>
