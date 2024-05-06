@@ -12,12 +12,12 @@ Figurine Finder is a web application that allows users to search for and discove
    - As a personal user?
      - username:
      - password:
-  - As an admin?
-    - username:
-    - password:
-  - As a business?
-    - username:
-    - password:  
+   - As an admin?
+     - username:
+     - password:       
+   - As a business?
+     - username:
+     - password: 
 
 # Team 6 Members
 - [Lauren Espineli](https://github.com/lauren-espi)
