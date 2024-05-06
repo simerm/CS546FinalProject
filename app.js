@@ -40,8 +40,6 @@ app.post('/createpost', async (req, res) => {
   if (req.files && req.files.file) {
     file = req.files.file;
   }
-  // console.log("This is fileType: " + req.body.fileType)
-  // console.log(req);
   let uploadPath = null;
   if (file) {
     uploadPath = thename + '/public/' + file.name;
@@ -92,38 +90,6 @@ app.post('/createpost', async (req, res) => {
     return res.status(500).send(error.message);
   }
 });
-//adding a comment i fear this gets errors
-// app.get('/comments', async (req, res) => {
-//   if (!req.session.user) {
-//     return res.redirect('/login');
-//   }
-//   res.render('comments');
-// });
-
-// app.post('/comments', async (req, res) => {
-
-//   let { postId,comment} = req.body;
-//   //xss stuff
-//   comment = xss(comment);
-//   comment= comment.trim();
-//   if (!comment) {
-//     return res.status(400).render('comments', { error: 'Must Input Comment to Add' });
-//   }
-//   if (typeof comment !== 'string') {
-//     return res.status(400).render('comments', { error: 'Comment must be string' });
-//   }
-//   if (comment.length < 1 || comment.length > 50) {
-//     return res.status(400).render('comments', { error: 'Comment must be 1-50 characters' });
-//   }
-  
-
-//     const comment_info = await createcomment(comment,req.session.user, postId);
-//     if (!comment_info) {
-//       return res.status(400).render('comments', { error: 'Comment was unsuccessful' });
-//     }
-//     return res.redirect('/');
-  
-// });
 
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
