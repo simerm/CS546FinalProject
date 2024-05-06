@@ -279,16 +279,16 @@ router
       if (currentUser) { //if user is logged in
         currentUsername = currentUser.username;
       }
-      let { comment, postId, commentInput } = req.body;
+      let { postId, commentInput } = req.body;
       commentInput = xss(commentInput);
-      if (!comment) {
+      if (!commentInput) {
         return res.status(400).render('home', { error: 'Must provide a comment', posts: postData, c_usr: currentUsername, auth: true });
      }
-     if (typeof comment !== 'string') {
+     if (typeof commentInput !== 'string') {
       return res.status(400).render('home', { error: 'Must provide a string', posts: postData, c_usr: currentUsername, auth: true });
      }
-    comment = comment.trim();
-    if (comment.length < 1 || comment.length > 50) {
+    commentInput = commentInput.trim();
+    if (commentInput.length < 1 || commentInput.length > 50) {
       return res.status(400).render('home', { error: 'Comment must be between 1-50 characters long', posts: postData, c_usr: currentUsername, auth: true });
     }
       let comments = await createComment(commentInput, req.session.user, postId);
