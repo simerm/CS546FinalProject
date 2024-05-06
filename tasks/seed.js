@@ -53,6 +53,37 @@ try { //create a 2nd admin
     console.log(e);
 }
 
+try { //create a business account
+    const user = await registerBusiness("Stevens Institute of Technology",  
+    "+17328483904", 
+    "12-3456789",
+    "1 Castle Point Terrace",
+    "Hoboken",
+    "NJ",
+    "07030",
+    "sit_official",
+    "#Ilovefigurines27");
+
+    console.log(user);
+} catch(e){
+    console.log(e);
+}
+
+try { //create a 2nd business account
+    const user = await registerBusiness("Anime",  
+    "+18489934590", 
+    "11-0987654",
+    "328 E 9th St",
+    "New York City",
+    "NY",
+    "10003",
+    "theAnime",
+    "Forever@34");
+
+    console.log(user);
+} catch(e){
+    console.log(e);
+}
 
 
 try {
