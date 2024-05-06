@@ -19,7 +19,7 @@ try {
 }
 
 try {
-    const user = await createPost(
+    const post = await createPost(
         "jfaustin",
         "Joey's Event",
         null,
@@ -35,7 +35,7 @@ try {
         false,
         "2024-05-06T21:46:37.350+00:00"
     )
-    console.log(user);
+    console.log(post);
 } catch (e) {
     console.log(e);
 }
