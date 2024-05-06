@@ -4,7 +4,7 @@ import { dirname } from 'path';
 import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import fileUpload from 'express-fileupload';
-import { createPost ,createComment} from './data/createposts.js';
+import { createPost, getAllPosts} from './data/createposts.js';
 import xss from 'xss';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -62,11 +62,29 @@ app.post('/createpost', async (req, res) => {
   } else if (!caption) {
     return res.status(400).render('createpost', { error: 'Must provide a post caption' });
   }
-  
-  
-
   if (typeof postTitle !== 'string' || typeof caption !== 'string') {
     return res.status(400).render('createpost', { error: 'Invalid params' });
+  }
+  let image = false;
+  let video = false;
+  let audio = false;
+  if (file) {
+    if (req.files.file.size > 10485760) {
+      return res.status(400).render('createpost', { error: 'File is too big (Max Size: 10MB)' });
+    }
+    let whatIsFile = (req.files.file.mimetype).substring(0,5);
+    if (whatIsFile !== 'image' && whatIsFile !== 'video' && whatIsFile !== 'audio') {
+      return res.status(400).render('createpost', { error: 'Invalid file type' });
+    }
+    if (whatIsFile === 'image') {
+      image = true;
+    }
+    if (whatIsFile === 'video') {
+      video = true;
+    }
+    if (whatIsFile === 'audio') {
+      audio = true;
+    }
   }
 
   postTitle = postTitle.trim();
@@ -81,7 +99,7 @@ app.post('/createpost', async (req, res) => {
 }
 
   try {
-    const user_info = await createPost(req.session.user, postTitle, file, req.body.rsvp, req.body.fileSelect, caption);
+    const user_info = await createPost(req.session.user, postTitle, file, req.body.rsvp, image, audio, video, caption);
     if (!user_info) {
       return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
     }

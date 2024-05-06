@@ -55,6 +55,14 @@
                             <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
                         </div>
                         {{/if}}
+                        {{#if isAudio}}
+                        <div class="image-container">
+                            <video controls>
+                                <source src="/public/{{encodeURIComponent file.name}}" class="postVideoOrAudio">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        {{/if}}
                     </div>
                     <div class="divider"></div>
                     <form id="ratings-likes-{{_id}}" action="/ratings" method="POST">
@@ -109,10 +117,29 @@
                             <button type="submit" class="user-post">Edit Your Post</button>
                         </form>
                         <p></p>
-                        <form id="delete-{{_id}}" action="/delete" method="POST">
+                        <form id="deleteForm" action="/delete" method="POST">
                             <input type="hidden" name="postId" value="{{_id}}">
                             <button type="submit" class="user-post">Delete Your Post</button>
                         </form>
+                        <script>
+                            $(document).ready( function() {
+                                $("#deleteForm").submit(function(e) {
+                                    
+                                e.preventDefault();
+                        $.ajax ({
+                            type: 'POST',
+                            url: $(this).attr('action'), 
+                            data: $(this).serialize(),
+                            success: function(res) {
+                                console.log("SUCCESS: ", res)
+                            },
+                            error: function(_, status, error) {
+                                console.log("ERROR: ", status, error)
+                            }
+                        });
+                                })
+                            })
+                        </script>
                     </div>
                     {{/if}}
                 </div>

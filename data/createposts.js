@@ -1,13 +1,15 @@
 import { ObjectId } from 'mongodb';
 import { posts } from '../config/mongoCollections.js';
-import e from 'express';
+import express from 'express';
 
 export const createPost = async (
     user,
     postTitle,
     file,
     rsvp,
-    fileSelect,
+    image,
+    audio,
+    video,
     caption
   ) => {
     if (!postTitle && !caption) {
@@ -46,35 +48,11 @@ export const createPost = async (
         isBusinessPost = false;
     }
 
-    let hasFile;
-    if (file) {
-        hasFile = true;
-    } else {
-        hasFile = false;
-    }
-
     let isRsvp;
     if (rsvp === 'Yes') {
         isRsvp = true;
     } else {
         isRsvp = false;
-    }
-
-    let isImage = false;
-    let isVideo = false;
-
-    if (hasFile) {
-        if (fileSelect === 'Image') {
-            isImage = true;
-        } else {
-            isImage = false;
-        }
-    
-        if (fileSelect === 'Video') {
-            isVideo = true;
-        } else {
-            isVideo = false;
-        }
     }
 
     let newPost_obj = {
@@ -89,9 +67,9 @@ export const createPost = async (
         whoRSVP: [],
         isAdminPost: isAdminPost,
         isBusinessPost: isBusinessPost,
-        hasFile: hasFile,
-        isImage: isImage,
-        isVideo, isVideo,
+        isImage: image,
+        isVideo: video,
+        isAudio: audio,
         dateAdded: new Date(),
 
     }
