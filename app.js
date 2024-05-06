@@ -28,6 +28,14 @@ app.use(session({
 app.use('/public', express.static('public'));
 app.use(express.static('public'));
 
+const redirectFromCollections = (req, res, next) => {
+  if (!req.session.user) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
+
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
   if (req.session.user) {
@@ -84,12 +92,13 @@ const requireLogout = (req, res, next) => {
   }
 };
 //set current user for delete button
-
+app.use("/collections", redirectFromCollections);
 app.use("/login", redirectAuthenticated);
 app.use("/register", redirectAuthenticatedForRegister);
 app.use("/profile", requireAuthentication);
 app.use("/business", requireAdminAuthorization);
 app.use("/logout", requireLogout);
+
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   // If the user posts to the server with a property called _method, rewrite the request's method
   // To be that method; so if they post _method=PUT you can now allow browsers to POST to a route that gets
