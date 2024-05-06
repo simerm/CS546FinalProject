@@ -499,7 +499,7 @@ h1 {
 .hide-btn {
     /* Set a specific width */
     width: 350px; /* Adjust the width as needed */
-    
+    border-radius: 50px;
     /* Or use max-width to limit the width */
     /* max-width: 150px; */
 }
@@ -562,3 +562,5 @@ h1 {
     display: flex; /* Set the container to flex to horizontally align items */
     gap: 10px; /* Add spacing between the buttons */
 }
+
+
