@@ -537,6 +537,7 @@ h1 {
     overflow: auto;
     height: 200px;
     width: 40%;
+    margin: auto;
    
 }
 
@@ -550,7 +551,7 @@ h1 {
     overflow: auto;
     height: 200px;
     width: 40%;
-    
+    margin: auto;
    
 }
 
@@ -562,4 +563,9 @@ h1 {
 
 .chosenPicture{
     width:120px;
+}
+
+.profileHeader{
+    margin-bottom:50px;
+    margin-top:40px;
 }
