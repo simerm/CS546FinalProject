@@ -156,6 +156,14 @@
         sendPatchRequest(`/addCollection/${figurineName}/${seriesName}/${modelName}`);
     }
 
+    function removeTrade(figurineName, seriesName, modelName) {
+        sendPatchRequest(`/removeTrade/${figurineName}/${seriesName}/${modelName}`);
+    }
+
+    function addTrade(figurineName, seriesName, modelName) {
+        sendPatchRequest(`/addTrade/${figurineName}/${seriesName}/${modelName}`);
+    }
+
     function sendPatchRequest(url) {
         fetch(url, {
             method: 'PATCH',

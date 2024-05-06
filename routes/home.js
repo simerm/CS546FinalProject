@@ -2,7 +2,7 @@ import {Router} from 'express';
 import { sortFigurines, sortFigurinesUser, getBadges } from '../data/genCollection.js';
 import { readFile } from 'fs/promises';
 const router = Router();
-import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist } from '../data/user.js';
+import { userExists, areNotFriends, getUserInfo, addFriend, loginUser, registerUser, registerBusiness, updateProfile, addCollection, removeCollection, addToStock, removeFromStock, addWishlist, removeWishlist, getWishlist, addTrade } from '../data/user.js';
 import { grabList } from '../data/companyStock.js';
 import fs from 'fs';
 import path from 'path';
@@ -1153,7 +1153,7 @@ router
         // console.log(e)
         res.status(500).json({ error: e });
       }
-    });
+    }),
 
 router
   .route('/viewUser/:username')
@@ -1223,7 +1223,7 @@ router
     }
 
 
-  });
+  }),
 
 router
   .route('/addFriend')
@@ -1242,7 +1242,7 @@ router
     } catch (e) {
       res.status(500).json({ error: e });
     }
-  });
+  }),
 
 router
   .route('/reportUser')
@@ -1260,7 +1260,7 @@ router
     } catch (e) {
       res.status(500).json({ error: e });
     }
-  });
+  }),
 
 router
   .route('/searchUser')
@@ -1299,6 +1299,47 @@ router
       res.status(500).json({ error: e });
     }
 
+  }),
+
+  router
+  .patch('/addTrade/:figurineName/:seriesName/:modelName', async (req, res) => {
+    try {
+      let figurineName = req.params.figurineName
+      let seriesName = req.params.seriesName
+      let modelName = req.params.modelName
+      let username = req.session.user.username
+      let trade = await addTrade(username, figurineName, seriesName, modelName)
+
+      if (trade.success) {
+        console.log(trade.message)
+        res.status(200).json({ success: true, message: trade.message });
+      } else {
+        console.log(trade.message)
+        res.status(400).json({ success: false, message: trade.message });
+      }
+    } catch (e) {
+      console.log(e)
+      res.status(500).json({ error: e });
+    }
+  }),
+
+  router
+  .patch('/removeTrade/:figurineName/:seriesName/:modelName', async (req, res) => {
+    try {
+      let figurineName = req.params.figurineName
+      let seriesName = req.params.seriesName
+      let modelName = req.params.modelName
+      let username = req.session.user.username
+      let trade = await removeTrade(username, figurineName, seriesName, modelName)
+
+      if (trade.success) {
+        res.status(200).json({ success: true, message: trade.message });
+      } else {
+        res.status(400).json({ success: false, message: trade.message });
+      }
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
   })
 
 export default router;

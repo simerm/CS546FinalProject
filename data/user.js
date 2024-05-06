@@ -2,6 +2,7 @@ import bcrypt, { compare } from 'bcrypt'
 const saltRounds = 16
 import { users } from '../config/mongoCollections.js';
 import { store } from '../config/mongoCollections.js';
+import { sortFigurinesUser } from './genCollection.js';
 
 export const registerUser = async (
   firstName,
@@ -112,17 +113,8 @@ export const registerUser = async (
     figurineCollection: {},
     bio: "",
     location: "",
-    picture: ""
-    // { sample object
-    // Smiski: {
-    //   series1: ["lounging figure", "sleeping figure"],
-    //   series2: ["workout figure", "etc figure"]
-    //
-    // },
-    // Sonny Angel: {
-    //  series1: ["lounging figure", "sleeping figure"],
-    //  series2: ["workout figure", "etc figure"]
-    // }
+    picture: "",
+    tradingList: {}
 
   }
 
@@ -225,7 +217,8 @@ export const loginUser = async (username, password) => {
     figurineCollection: u.figurineCollection,
     bio: u.bio,
     location: u.location,
-    picture: u.picture
+    picture: u.picture,
+    tradingList: u.tradingList
   }
 
 };
@@ -725,9 +718,6 @@ export const updateProfile = async (username, updateObject, role) => {
 
 };
 
-
-
-
 export const addWishlist = async (username, figurineName, seriesName, modelName) => { //honestly, dont really need figurineName and seriesName
   try {
     const userCollection = await users();
@@ -838,11 +828,10 @@ export const getUserInfo = async (username) => {
     figurineCollection: user.figurineCollection,
     bio: user.bio,
     location: user.location,
-    picture: user.picture
+    picture: user.picture,
+    tradingList: user.tradingList
   }
   return userInfo
-
-
 }
 
 export const areNotFriends = async (first, sec) => {
@@ -861,4 +850,41 @@ export const userExists = async (user) => {
   const u = await userCollection.findOne({ username: user });
   if (!u) return false;
   return true
+}
+
+export const addTrade = async (username, figurineName, seriesName, modelName, tradeUser) => {
+  try {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ username: username });
+    if (!user) throw 'User not found';
+
+    if (!user.tradingList) {
+      user.trades = {};
+    }
+
+    // const genCollection = await sortFigurinesUser(username);
+    // console.log(genCollection);
+
+    // const figurineCollection = user.figurineCollection
+    // console.log(figurineCollection);
+
+    if (!user.tradingList[figurineName]) {
+      user.tradingList[figurineName] = {};
+    }
+
+    if (!user.tradingList[figurineName][seriesName]) {
+      user.tradingList[figurineName][seriesName] = [];
+    }
+
+    if (user.tradingList[figurineName][seriesName].includes(modelName)) {
+      return { success: false, message: 'Model already exists in trading list' };
+    } else {
+      user.tradingList[figurineName][seriesName].push(modelName);
+      // Update user's document in the collection
+      await userCollection.updateOne({ username: username }, { $set: { tradingList: user.tradingList } });
+      return { success: true, message: 'Trade added to trading list', trade: user.tradingList };
+    }
+  } catch (e) {
+    return { success: false, message: e }; // Return error message
+  }
 }

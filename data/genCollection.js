@@ -55,6 +55,11 @@ export const sortFigurinesUser = async (username) => {
             userCollectionData = user.figurineCollection;
         }
 
+        let tradingList = {};
+        if (user.tradingList) {
+            tradingList = user.tradingList;
+        }
+
         let wishlist = [];
         if (user.wishlist) {
             wishlist = user.wishlist;
@@ -76,11 +81,16 @@ export const sortFigurinesUser = async (username) => {
                         figurineTypes: series.figurineTypes.map(figurine => {
                             const owned = userCollectionData[name][series.seriesName]?.includes(figurine.modelName) || false; // Check if modelName exists in user's collection
                             const inWishlist = wishlist?.includes(figurine.modelName) || false;
+                            let trading = false;
+                            if (tradingList[name]) {
+                                trading = tradingList[name][series.seriesName]?.includes(figurine.modelName) || false;
+                            }
                             return {
                                 ...figurine,
                                 owned: owned,
                                 inWishlist: inWishlist,
-                                seriesName: series.seriesName
+                                seriesName: series.seriesName,
+                                trading: trading
                             }
                         })
                     };
