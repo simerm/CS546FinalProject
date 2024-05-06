@@ -558,11 +558,15 @@ h1 {
 
 .image-container {
     text-align: center;
+    max-width: 500px;
 }
 
-.image-container img {
-    height: 500px; /* Set a fixed height for each image */
-    width: auto; /* Maintain aspect ratio */
+.image-container img,
+.image-container video {
+    width: 450px; /* Ensure images don't exceed container width */
+    height: auto; /* Maintain aspect ratio */
+    display: inline-block; /* Ensure proper rendering */
+
 }
 
 .button-container {

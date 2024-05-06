@@ -175,12 +175,28 @@ export const createComment = async (
     return comment_info;
 }
 
-// export const incrementLikes = async (user, postId) => {
-//     const post_collection = await posts();
-//     postId = new ObjectId(postId);
-//     const likes = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoLiked: user } });
-//     return likes;
-// }
+export const createRating = async (
+    rating,
+    user,
+    postId
+  ) => {
+    if (!ObjectId.isValid(postId)) {
+        throw "Invalid postId";
+    }
+    const post_collection = await posts();
+
+    let newRating_obj = {
+        rating: rating,
+        user: user.username,
+    }
+    postId = new ObjectId(postId);
+    const post = await post_collection.findOne({ _id: postId });
+    if(!post){
+        throw "Post not found";
+    }
+    const rating_info = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { rating: newRating_obj } });
+    return rating_info;
+}
 
 // export const incrementDislikes = async (user, postId) => {
 //     const post_collection = await posts();

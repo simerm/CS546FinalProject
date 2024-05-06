@@ -1,4 +1,9 @@
-<title>Feed</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed</title>
     <style>
         .hidden {
             display: none;
@@ -12,101 +17,104 @@
         <p class="error">{{error}}</p>
         {{/if}}
         <div class="clientError" id="clientError"></div>
-        <form id="createpost" action="/createpost" method="GET"><button id="createpost">Create Post</button></form>
+        <form id="createpost" action="/createpost" method="GET">
+            <button type="submit">Create Post</button>
+        </form>
         <div>
             <label for="searchfriend">Search for User:</label>
             <input type="text" id="searchfriend" name="searchfriend">
             <button onclick="searchFriend()">Search</button>
             <button id="seeAllButton" onclick="seeAllPosts()" style="display: none;">See All Posts</button>
         </div>
-        
+
+        <div class="posts-container">
+            {{#each posts}}
             <div class="post">
-                <div class="right">
-                    {{#each posts}}
-                    <div class="postDetails">
-                        <p class="name"><b>{{name}}</b>
+                <div class="postDetails">
+                    <p class="name"><b>{{name}}</b>
                         {{#if isAdminPost}}
-                            <img src="/public/verified.png" class="adminCheck">
+                        <img src="/public/verified.png" class="adminCheck">
                         {{/if}}
                         {{#if isBusinessPost}}
-                            <img src="/public/business icon.png" class="businessIcon">
+                        <img src="/public/business icon.png" class="businessIcon">
                         {{/if}}
-                        </p>
-                        <h2>{{title}}</h2>
-                        <div class="postDiv">
-                            <p>{{caption}}</p>
-                            {{#if isVideo}}
-                            <div class="image-container">
-                                <video controls>
+                    </p>
+                    <h2>{{title}}</h2>
+                    <div class="postDiv">
+                        <p>{{caption}}</p>
+                        {{#if isVideo}}
+                        <div class="image-container">
+                            <video controls>
                                 <source src="/public/{{encodeURIComponent file.name}}" class="postVideoOrAudio">
                                 Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            {{/if}}
-                            {{#if isImage}}
-                            <div class="image-container">
-                                <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
-                            </div>
-                            {{/if}}
+                            </video>
                         </div>
-                        <div class="divider"></div>
-                        
-                            <form id="likes-{{_id}}">
-                            <div class="countRatings ">
-                                <button class="thumbIcon">👍</button>
-                                <span class="rateCount">0</span>
-                            </div>
-                            <div class="countRatings">
-                                <button class="thumbIcon">👎</button>
-                                <span class="rateCount">0</span>
-                            </div>
-                                
-                            </form>
-                                <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
-                        {{#if isRsvp}}
-                            <div class="countRsvp">
-                                <button class="rsvpButton">I want to RSVP to this event</button>
-                                <label>Number of RSVP</label>
-                                <span class="rsvpCount">0</span>
-                            </div>
                         {{/if}}
-                        <div class="previous-comments" id="comments-{{_id}}">
-                            <p><b>Comments</b></p>
-                                {{#each comments}}
-                                    <h2>[{{user}}]</h2>
-                                    <p>{{comment}}</p>
-                                {{/each}}
+                        {{#if isImage}}
+                        <div class="image-container">
+                            <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
                         </div>
-                        <div class="commentBox">
-                            <form id="comments-{{_id}}" action="/comments" method="POST">
-                                <input type="hidden" name="postId" value="{{_id}}">
-                                <label for="commentInput">Add Comment:</label>
-                                <input type="text" id="commentInput" name="commentInput" data-post-id="{{_id}}">
-                                <button class="add-comment-btn">Add</button>
-                            </form>
-                        </div>
-                        <button onclick="toggleComments('{{_id}}')" class="hide-btn">Hide/Show Comments</button>
-                        <p></p>
-                        {{#if (equals ../c_usr name)}}
-                            <div class="button-container">
-                            <form id="edit-{{_id}}" action="/edit" method="GET">
-                                <input type="hidden" name="postId" value="{{_id}}">
-                                <button type="submit" class="user-post">Edit Your Post</button>
-                            </form>
-                            <p></p>
-                            <form id="delete-{{_id}}" action="/delete" method="POST">
-                                <input type="hidden" name="postId" value="{{_id}}">
-                                <button type="submit" class="user-post">Delete Your Post</button>
-                            </form>
-                            </div>
                         {{/if}}
                     </div>
-                    
-                    {{/each}}
+                    <div class="divider"></div>
+                    <form id="likes-{{_id}}">
+                        <div class="countRatings ">
+                            <button class="thumbIcon">👍</button>
+                            <span class="rateCount">0</span>
+                        </div>
+                        <div class="countRatings">
+                            <button class="thumbIcon">👎</button>
+                            <span class="rateCount">0</span>
+                        </div>
+                    </form>
+                    <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
+                    {{#if isRsvp}}
+                    <div class="countRsvp">
+                        <button class="rsvpButton">I want to RSVP to this event</button>
+                        <label>Number of RSVP</label>
+                        <span class="rsvpCount">0</span>
+                    </div>
+                    {{/if}}
+                    <div class="previous-comments" id="comments-{{_id}}">
+                        <p><b>Comments</b></p>
+                        {{#each comments}}
+                        <h2>[{{user}}]</h2>
+                        <p>{{comment}}</p>
+                        {{/each}}
+                    </div>
+                    <div class="commentBox">
+                        <form id="comments-form-{{_id}}" name="comments" action="/comments" method="POST">
+                            <input type="hidden" name="postId" value="{{_id}}">
+                            <label for="commentInput">Add Comment:</label>
+                            <input type="text" id="commentInput-{{_id}}" name="commentInput" data-post-id="{{_id}}">
+                            <button class="add-comment-btn">Add</button>
+                        </form>
+                        {{#if commentError}}
+                        <p class="error">{{commentError}}</p>
+                        {{/if}}
+                        <div class="clientError" id="clientError"></div>
+                    </div>
+                    <button onclick="toggleComments('{{_id}}')" class="hide-btn">Hide/Show Comments</button>
+                    <p></p>
+                    {{#if (equals ../c_usr name)}}
+                    <div class="button-container">
+                        <form id="edit-{{_id}}" action="/edit" method="GET">
+                            <input type="hidden" name="postId" value="{{_id}}">
+                            <button type="submit" class="user-post">Edit Your Post</button>
+                        </form>
+                        <p></p>
+                        <form id="delete-{{_id}}" action="/delete" method="POST">
+                            <input type="hidden" name="postId" value="{{_id}}">
+                            <button type="submit" class="user-post">Delete Your Post</button>
+                        </form>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
+            {{/each}}
         </div>
     </div>
+</body>
 <script>
         //likes and dislike accumulator
         document.querySelectorAll(".postDetails").forEach(post => {
@@ -117,7 +125,7 @@
             ratings.forEach(rating =>{
                 const button= rating.querySelector(".thumbIcon");
                 const count= rating.querySelector(".rateCount");
-                //console.log(button);
+                console.log(button);
                 //console.log(count);
                 button.addEventListener("click",async()=>{
                     const likeOrDislike = likeRating === rating ? "like" : "dislike";
@@ -175,5 +183,4 @@
         }
 
     </script>
-</body>
 </html>

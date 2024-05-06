@@ -308,9 +308,15 @@ router
       }
       let { postId, commentInput } = req.body;
       commentInput = xss(commentInput);
+      //console.log(commentInput)
+      if(!commentInput){
+        console.error("Error: Need to input comment to add");
+        return res.status(400).render('home', { commentError: 'Need to input comment to add' });
+      }
       let comment = await createComment(commentInput, req.session.user, postId);
       if (!comment) {
-        return res.status(400).render('comments', { error: 'Comment post was unsuccessful' });
+      console.log("yay")
+        return res.status(400).render('home', { commentError: 'Comment post was unsuccessful' });
       }
       return res.redirect('/');
     });

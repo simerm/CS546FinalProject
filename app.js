@@ -4,7 +4,7 @@ import { dirname } from 'path';
 import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import fileUpload from 'express-fileupload';
-import { createPost } from './data/createposts.js';
+import { createPost ,createComment} from './data/createposts.js';
 import xss from 'xss';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -78,9 +78,6 @@ app.post('/createpost', async (req, res) => {
     return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
   }
 
-if(!postTitle||!caption){
-  return res.status(400).render('createpost', { error: 'Must provide a post title and caption' });
-}
   if (caption.length < 1 || caption.length > 100) {
   return res.status(400).render('createpost', { error: 'Caption can only be 1-100 characters' });
 }
@@ -95,6 +92,38 @@ if(!postTitle||!caption){
     return res.status(500).send(error.message);
   }
 });
+//adding a comment i fear this gets errors
+// app.get('/comments', async (req, res) => {
+//   if (!req.session.user) {
+//     return res.redirect('/login');
+//   }
+//   res.render('comments');
+// });
+
+// app.post('/comments', async (req, res) => {
+
+//   let { postId,comment} = req.body;
+//   //xss stuff
+//   comment = xss(comment);
+//   comment= comment.trim();
+//   if (!comment) {
+//     return res.status(400).render('comments', { error: 'Must Input Comment to Add' });
+//   }
+//   if (typeof comment !== 'string') {
+//     return res.status(400).render('comments', { error: 'Comment must be string' });
+//   }
+//   if (comment.length < 1 || comment.length > 50) {
+//     return res.status(400).render('comments', { error: 'Comment must be 1-50 characters' });
+//   }
+  
+
+//     const comment_info = await createcomment(comment,req.session.user, postId);
+//     if (!comment_info) {
+//       return res.status(400).render('comments', { error: 'Comment was unsuccessful' });
+//     }
+//     return res.redirect('/');
+  
+// });
 
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {
