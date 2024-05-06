@@ -5,25 +5,40 @@ import { createPost, getAllPosts, createComment, deletePost } from '../data/crea
 const db = await dbConnection();
 await db.dropDatabase();
 
-try {
+try { //create a normal user
     const user = await registerUser("Joey", 
     "Faustino",  
     "jfaustin", 
     "Dajoma141!!!",
     "",
-    "light",
-    "admin");
+    {role: "personal", 
+    favoriteFigurine: "Morning Glory",
+    wishlist: ["Looking Back", "Hiding"],
+    friends: ["pat_hill"],
+    location: "NYC",
+    picture: "lion"});
+
     console.log(user);
 } catch (e) {
     console.log(e);
 }
 
-try {
-    const login = await loginUser("graffixnyc", "Dajoma141");
-    console.log(login);
+try { //create a 2nd normal user
+    const user = await registerUser("Patrick", 
+    "Hill",  
+    "pat_hill", 
+    "Pandas12!",
+    "",
+    {role: "personal", 
+    favoriteFigurine: "Bok Choy",
+    friends: ["jfaustin"],
+    picture: "cat"});
+
+    console.log(user);
 } catch (e) {
     console.log(e);
 }
+
 
 console.log("Done seeding database.");
 
