@@ -947,7 +947,7 @@ router
         let series = req.params.seriesName //series 
 
         const adding = await addToStock(username, series); //call the function to add in the stock
-        console.log(adding);
+        //console.log(adding);
         
         if (adding.success) {
           // Send the updated list as JSON
