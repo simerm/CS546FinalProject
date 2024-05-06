@@ -573,13 +573,15 @@ if (document.getElementById('business-signup-form')) {
                 error.appendChild(e)
                 valid = false
             }
-            for (let i = 2; i < 12; i++) {
-                if (isNaN(parseInt(phoneNumber[i]))) {
-                    let e = document.createElement("p");
-                    e.innerHTML = 'Must have a valid phone number'
-                    error.appendChild(e)
-                    valid = false
-                    break;
+            else{
+                for (let i = 2; i < 12; i++) {
+                    if (isNaN(parseInt(phoneNumber[i]))) {
+                        let e = document.createElement("p");
+                        e.innerHTML = 'Must have a valid phone number'
+                        error.appendChild(e)
+                        valid = false
+                        break;
+                    }
                 }
             }
         }
