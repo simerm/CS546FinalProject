@@ -234,6 +234,11 @@
                             <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}}
                                     Series</span></li>
                             <li class="list-group-item">Rarity: <span class="badge bg-success">Rare</span></li>
+                            {{#if inTradingList}}
+                                <li class="list-group-item">Willing to Trade: <span class="badge bg-success">Yes!</span></li>
+                            {{else}}
+                                <li class="list-group-item">Willing to Trade: <span class="badge bg-danger">Nope!</span></li>
+                            {{/if}}
                         </ul>
                         {{else}}
                         <img src={{this.image_url}} class="card-img-top" style="padding: 5px;" alt={{this.modelName}}>
@@ -244,6 +249,11 @@
                             <li class="list-group-item">Series: <span class="badge bg-primary">{{seriesName}}
                                     Series</span></li>
                             <li class="list-group-item">Rarity: <span class="badge bg-secondary">Common</span></li>
+                            {{#if inTradingList}}
+                                <li class="list-group-item">Willing to Trade: <span class="badge bg-success">Yes!</span></li>
+                            {{else}}
+                                <li class="list-group-item">Willing to Trade: <span class="badge bg-danger">Nope!</span></li>
+                            {{/if}}
                         </ul>
                         {{/if}}
                     </div>

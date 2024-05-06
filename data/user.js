@@ -523,6 +523,7 @@ export const removeCollection = async (username, figurineName, seriesName, model
       user.figurineCollection[figurineName][seriesName] = user.figurineCollection[figurineName][seriesName].filter(model => model !== modelName);
       // Update user's document in the collection
       await userCollection.updateOne({ username: username }, { $set: { figurineCollection: user.figurineCollection } });
+      await removeTrade(username, figurineName, seriesName, modelName);
       return { success: true, message: 'Model removed from collection', userCollection: user.figurineCollection };
     }
   } catch (e) {
