@@ -1299,7 +1299,7 @@ router
       
       if(result.role === 'business'){
         res.render('viewBusinessProfile',{
-          username: result.username,
+          username: username,
           storeName: result.storeName,
           city: result.city,
           state: result.state,
