@@ -1318,9 +1318,10 @@ router
       }
     }
 
-    if (username === req.session.user.username){
+    if (username === req.session.user.username){ //if they look up themselves
       return res.redirect("/profile")
     }
+
     let result;
     try{
       result = await userExists(username)

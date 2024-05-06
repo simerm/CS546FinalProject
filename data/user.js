@@ -888,10 +888,19 @@ export const areNotFriends = async (first, sec) => {
 }
 
 export const userExists = async (user) => {
+  const storeCollection = await store();
   const userCollection = await users();
+
   const u = await userCollection.findOne({ username: user });
-  if (!u) return false;
-  return true
+  const b = await storeCollection.findOne({username: user});
+
+  if (!u && !b) return false; //there's no username for any of the businesses and user profiles
+  if( u && !b){ //exists in the user and NOT in business
+    return true;
+  }else{ //exists in business and NOT in user -- ALSO exists in user and business it seems in this case
+    return true;
+  }
+  
 }
 
 export const addTrade = async (username, figurineName, seriesName, modelName, tradeUser) => {
