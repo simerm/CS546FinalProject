@@ -568,12 +568,11 @@ export const removeCollection = async (username, figurineName, seriesName, model
     throw e;
   }
 };
-export const addToStock = async (username, series) => { //function to add stock to the business
+export const addToStock = async (username, series, req) => { //function to add stock to the business
   try {
     const bCollection = await store();
     const business = await bCollection.findOne({ username: username });
     if (!business) throw 'Business not found';
-
     //console.log("made it")
     if (business.figurineStock.includes(series)) {
       return { success: false, message: 'This series already exists in the stock' };
@@ -581,24 +580,26 @@ export const addToStock = async (username, series) => { //function to add stock 
       // Update business' document in the collection
       //console.log("got to the function")
       await bCollection.updateOne({ username: username }, { $push: { figurineStock: series } });
+      // Update session data with the added stock item
+      req.session.user.figurineStock.push(series);
       return { success: true, message: 'Series added to your stock', figurineStock: series };
     }
   } catch (e) {
     throw 'Error adding to stock!';
   }
 };
-
-export const removeFromStock = async (username, series) => { //function to remove stock from the business
+export const removeFromStock = async (username, series, req) => { //function to remove stock from the business
   try {
     const bCollection = await store();
     const business = await bCollection.findOne({ username: username });
     if (!business) throw 'Business not found';
-
     if (!business.figurineStock.includes(series)) {
       return { success: false, message: 'This series does not exist in the stock' };
     } else {
       // Update business' document in the collection
       await bCollection.updateOne({ username: username }, { $pull: { figurineStock: series } });
+      // Update session data
+      req.session.user.figurineStock = req.session.user.figurineStock.filter(item => item !== series);
       return { success: true, message: 'Series removed from your stock', figurineStock: series };
     }
   } catch (e) {
