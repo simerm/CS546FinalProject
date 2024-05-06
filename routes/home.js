@@ -90,7 +90,7 @@ router
         try {
           exist = await appExists(req.session.user.username)
 
-          if (exist) {
+          if (exist || req.session.user.role === "admin") {
             eligible = false
           }
         } catch (e) {
