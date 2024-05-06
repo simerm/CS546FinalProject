@@ -63,7 +63,13 @@
                                 
                             </form>
                                 <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
-                        
+                        {{#if isRsvp}}
+                            <div class="countRsvp">
+                                <button class="rsvpButton">I want to RSVP to this event</button>
+                                <label>Number of RSVP</label>
+                                <span class="rsvpCount">0</span>
+                            </div>
+                        {{/if}}
                         <div class="previous-comments" id="comments-{{_id}}">
                             <p><b>Comments</b></p>
                                 {{#each comments}}
