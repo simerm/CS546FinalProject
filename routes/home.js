@@ -1180,6 +1180,45 @@ router
         let figurineName = req.params.figurineName;
         let seriesName = req.params.seriesName;
         let modelName = req.params.modelName;
+        let user = req.session.user;
+
+        const figurineInfo = await sortFigurines();
+        // console.log(figurineInfo)
+
+        // Check if the provided figurineName exists in the object
+        const figurineData = figurineInfo[figurineName];
+        if (!figurineData) {
+          return res.status(400).json({ success: false, message: 'Figurine name not found' });
+        }
+
+        // Check if the provided seriesName exists in the found figurineData
+        const seriesData = figurineData.find(series => series.seriesName === seriesName);
+        if (!seriesData) {
+          return res.status(400).json({ success: false, message: 'Series name not found' });
+        }
+
+        // Check if the provided modelName exists in the found seriesData
+        const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+        if (!modelData) {
+          return res.status(400).json({ success: false, message: 'Model name not found' });
+        }
+
+        const userFigurineCollection = user.figurineCollection || {};
+
+        // Check if the model already exists in the user's figurine collection
+        for (const [figurine, seriesArray] of Object.entries(userFigurineCollection)) {
+          for (const [series, models] of Object.entries(seriesArray)) {
+            if (models.includes(modelName)) {
+              return res.status(400).json({ success: false, message: 'Model already exists in collection' });
+            }
+          }
+        }
+
+        // Check if the model already exists in the user's wishlist
+        const wishlistExists = user.wishlist && user.wishlist.includes(modelName);
+        if (wishlistExists) {
+            return res.status(400).json({ success: false, message: 'Model already exists in wishlist' });
+        }
 
         // Add to collection
         let wishlist = await addWishlist(req.session.user.username, figurineName, seriesName, modelName);

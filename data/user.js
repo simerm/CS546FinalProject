@@ -797,6 +797,31 @@ export const addWishlist = async (username, figurineName, seriesName, modelName)
     const user = await userCollection.findOne({ username: username });
     if (!user) throw 'User not found';
 
+    const figurineInfo = await sortFigurines();
+    // Check if the provided figurineName exists in the object
+    const figurineData = figurineInfo[figurineName];
+    if (!figurineData) throw 'Figurine name not found';
+    // console.log(figurineData)
+
+    // Check if the provided seriesName exists in the found figurineData
+    const seriesData = figurineData.find(series => series.seriesName === seriesName);
+    if (!seriesData) throw 'Series name not found';
+
+    // Check if the provided modelName exists in the found seriesData
+    const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+    if (!modelData) throw 'Model name not found';
+
+    const userFigurineCollection = user.figurineCollection || {};
+
+    // Check if the model already exists in the user's figurine collection
+    for (const [figurine, seriesArray] of Object.entries(userFigurineCollection)) {
+      for (const [series, models] of Object.entries(seriesArray)) {
+        if (models.includes(modelName)) {
+          return { success: false, message: 'Model already exists in collection' };
+        }
+      }
+    }
+
     if (!user.wishlist) {
       user.wishlist = [];
     }
@@ -812,7 +837,7 @@ export const addWishlist = async (username, figurineName, seriesName, modelName)
       return { success: true, message: 'Model added to wishlist', wishlist: user.wishlist };
     }
   } catch (e) {
-    return { success: false, message: error }; // Return error message
+    return { success: false, message: e }; // Return error message
   }
 };
 
@@ -821,6 +846,20 @@ export const removeWishlist = async (username, figurineName, seriesName, modelNa
     const userCollection = await users();
     const user = await userCollection.findOne({ username: username });
     if (!user) throw 'User not found';
+
+    const figurineInfo = await sortFigurines();
+    // Check if the provided figurineName exists in the object
+    const figurineData = figurineInfo[figurineName];
+    if (!figurineData) throw 'Figurine name not found';
+    // console.log(figurineData)
+
+    // Check if the provided seriesName exists in the found figurineData
+    const seriesData = figurineData.find(series => series.seriesName === seriesName);
+    if (!seriesData) throw 'Series name not found';
+
+    // Check if the provided modelName exists in the found seriesData
+    const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+    if (!modelData) throw 'Model name not found';
 
     if (!user.wishlist) {
       return { success: true, message: 'Wishlist is empty, no need to delete figurine' };
@@ -833,7 +872,7 @@ export const removeWishlist = async (username, figurineName, seriesName, modelNa
       return { success: true, message: 'Model removed from wishlist', wishlist: user.wishlist };
     }
   } catch (e) {
-    return { success: false, message: error }; // Return error message
+    return { success: false, message: e }; // Return error message
   }
 };
 
@@ -965,6 +1004,21 @@ export const addTrade = async (username, figurineName, seriesName, modelName, tr
       user.trades = {};
     }
 
+    const figurineInfo = await sortFigurines();
+    // Check if the provided figurineName exists in the object
+    const figurineData = figurineInfo[figurineName];
+    if (!figurineData) throw 'Figurine name not found';
+    // console.log(figurineData)
+
+    // Check if the provided seriesName exists in the found figurineData
+    const seriesData = figurineData.find(series => series.seriesName === seriesName);
+    if (!seriesData) throw 'Series name not found';
+
+    // Check if the provided modelName exists in the found seriesData
+    const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+    if (!modelData) throw 'Model name not found';
+
+
     // const genCollection = await sortFigurinesUser(username);
     // console.log(genCollection);
 
@@ -997,6 +1051,20 @@ export const removeTrade = async (username, figurineName, seriesName, modelName)
     const userCollection = await users();
     const user = await userCollection.findOne({ username: username });
     if (!user) throw 'User not found';
+
+    const figurineInfo = await sortFigurines();
+    // Check if the provided figurineName exists in the object
+    const figurineData = figurineInfo[figurineName];
+    if (!figurineData) throw 'Figurine name not found';
+    // console.log(figurineData)
+
+    // Check if the provided seriesName exists in the found figurineData
+    const seriesData = figurineData.find(series => series.seriesName === seriesName);
+    if (!seriesData) throw 'Series name not found';
+
+    // Check if the provided modelName exists in the found seriesData
+    const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+    if (!modelData) throw 'Model name not found';
 
     if (!user.tradingList || !user.tradingList[figurineName] || !user.tradingList[figurineName][seriesName]) {
       return { success: true, message: 'Trading list is empty, no need to delete figurine' };

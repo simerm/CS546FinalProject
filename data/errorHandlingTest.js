@@ -1,11 +1,11 @@
-import { addCollection, removeCollection } from './user.js';
+import { addCollection, removeCollection, addWishlist } from './user.js';
 
 const username = 'jovera';
-const figurineName = 'Stink';
-const seriesName = 'Test';
+const figurineName = 'Smiski';
+const seriesName = 'Bed';
 const modelName = 'Crescent';
 
-removeCollection(username, figurineName, seriesName, modelName)
+addCollection(username, figurineName, seriesName, modelName)
     .then(result => {
         console.log(result)
     })
