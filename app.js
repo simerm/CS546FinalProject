@@ -71,7 +71,7 @@ const requireAuthentication = (req, res, next) => {
   }
 };
 
-// // Middleware #5
+// Middleware #5
 const requireAdminAuthorization = (req, res, next) => {
   if (!req.session.user) {
     res.redirect("/login");
@@ -91,6 +91,7 @@ const requireLogout = (req, res, next) => {
     next();
   }
 };
+
 //set current user for delete button
 app.use("/collections", redirectFromCollections);
 app.use("/login", redirectAuthenticated);

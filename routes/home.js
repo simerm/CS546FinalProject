@@ -336,7 +336,7 @@ router
       } else {
         const figurineInfo = await sortFigurines();
         // console.log(figurineInfo)
-        res.render('generalCollection', { figurineInfo })
+        res.redirect('/login')
       }
     }
     catch (e) {
@@ -347,8 +347,14 @@ router
   }),
   router
     .route('/businessRegister')
-    .get(async (req, res) => {
-      res.render('businessRegister')
+  .get(async (req, res) => {
+      if (req.session.user.role == 'business') {
+        return res.redirect('/businessProfile');
+      } else if (req.session.user.role == 'personal' || req.session.user.role == 'admin') {
+        return res.redirect('/profile');
+      } else {
+        res.render('businessRegister')
+      }
     })
     .post(async (req, res) => {
       let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword} = req.body;

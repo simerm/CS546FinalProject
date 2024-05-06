@@ -4,7 +4,9 @@ import {static as staticDir} from 'express';
 
 const constructorMethod = (app) => {
   app.use('/', homeRoute);
-  
+  app.use('*', (req, res) => {
+        res.status(404).json({ error: 'Not found' });
+    });
 };
 
 export default constructorMethod;
