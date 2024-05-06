@@ -134,42 +134,45 @@
         </div>
 
     </div>
-    <div class="addInfo">
-        <div class="friends">
-            <h2>My Friends</h2>
-            {{#if hasFriends}}
-            <div class="friendsList">
-                <ul class="list-group">
-                    {{#each friends}}
-                    <li class="list-group-item">{{this}}</li>
-                    {{/each}}
-                </ul>
+
+    <div>
+        <div class="addInfo">
+            <div class="friends">
+                <h2>My Friends</h2>
+                {{#if hasFriends}}
+                <div class="friendsList">
+                    <ul class="list-group">
+                        {{#each friends}}
+                        <li class="list-group-item">{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{else}}
+                <p>You don't have any friends currently.</p>
+                {{/if}}
+
+
+            </div>
+
+            {{#if admin}}
+            <div class="reported">
+                <h2>Reported Users</h2>
+                {{#if reportedUsers}}
+                <div class="reportedList">
+                    <ul class="list-group">
+                        {{#each reportedUsers}}
+                        <li class="list-group-item">{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
             </div>
             {{else}}
-            <p>You don't have any friends currently.</p>
+            <p>No reported users.</p>
             {{/if}}
-
-
+            {{/if}}
         </div>
-
-        {{#if admin}}
-        <div class="reported">
-            <h2>Reported Users</h2>
-            {{#if reportedUsers}}
-            <div class="reportedList">
-                <ul class="list-group">
-                    {{#each reportedUsers}}
-                    <li class="list-group-item">{{this}}</li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
-        {{else}}
-        <p>No reported users.</p>
-        {{/if}}
-        {{/if}}
     </div>
-
+    
     {{#if eligible}}
     <div class="jumbotron">
         <h3>You are eligible to become an Admin!</h3>
