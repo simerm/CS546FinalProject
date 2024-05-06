@@ -85,7 +85,7 @@ try { //create a 2nd business account
     console.log(e);
 }
 
-//personal post
+//personal post(rsvp)
 try {
     const post = await createPost(
         "jfaustin",
@@ -109,10 +109,31 @@ try {
     console.log(e);
 }
 
-//business post
+//business post(rsvp)
+try {
+    const post = await createPost(
+        "sit_official",
+        "Sony angel X Stevens",
+        null,
+        "Reserve your spot for free Smiski or Sony Angel",
+        [],
+        [],
+        [],
+        true,
+        [],
+        false,
+        true,
+        false,
+        false,
+        false,
+        "2023-05-06T21:46:37.350+00:00"
+    )
+    console.log(post);
+} catch (e) {
+    console.log(e);
+}
 
-
-//admin post
+//admin post(no rsvp)
 try {
     const post = await createPost(
         "ms_fast",
