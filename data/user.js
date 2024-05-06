@@ -2,7 +2,8 @@ import bcrypt, { compare } from 'bcrypt'
 const saltRounds = 16
 import { users } from '../config/mongoCollections.js';
 import { store } from '../config/mongoCollections.js';
-import { sortFigurinesUser } from './genCollection.js';
+import { sortFigurines, sortFigurinesUser } from './genCollection.js';
+import { series } from './series.js';
 
 export const registerUser = async (
   firstName,
@@ -490,6 +491,22 @@ export const addCollection = async (username, figurineName, seriesName, modelNam
     const user = await userCollection.findOne({ username: username });
     if (!user) throw 'User not found';
 
+    const figurineInfo = await sortFigurines();
+    // console.log(figurineInfo)
+
+    // Check if the provided figurineName exists in the object
+    const figurineData = figurineInfo[figurineName];
+    if (!figurineData) throw 'Figurine name not found';
+    // console.log(figurineData)
+
+    // Check if the provided seriesName exists in the found figurineData
+    const seriesData = figurineData.find(series => series.seriesName === seriesName);
+    if (!seriesData) throw 'Series name not found';
+
+    // Check if the provided modelName exists in the found seriesData
+    const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+    if (!modelData) throw 'Model name not found';
+
     if (!user.figurineCollection) {
       user.figurineCollection = {};
     }
@@ -522,6 +539,20 @@ export const removeCollection = async (username, figurineName, seriesName, model
     const user = await userCollection.findOne({ username: username });
     if (!user) throw 'User not found';
 
+    const figurineInfo = await sortFigurines();
+    // Check if the provided figurineName exists in the object
+    const figurineData = figurineInfo[figurineName];
+    if (!figurineData) throw 'Figurine name not found';
+    // console.log(figurineData)
+
+    // Check if the provided seriesName exists in the found figurineData
+    const seriesData = figurineData.find(series => series.seriesName === seriesName);
+    if (!seriesData) throw 'Series name not found';
+
+    // Check if the provided modelName exists in the found seriesData
+    const modelData = seriesData.figurineTypes.find(type => type.modelName === modelName);
+    if (!modelData) throw 'Model name not found';
+
     if (!user.figurineCollection || !user.figurineCollection[figurineName] || !user.figurineCollection[figurineName][seriesName]) {
       return { success: true, message: 'Collection is empty, no need to delete figurine' };
     }
@@ -534,7 +565,7 @@ export const removeCollection = async (username, figurineName, seriesName, model
       return { success: true, message: 'Model removed from collection', userCollection: user.figurineCollection };
     }
   } catch (e) {
-    throw 'Error fetching user data!';
+    throw e;
   }
 };
 export const addToStock = async (username, series) => { //function to add stock to the business
