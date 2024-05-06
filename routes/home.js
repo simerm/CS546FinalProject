@@ -819,7 +819,7 @@ router
 
         }
         else { //THIS IS WHERE THE LOGIN ERROR WONT APPEAR
-          return res.status(400).render('login', { error: "invalid username or password" });
+          return res.status(400).render('login', { hasError:true, error: "invalid username or password" });
         }
 
       } catch (e) {
