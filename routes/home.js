@@ -704,7 +704,7 @@ router
 
         }
       } catch (e) {
-        console.log(e)
+        //console.log(e)
         return res.status(400).render('register', { error: e });
 
       }
@@ -926,7 +926,7 @@ router
         
       let bool = true;
       let role = req.session.user.role; //so it can make the necessary changes for each profile
-      console.log(role);
+      //console.log(role);
 
       try {
         let result = await updateProfile(username, update, role) 
@@ -951,7 +951,7 @@ router
       // Call the function to add in the stock and update session data
       const adding = await addToStock(username, series, req);
       if (adding.success) {
-        console.log("Added",req.session.user);
+        //console.log("Added",req.session.user);
         // Send the updated list as JSON
         res.status(200).json({ success: true, data: adding });
         // Need to render the business profile page again after calling to show updated stock - using ajax
@@ -972,7 +972,7 @@ router
         let series = req.params.seriesName; // Series name from request parameters
         const removing = await removeFromStock(username, series, req); // Call the function to remove from stock and pass the request object
         if (removing.success) {
-          console.log("Removed", req.session.user);
+          //console.log("Removed", req.session.user);
           res.status(200).json({ success: true, data: removing });
         } else {
           res.status(400).json({ success: false, message: "Error with removing" });
