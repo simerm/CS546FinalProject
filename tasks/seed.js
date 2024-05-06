@@ -1,5 +1,5 @@
 import {dbConnection, closeConnection} from '../config/mongoConnection.js';
-import { loginUser, registerUser, registerBusiness } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection, addWishlist, addTrade } from '../data/user.js';
 import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
 
 const db = await dbConnection();
@@ -13,6 +13,76 @@ try { //create a normal user
     "personal")
 
     console.log(user);
+} catch (e) {
+    console.log(e);
+}
+
+// Adding to jfaustin's collection
+try {
+    // Adding full Bed series to jfaustin
+    await addCollection("jfaustin", "Smiski", "Bed", "Before Rest");
+    await addCollection("jfaustin", "Smiski", "Bed", "Sleepy");
+    await addCollection("jfaustin", "Smiski", "Bed", "Co-Sleeping");
+    await addCollection("jfaustin", "Smiski", "Bed", "Reading");
+    await addCollection("jfaustin", "Smiski", "Bed", "At Sleep");
+    await addCollection("jfaustin", "Smiski", "Bed", "Fussing");
+    await addCollection("jfaustin", "Smiski", "Bed", "Crescent");
+
+    // Adding full Vegetable series to jfaustin
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Carrot");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Tomato");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Garlic");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Zucchini");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Onion");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Radish");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Green Pepper");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Eggplant");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Bok Choy");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Corn");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Cauliflower");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Cabbage");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Shiitake");
+    await addCollection("jfaustin", "Sonny Angel", "Vegetable", "Vegtable Robbie");
+    
+    // Adding random figurines to jfaustin
+    await addCollection("jfaustin", "Sonny Angel", "Marine", "Shark");
+    await addCollection("jfaustin", "Sonny Angel", "Marine", "Seahorse");
+    await addCollection("jfaustin", "Sonny Angel", "Marine", "Penguin");
+
+    await addCollection("jfaustin", "Smiski", "Series 1", "Hugging Knees");
+    await addCollection("jfaustin", "Smiski", "Series 1", "Lounging");
+    await addCollection("jfaustin", "Smiski", "Series 1", "Scream");
+    
+    await addCollection("jfaustin", "Smiski", "Museum", "Velazquez");
+    const lastPop = await addCollection("jfaustin", "Smiski", "Museum", "Tutankhamen");
+
+    console.log(lastPop);
+} catch (e) {
+    console.log(e);
+}
+
+// Adding to jfaustin's wishlist
+try {
+    await addWishlist("jfaustin", "Sonny Angel", "Marine", "Blowfish");
+    await addWishlist("jfaustin", "Sonny Angel", "Marine", "Marine Robbie");
+    await addWishlist("jfaustin", "Sonny Angel", "Flower", "Sunflower");
+
+    const lastPop = await addWishlist("jfaustin", "Smiski", "Series 1", "Peeking");
+    console.log(lastPop);
+} catch (e) {
+    console.log(e);
+}
+
+// Adding to jfaustin's trades
+try {
+    await addTrade("jfaustin", "Sonny Angel", "Marine", "Seahorse");
+    await addTrade("jfaustin", "Sonny Angel", "Marine", "Shark");
+    await addTrade("jfaustin", "Sonny Angel", "Vegetable", "Bok Choy");
+
+    await addTrade("jfaustin", "Smiski", "Bed", "Fussing");
+
+    const lastPop = await addTrade("jfaustin", "Smiski", "Series 1", "Hugging Knees");
+    console.log(lastPop);
 } catch (e) {
     console.log(e);
 }
