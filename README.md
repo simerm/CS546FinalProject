@@ -8,6 +8,16 @@ Figurine Finder is a web application that allows users to search for and discove
 2. Install all dependencies using ```npm install```
 3. Seed the database by running ```npm seed```
 4. Run the program ```npm start```
+5. Register or Login (using the info below)
+   - As a personal user?
+     - username:
+     - password:
+  - As an admin?
+    - username:
+    - password:
+  - As a business?
+    - username:
+    - password:  
 
 # Team 6 Members
 - [Lauren Espineli](https://github.com/lauren-espi)
