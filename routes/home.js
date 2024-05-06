@@ -203,14 +203,14 @@ router
           req.session.user.location = location
         }
         if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
-          return res.status(400).render('userProfile', { error: "Invalid location" });
+          return res.status(400).render('userProfile', { error: "Invalid bio" });
         }
         else if (bio.length != 0) {
           update.bio = bio
           req.session.user.bio = bio
         }
         if (favFig.length != 0 && favFig.length < 2 || favFig.length > 20) {
-          return res.status(400).render('userProfile', { error: "Invalid location" });
+          return res.status(400).render('userProfile', { error: "Invalid favorite figurine" });
 
         }
         else if (favFig.length != 0) {
@@ -351,7 +351,7 @@ router
       res.render('businessRegister')
     })
     .post(async (req, res) => {
-      let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword } = req.body;
+      let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword} = req.body;
       name = xss(name);
       streetAddress = xss(streetAddress);
       city = xss(city);
@@ -773,6 +773,7 @@ router
       try {
         const user = await loginUser(username, password)
         let val = false 
+        
         if (user) {
           //val = true
           if (user.role == 'business') {
@@ -787,6 +788,7 @@ router
               username: user.username,
               figurineStock: user.figurineStock,
               role: user.role,
+              bio: user.bio
               //auth: val
             }
           }
@@ -859,6 +861,11 @@ router
           val = true;
         }
 
+        let bio = null;
+        if (req.session.user.bio != "") {
+          bio = req.session.user.bio
+        }
+        
         res.render('businessProfile',
           {
             username: req.session.user.username,
@@ -868,7 +875,8 @@ router
             role: req.session.user.role,
             figurineStock: req.session.user.figurineStock,
             figList,
-            auth: val
+            auth: val,
+            bio: bio
           })
       } catch (e) {
         res.status(500).json({ error: 'Error while rendering business profile' })
@@ -876,12 +884,17 @@ router
 
     })
     .post(async (req, res) => { //to edit the profile info
+      let username; 
       if (req.session.user) {
         username = req.session.user.username
       }
       if (!username || typeof username !== 'string' || !isNaN(username)) {
-        return res.status(400).render('userProfile', { error: "Invalid User" });
+        return res.status(400).render('businessProfile', { error: "Invalid User" });
       } //these if statements check if the user is logged in/valid
+      let { storeName, bio } = req.body;
+
+      //console.log(bio); //N/A rn 
+      //console.log(storeName) //EC_test rn
 
       let update = {}
       if (storeName.length == 0 && bio.length == 0) {
@@ -889,14 +902,15 @@ router
       }
       else {
         if (storeName.length != 0 && storeName.length < 2 || storeName.length > 25) {
-          return res.status(400).render('businessProfile', { error: "Invalid name" });
+          return res.status(400).render('businessProfile', { error: "Invalid Store Name" });
         }
         if (storeName.length != 0) {
           update.storeName = storeName
           req.session.user.storeName = storeName
         }
-        if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
-          return res.status(400).render('businessProfile', { error: "Invalid about us" });
+
+        if (bio.length !== 0 && bio.length < 5 || bio.length > 50) {
+          return res.status(400).render('businessProfile', { error: "Invalid About Us" });
         }
         else if (bio.length != 0) {
           update.bio = bio
@@ -906,9 +920,10 @@ router
         
       let bool = true;
       let role = req.session.user.role; //so it can make the necessary changes for each profile
+      console.log(role);
 
       try {
-        let result = await updateProfile(username, update, role) //UPDATE THIS FUNCTION
+        let result = await updateProfile(username, update, role) 
         bool = result.success
         if (!bool) {
           return res.status(400).render('businessProfile', { error: "Something went wrong" });

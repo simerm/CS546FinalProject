@@ -111,7 +111,7 @@ export const registerUser = async (
     dateCreated: date,
     friends: [],
     figurineCollection: {},
-    bio: "",
+    bio: "N/A",
     location: "",
     picture: "",
     tradingList: {}
@@ -192,7 +192,8 @@ export const loginUser = async (username, password) => {
       zipcode: b.zipcode,
       username: username,
       figurineStock: b.figurineStock,
-      role: b.role
+      role: b.role,
+      bio: b.bio
 
     }
   }
@@ -473,7 +474,8 @@ export const registerBusiness = async (
     username: username,
     password: hash,
     role: role,
-    figurineStock: []
+    figurineStock: [],
+    bio: "N/A"
   }
 
   const newInsertInformation = await storeCollection.insertOne(newUser);
@@ -579,36 +581,71 @@ export const updateProfile = async (username, updateObject, role) => {
   if (typeof username !== 'string') throw 'username must be a string';
   if (username.trim().length === 0)
     throw 'username cannot be an empty string or just spaces';
-  username = username.trim();
-  const userCollection = await users()
-  const oldUser = await userCollection.findOne(
-    { 'username': username },
-  )
-  if (oldUser === null) throw 'No review with that id';
-  let theUser = null;
-  //^ what is this stuff? 
+  // username = username.trim(); - commented out for now
+  // const userCollection = await users()
+  // const oldUser = await userCollection.findOne(
+  //   { 'username': username },
+  // )
+  // if (oldUser === null) throw 'No review with that id';
+  // let theUser = null;
+  
 
   if (role === 'business') {
+    username = username.trim();
+    const storeCollection = await store()
+    const oldStore = await storeCollection.findOne(
+      { 'username': username },
+    )
+    if (oldStore === null) throw 'No review with that id';
+    let theStore = null;
+
     if (updateObject.hasOwnProperty("storeName")) {
-      if (typeof updateObject.first !== 'string') {
+      if (typeof updateObject.storeName !== 'string') {
         throw "must be a string"
       }
-      updateObject.first = updateObject.first.trim()
-      if (updateObject.first.length < 5 || updateObject.first.length > 50) {
+      updateObject.storeName = updateObject.storeName.trim()
+      if (updateObject.storeName.length < 5 || updateObject.storeName.length > 25) {
         throw "must not be empty"
       }
     }
 
-    if (updateObject.hasOwnProperty("bio")) {
-      if (typeof updateObject.first !== 'string') {
+    if (updateObject.hasOwnProperty("bio")) { //bio
+      if (typeof updateObject.bio !== 'string') {
         throw "must be a string"
       }
-      updateObject.first = updateObject.first.trim()
-      if (updateObject.first.length < 2 || updateObject.first.length > 25) {
-        throw "must not be empty"
+      updateObject.bio = updateObject.bio.trim()
+      if (updateObject.bio.length < 2 || updateObject.bio.length > 50) {
+        throw "bio isn't a valid length"
       }
     }
+
+    //after checking, now update the info 
+    if (updateObject.hasOwnProperty("storeName")) {
+
+      theStore = await storeCollection.findOneAndUpdate(
+        { 'username': username },
+        { $set: { 'storeName': updateObject.storeName } },
+        { returnDocument: 'after' }
+      )
+    }
+
+
+    if (updateObject.hasOwnProperty("bio")) {
+
+      theStore = await storeCollection.findOneAndUpdate(
+        { 'username': username },
+        { $set: { 'bio': updateObject.bio } },
+        { returnDocument: 'after' }
+      )
+    }
   } else {
+    const userCollection = await users()  //the thing I commented out, I placed here
+    const oldUser = await userCollection.findOne(
+      { 'username': username },
+    )
+    if (oldUser === null) throw 'No review with that id';
+    let theUser = null;
+
     if (updateObject.hasOwnProperty("first")) {
       if (typeof updateObject.first !== 'string') {
         throw "must be a string"
