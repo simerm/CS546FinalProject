@@ -411,9 +411,6 @@ h1 {
     justify-content: flex-end;
 }
 
-.alert.alert-danger{
-    display: none
-}
 
 .addButton{
     background-color: #34495e; 
