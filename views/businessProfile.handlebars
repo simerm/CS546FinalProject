@@ -69,25 +69,22 @@
     <h2>My Stock</h2>
     
     <div id ="stock-list">
+        <ul>
         {{#each figurineStock}}
-            <ul>
             <li>{{this}}</li>
-            </ul>
         {{/each}}  
+        </ul>
     </div> <br>
     
     <form id="addStockForm">
         <h2>Add Stock</h2>
         <label for="add-stock">Select Figurine:</label> <br>
-
         <select name="add-stock" id="add-stock" class="dropbtn">
             {{#each figList}}
                 <option value="{{this}}">{{this}}</option>
             {{/each}}
         </select>
-
         <button id="AddButton" name="AddButton" type="submit" class="addButton">Add</button>
-
     </form> <br>
 
     <form id="removeStockForm">

@@ -866,6 +866,9 @@ router
           bio = req.session.user.bio
         }
         
+        let figs = req.session.user.figurineStock
+        console.log(figs);
+
         res.render('businessProfile',
           {
             username: req.session.user.username,
@@ -944,13 +947,13 @@ router
         let series = req.params.seriesName //series 
 
         const adding = await addToStock(username, series); //call the function to add in the stock
-
+        console.log(adding);
+        
         if (adding.success) {
-          // console.log('success')
           // Send the updated list as JSON
           res.status(200).json({ success: true, data: adding });
           // need to render the business profile page again after calling to show updated stock - using ajax
-
+          //return res.status(400).render('businessProfile')
         } else {
           // console.log('fail')
           
@@ -978,7 +981,7 @@ router
           // Send the updated list as JSON
           res.status(200).json({ success: true, data: removing });
           // need to render the business profile page again after calling to show updated stock - using ajax
-
+          //return res.status(400).render('businessProfile')
         } else {
           // console.log('fail')
           

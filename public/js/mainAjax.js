@@ -13,8 +13,7 @@ jQuery(document).ready(function() {
         };
 
         jQuery.ajax(requestConfig).then(function(response) {
-            //console.log(option);
-            jQuery('#stock-list').append('<li>' + selectedOption + '</li>');
+            jQuery('#stock-list ul').append('<li>' + selectedOption + '</li>');
 
             jQuery('#remove-stock').append('<option value="' + selectedOption + '">' + selectedOption + '</option>');
 
