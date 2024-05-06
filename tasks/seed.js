@@ -54,7 +54,7 @@ try { //create a 2nd admin
 }
 
 
-
+//personal post
 try {
     const post = await createPost(
         "jfaustin",
@@ -70,7 +70,35 @@ try {
         false,
         false,
         false,
+        false,
         "2024-05-06T21:46:37.350+00:00"
+    )
+    console.log(post);
+} catch (e) {
+    console.log(e);
+}
+
+//business post
+
+
+//admin post
+try {
+    const post = await createPost(
+        "ms_fast",
+        "Favorite Smiski",
+        null,
+        "I went to Japan, look at my smiski",
+        [],
+        [],
+        [],
+        false,
+        [],
+        true,
+        false,
+        false,
+        false,
+        false,
+        "2024-05-04T23:17:38.759+00:00"
     )
     console.log(post);
 } catch (e) {
