@@ -57,10 +57,15 @@ app.post('/createpost', async (req, res) => {
   //xss stuff
   postTitle = xss(postTitle);
   caption = xss(caption);
-
-  if (!postTitle) {
+  if (!postTitle && !caption) {
+    return res.status(400).render('createpost', { error: 'Must provide a post title and caption' });
+  } else if (!postTitle) {
     return res.status(400).render('createpost', { error: 'Must provide a post title' });
+  } else if (!caption) {
+    return res.status(400).render('createpost', { error: 'Must provide a post caption' });
   }
+  
+  
 
   if (typeof postTitle !== 'string' || typeof caption !== 'string') {
     return res.status(400).render('createpost', { error: 'Invalid params' });
@@ -72,6 +77,13 @@ app.post('/createpost', async (req, res) => {
   if (postTitle.length < 1 || postTitle.length > 25) {
     return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
   }
+
+if(!postTitle||!caption){
+  return res.status(400).render('createpost', { error: 'Must provide a post title and caption' });
+}
+  if (caption.length < 1 || caption.length > 100) {
+  return res.status(400).render('createpost', { error: 'Caption can only be 1-100 characters' });
+}
 
   try {
     const user_info = await createPost(req.session.user, postTitle, file, req.body.rsvp, req.body.fileSelect, caption);

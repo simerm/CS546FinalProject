@@ -295,6 +295,13 @@ h1 {
     color: red;
 }
 
+.error {
+    color: rgb(253, 253, 253);
+    background-color: rgb(241, 67, 67);
+    padding: 10px;
+    border-radius: 5px;
+}
+
 
 
 .wishForm{
@@ -563,4 +570,7 @@ h1 {
     gap: 10px; /* Add spacing between the buttons */
 }
 
+.rsvpButton{
+    margin-top:10px;
+}
 

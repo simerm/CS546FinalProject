@@ -9,9 +9,14 @@ export const createPost = async (
     fileSelect,
     caption
   ) => {
-    if (!postTitle) {
-        throw "Must provide a post title";
-    }
+    if (!postTitle && !caption) {
+        throw 'Must provide a post title and caption'
+      } else if (!postTitle) {
+        throw 'Must provide a post title' 
+      } else if (!caption) {
+        throw'Must provide a post caption'
+      }
+      
     if (typeof postTitle !== 'string' || typeof caption !== 'string') {
         throw "Must provide a string";
     }
@@ -20,6 +25,7 @@ export const createPost = async (
     if (postTitle.length < 1 || postTitle.length > 25) {
         throw "Post title must be between 1-25 characters long";
     }
+    
     if (caption.length < 1 || caption.length > 100) {
         throw "Caption must be between 1-00 characters long";
     }
