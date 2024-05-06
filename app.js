@@ -4,8 +4,8 @@ import { dirname } from 'path';
 import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import fileUpload from 'express-fileupload';
-
-import { deletePost } from './data/createposts.js';
+import { createPost} from './data/createposts.js';
+import xss from 'xss';
 
 const __filename = fileURLToPath(import.meta.url);
 const thename = dirname(__filename);
@@ -35,6 +35,87 @@ const redirectFromCollections = (req, res, next) => {
     next();
   }
 }
+
+app.get('/createpost', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  res.render('createpost');
+});
+
+app.post('/createpost', async (req, res) => {
+  let file = null;
+  if (req.files && req.files.file) {
+    file = req.files.file;
+  }
+  let uploadPath = null;
+  if (file) {
+    uploadPath = thename + '/public/' + file.name;
+
+    file.mv(uploadPath, async function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+    });
+  }
+
+  let { postTitle, caption } = req.body;
+  //xss stuff
+  postTitle = xss(postTitle);
+  caption = xss(caption);
+  if (!postTitle && !caption) {
+    return res.status(400).render('createpost', { error: 'Must provide a post title and caption' });
+  } else if (!postTitle) {
+    return res.status(400).render('createpost', { error: 'Must provide a post title' });
+  } else if (!caption) {
+    return res.status(400).render('createpost', { error: 'Must provide a post caption' });
+  }
+  if (typeof postTitle !== 'string' || typeof caption !== 'string') {
+    return res.status(400).render('createpost', { error: 'Invalid params' });
+  }
+  let image = false;
+  let video = false;
+  let audio = false;
+  if (file) {
+    if (req.files.file.size > 10485760) {
+      return res.status(400).render('createpost', { error: 'File is too big (Max Size: 10MB)' });
+    }
+    let whatIsFile = (req.files.file.mimetype).substring(0,5);
+    if (whatIsFile !== 'image' && whatIsFile !== 'video' && whatIsFile !== 'audio') {
+      return res.status(400).render('createpost', { error: 'Invalid file type' });
+    }
+    if (whatIsFile === 'image') {
+      image = true;
+    }
+    if (whatIsFile === 'video') {
+      video = true;
+    }
+    if (whatIsFile === 'audio') {
+      audio = true;
+    }
+  }
+
+  postTitle = postTitle.trim();
+  caption = caption.trim();
+
+  if (postTitle.length < 1 || postTitle.length > 25) {
+    return res.status(400).render('createpost', { error: 'Post title must be between 1-25 characters long' });
+  }
+
+  if (caption.length < 1 || caption.length > 100) {
+  return res.status(400).render('createpost', { error: 'Caption can only be 1-100 characters' });
+}
+
+  try {
+    const user_info = await createPost(req.session.user, postTitle, file, req.body.rsvp, image, audio, video, caption);
+    if (!user_info) {
+      return res.status(400).render('createpost', { error: 'Post was unsuccessful' });
+    }
+    return res.redirect('/');
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+});
 
 // Middleware #2
 const redirectAuthenticated = (req, res, next) => {

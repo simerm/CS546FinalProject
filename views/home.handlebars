@@ -12,11 +12,167 @@
     {{/if}}
     
 </div>
-<title>Feed</title>
-    <script>
+    <title>Feed</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <h1>Feed</h1>
+        {{#if error}}
+        <p class="error">{{error}}</p>
+        {{/if}}
+        <div class="clientError" id="clientError"></div>
+        <form id="createpost" action="/createpost" method="GET">
+            <button type="submit">Create Post</button>
+        </form>
+        <div>
+            <label for="searchfriend">Search for User:</label>
+            <input type="text" id="searchfriend" name="searchfriend">
+            <button onclick="searchFriend()">Search</button>
+            <button id="seeAllButton" onclick="seeAllPosts()" style="display: none;">See All Posts</button>
+        </div>
+
+        <div class="posts-container">
+            {{#each posts}}
+            <div class="post">
+                <div class="postDetails">
+                    <p class="name"><b>{{name}}</b>
+                        {{#if isAdminPost}}
+                        <img src="/public/verified.png" class="adminCheck">
+                        {{/if}}
+                        {{#if isBusinessPost}}
+                        <img src="/public/business icon.png" class="businessIcon">
+                        {{/if}}
+                    </p>
+                    <h2><b>{{title}}</b></h2>
+                    {{#if isRsvp}}
+                    <h4>[RSVP Post]</h4>
+                    {{/if}}
+                    <div class="postDiv">
+                        <p>{{caption}}</p>
+                        {{#if isVideo}}
+                        <div class="image-container">
+                            <video controls>
+                                <source src="/public/{{encodeURIComponent file.name}}" class="postVideoOrAudio">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        {{/if}}
+                        {{#if isImage}}
+                        <div class="image-container">
+                            <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
+                        </div>
+                        {{/if}}
+                        {{#if isAudio}}
+                        <div class="image-container">
+                            <video controls>
+                                <source src="/public/{{encodeURIComponent file.name}}" class="postVideoOrAudio">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="divider"></div>
+                    <form id="ratings-likes-{{_id}}" action="/ratings" method="POST">
+                        <input type="hidden" name="rating" value="like">
+                        <input type="hidden" name="postId" value="{{_id}}">
+                        <div class="countRatings ">
+                            <button type="submit" class="thumbIcon">👍</button>
+                            <span class="rateCount">{{whoLiked.length}}</span>
+                        </div>
+                    </form>
+                    <form id="ratings-dislikes-{{_id}}" action="/ratings" method="POST">
+                    <input type="hidden" name="rating" value="dislike">
+                    <input type="hidden" name="postId" value="{{_id}}">
+                        <div class="countRatings">
+                            <button type="submit" class="thumbIcon">👎</button>
+                            <span class="rateCount">{{whoDisliked.length}}</span>
+                        </div>
+                    </form>
+                    <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
+                    {{#if isRsvp}}
+                    <form  action="/rsvps" method="POST">
+                        <input type="hidden" name="rsvpMe" value="yes">
+                        <input type="hidden" name="postId" value="{{_id}}">
+                        <div class="countRsvp">
+                            <button type="submit" class="rsvpButton">RSVP to This Event</button>
+                            <label><b>RSVP Count: </b></label>
+                        <span class="rsvpCount">{{whoRSVP.length}}</span>
+                    </div>
+                    </form>
+                    
+                    {{/if}}
+                    <div class="previous-comments" id="comments-{{_id}}">
+                        <p><b>Comments</b></p>
+                        {{#each comments}}
+                        <h2>[{{user}}]</h2>
+                        <p>{{comment}}</p>
+                        {{/each}}
+                    </div>
+                    <div class="commentBox">
+                        <form id="comments-form-{{_id}}" name="comments" action="/comments" method="POST">
+                            <input type="hidden" name="postId" value="{{_id}}">
+                            <label for="commentInput">Add Comment:</label>
+                            <input type="text" id="commentInput-{{_id}}" name="commentInput" data-post-id="{{_id}}">
+                            <button class="add-comment-btn">Add</button>
+                        </form>
+                        {{#if commentError}}
+                        <p class="error">{{commentError}}</p>
+                        {{/if}}
+                        <div class="clientError" id="clientError"></div>
+                    </div>
+                    <button onclick="toggleComments('{{_id}}')" class="hide-btn">Hide/Show Comments</button>
+                    <p></p>
+                    {{#if (equals ../c_usr name)}}
+                    <div class="button-container">
+                        <form id="edit-{{_id}}" action="/edit" method="GET">
+                            <input type="hidden" name="postId" value="{{_id}}">
+                            <button type="submit" class="user-post">Edit Your Post</button>
+                        </form>
+                        <p></p>
+                        <form id="deleteForm" action="/delete" method="POST">
+                            <input type="hidden" name="postId" value="{{_id}}">
+                            <button type="submit" class="user-post">Delete Your Post</button>
+                        </form>
+                        <script>
+                            $(document).ready( function() {
+                                $("#deleteForm").submit(function(e) {
+                                    
+                                e.preventDefault();
+                        $.ajax ({
+                            type: 'POST',
+                            url: $(this).attr('action'), 
+                            data: $(this).serialize(),
+                            success: function(res) {
+                                console.log("SUCCESS: ", res)
+                            },
+                            error: function(_, status, error) {
+                                console.log("ERROR: ", status, error)
+                            }
+                        });
+                                })
+                            })
+                        </script>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</body>
+
+
+<script>
         function toggleLikesAndDislikes(postId) {
-            var likesAndDislikes = document.getElementById("likes-" + postId);
+            var likesAndDislikes = document.getElementById("ratings-likes-" + postId);
+            var likesAndDislikes2 = document.getElementById("ratings-dislikes-" + postId);
             likesAndDislikes.classList.toggle("hidden");
+            likesAndDislikes2.classList.toggle("hidden");
         }
 
         function toggleComments(postId) {
@@ -61,94 +217,6 @@
             seeAllButton.style.display = "none";
         }
 
-    
-        function incrementLikes(postId) {
-            var likeCountElement = document.getElementById("likeCount-" + postId);
-            var currentLikes = parseInt(likeCountElement.innerText);
-            console.log("Current Likes:", currentLikes);
-            var newLikes = currentLikes + 1;
-            console.log("New Likes:", newLikes);
-            likeCountElement.innerText = newLikes;    
-        }
-
     </script>
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-    <div class="body">
-        <h1>Feed</h1>
-        {{#if error}}
-        <p class="error">{{error}}</p>
-        {{/if}}
-        <div class="clientError" id="clientError"></div>
-        <form id="createpost" action="/createpost" method="GET"><button id="createpost">Create Post</button></form>
-        <div>
-            <label for="searchfriend">Search for User:</label>
-            <input type="text" id="searchfriend" name="searchfriend">
-            <button onclick="searchFriend()">Search</button>
-            <button id="seeAllButton" onclick="seeAllPosts()" style="display: none;">See All Posts</button>
-        </div>
-        <div class="display">
-            <div class="post">
-                <div class="right">
-                    {{#each posts}}
-                    <div class="postDetails">
-                        <p class="name"><b>{{name}}</b>
-                        {{#if isAdminPost}}
-                            <img src="/public/verified.png" class="adminCheck">
-                        {{/if}}</p>
-                        <h2>{{title}}</h2>
-                        <div class="postDiv">
-                            <p>{{caption}}</p>
-                            <img src="/public/mockpost.jpg" class="postPicture">
-                        </div>
-                        <div class="divider"></div>
-                        <div class="button-group">
-                            <form id="likes-{{_id}}">
-                                <button class="thumbsUp" onclick="incrementLikes('{{_id}}')">👍</button>
-                                <button class="thumbsDown" onclick="incrementDislikes('{{_id}}')">👎</button>
-                        <p>
-                            <b>Likes: </b><span id="likeCount-{{_id}}">{{likes}}</span> 
-                            <b>Dislikes: </b><span id="dislikeCount-{{_id}}">{{dislikes}}</span>
-                        </p>
-    </form>
-    <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-up-down-btn">Hide/Show Likes and Dislikes</button>
-</div>
-
-
-                        <div class="previous-comments" id="comments-{{_id}}">
-                            <p><b>Comments</b></p>
-                                {{#each comments}}
-                                    <h2>[{{user}}]</h2>
-                                    <p>{{comment}}</p>
-                                {{/each}}
-                        </div>
-                        <div class="commentBox">
-                            <form id="comments-{{_id}}" action="/comments" method="POST">
-                                <input type="hidden" name="postId" value="{{_id}}">
-                                <label for="commentInput">Add Comment:</label>
-                                <input type="text" id="commentInput" name="commentInput" data-post-id="{{_id}}">
-                                <button class="add-comment-btn">Add</button>
-                            </form>
-                        </div>
-                            {{#if (equals ../c_usr name)}}
-                            <form id="delete-{{_id}}" action="/delete" method="POST">
-                                <input type="hidden" name="postId" value="{{_id}}">
-                                <button type="submit">Delete Your Post</button>
-                            </form>
-                            {{/if}}
-                        <button onclick="toggleComments('{{_id}}')" class="hide-comments-btn">Hide/Show Comments</button>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
 
 
