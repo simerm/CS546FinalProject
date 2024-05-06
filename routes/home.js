@@ -10,7 +10,8 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
-import { createPost, getAllPosts, createComment, editPost, deletePost } from '../data/createposts.js';
+import { posts } from '../config/mongoCollections.js';
+import { getAllPosts, createComment, editPost, deletePost } from '../data/createposts.js';
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -248,7 +249,18 @@ router
       return res.render('edit', {postId: req.query.postId});
     })
     .post(async (req, res) => {
-      let { postId, newCaption } = req.body;
+    let { postId, newCaption } = req.body;
+    if (newCaption.length === 0) {
+      return res.status(400).render('edit', { error: 'Caption cannot be empty' });
+    }
+    if (newCaption.length < 1 || newCaption.length > 100) {
+      return res.status(400).render('edit', { error: 'Caption must be between 1-100 characters long' });
+    }
+    const postCollection = await posts();
+    const post = await postCollection.findOne({ _id: postId });
+    if (!post) {
+      return res.status(400).render('edit', { error: 'Post not found' });
+    }
       postId = new ObjectId(postId);
       newCaption = xss(newCaption);
       let edit = await editPost(newCaption, postId);
