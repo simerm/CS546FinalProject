@@ -11,7 +11,7 @@ import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
 import { posts } from '../config/mongoCollections.js';
-import { getAllPosts, createComment, editPost, deletePost } from '../data/createposts.js';
+import { getAllPosts, createComment, editPost, deletePost, createRating } from '../data/createposts.js';
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -40,6 +40,11 @@ Handlebars.registerHelper('equals', function () {
 Handlebars.registerHelper('encodeURIComponent', function(str) {
   return encodeURIComponent(str);
 });
+
+// Handlebars.registerHelper('ratings', async function(rating, user, postId) {
+//   let rate = await createRating(rating, user, postId);
+//   return rate;
+// });
 
 router
   .route('/')
@@ -253,19 +258,16 @@ router
       }
       return res.redirect('/');
     }),
-  // router
-  // .route('/likes')
-  // .post(async (req, res) =>  {
-  //   if (!req.session.user) {
-  //     return res.redirect('/login');
-  //   }
-  //   let {postId} = req.body;
-  //   let like = await incrementLikes(req.session.user, postId);
-  //   if (!like) {
-  //     return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
-  //   }
-  //   return res.redirect('/');
-  // });
+  router
+  .route('/ratings')
+  .post(async (req, res) =>  {
+    let {rating, postId} = req.body;
+    let rate = await createRating(rating, req.session.user, postId);
+    if (!rate) {
+      return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
   router
     .route('/comments')
     .post(async (req, res) => {

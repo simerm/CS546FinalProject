@@ -57,14 +57,20 @@
                         {{/if}}
                     </div>
                     <div class="divider"></div>
-                    <form id="likes-{{_id}}">
+                    <form id="ratings-likes-{{_id}}" action="/ratings" method="POST">
+                        <input type="hidden" name="rating" value="like">
+                        <input type="hidden" name="postId" value="{{_id}}">
                         <div class="countRatings ">
-                            <button class="thumbIcon">👍</button>
-                            <span class="rateCount">0</span>
+                            <button type="submit" class="thumbIcon">👍</button>
+                            <span class="rateCount">{{whoLiked.length}}</span>
                         </div>
+                    </form>
+                    <form id="ratings-dislikes-{{_id}}" action="/ratings" method="POST">
+                    <input type="hidden" name="rating" value="dislike">
+                    <input type="hidden" name="postId" value="{{_id}}">
                         <div class="countRatings">
-                            <button class="thumbIcon">👎</button>
-                            <span class="rateCount">0</span>
+                            <button type="submit" class="thumbIcon">👎</button>
+                            <span class="rateCount">{{whoDisliked.length}}</span>
                         </div>
                     </form>
                     <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
@@ -117,7 +123,7 @@
 </body>
 <script>
         //likes and dislike accumulator
-        document.querySelectorAll(".postDetails").forEach(post => {
+        /*document.querySelectorAll(".postDetails").forEach(post => {
             const postId = post.dataset.postId;
             const ratings = post.querySelectorAll(".countRatings");
             const likeRating = ratings[0];
@@ -133,11 +139,15 @@
                 });
         });
          });
+        */
         
         //end accumulator
+
         function toggleLikesAndDislikes(postId) {
-            var likesAndDislikes = document.getElementById("likes-" + postId);
+            var likesAndDislikes = document.getElementById("ratings-likes-" + postId);
+            var likesAndDislikes2 = document.getElementById("ratings-dislikes-" + postId);
             likesAndDislikes.classList.toggle("hidden");
+            likesAndDislikes2.classList.toggle("hidden");
         }
 
         function toggleComments(postId) {

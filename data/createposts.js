@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { posts } from '../config/mongoCollections.js';
+import e from 'express';
 
 export const createPost = async (
     user,
@@ -178,18 +179,28 @@ export const createRating = async (
         throw "Invalid postId";
     }
     const post_collection = await posts();
-
-    let newRating_obj = {
-        rating: rating,
-        user: user.username,
-    }
     postId = new ObjectId(postId);
     const post = await post_collection.findOne({ _id: postId });
     if(!post){
         throw "Post not found";
     }
-    const rating_info = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { rating: newRating_obj } });
-    return rating_info;
+    if (rating === 'like') {
+        if (post.whoLiked.includes(user.username)) {
+            const like_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoLiked: user.username } });
+        } else {
+            const dislike_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoDisliked: user.username } });
+            const like_push = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoLiked: user.username } });
+        }
+    }
+    else if (rating === 'dislike') {
+        if (post.whoDisliked.includes(user.username)) {
+            const dislike_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoDisliked: user.username } });
+        } else {
+            const like_pop = await post_collection.findOneAndUpdate( { _id : postId },{ $pull: { whoLiked: user.username } });
+            const dislike_push = await post_collection.findOneAndUpdate( { _id : postId },{ $push: { whoDisliked: user.username } });
+        }
+    }
+    return true;
 }
 
 // export const incrementDislikes = async (user, postId) => {
