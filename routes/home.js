@@ -11,7 +11,7 @@ import { submitApplication, appExists } from '../data/adminApplication.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
 import { posts } from '../config/mongoCollections.js';
-import { getAllPosts, createComment, editPost, deletePost, createRating } from '../data/createposts.js';
+import { getAllPosts, createComment, editPost, deletePost, createRating, createRsvp } from '../data/createposts.js';
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -41,10 +41,6 @@ Handlebars.registerHelper('encodeURIComponent', function(str) {
   return encodeURIComponent(str);
 });
 
-// Handlebars.registerHelper('ratings', async function(rating, user, postId) {
-//   let rate = await createRating(rating, user, postId);
-//   return rate;
-// });
 
 router
   .route('/')
@@ -264,7 +260,18 @@ router
     let {rating, postId} = req.body;
     let rate = await createRating(rating, req.session.user, postId);
     if (!rate) {
-      return res.status(400).render('home', { error: 'Liking post was unsuccessful' });
+      return res.status(400).render('home', { error: 'Rate post was unsuccessful' });
+    }
+    return res.redirect('/');
+  });
+
+  router
+  .route('/rsvps')
+  .post(async (req, res) =>  {
+    let {rsvpMe, postId} = req.body;
+    let userRsvp = await createRsvp(rsvpMe, req.session.user, postId);
+    if (!userRsvp) {
+      return res.status(400).render('home', { error: 'RSVP post was unsuccessful' });
     }
     return res.redirect('/');
   });

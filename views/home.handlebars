@@ -75,11 +75,16 @@
                     </form>
                     <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
                     {{#if isRsvp}}
-                    <div class="countRsvp">
-                        <button class="rsvpButton">I want to RSVP to this event</button>
-                        <label>Number of RSVP</label>
-                        <span class="rsvpCount">0</span>
+                    <form  action="/rsvps" method="POST">
+                        <input type="hidden" name="rsvpMe" value="yes">
+                        <input type="hidden" name="postId" value="{{_id}}">
+                        <div class="countRsvp">
+                            <button type="submit" class="rsvpButton">I want to RSVP to this event</button>
+                            <label>Number of RSVP</label>
+                        <span class="rsvpCount">{{whoRSVP.length}}</span>
                     </div>
+                    </form>
+                    
                     {{/if}}
                     <div class="previous-comments" id="comments-{{_id}}">
                         <p><b>Comments</b></p>
@@ -122,26 +127,7 @@
     </div>
 </body>
 <script>
-        //likes and dislike accumulator
-        /*document.querySelectorAll(".postDetails").forEach(post => {
-            const postId = post.dataset.postId;
-            const ratings = post.querySelectorAll(".countRatings");
-            const likeRating = ratings[0];
-
-            ratings.forEach(rating =>{
-                const button= rating.querySelector(".thumbIcon");
-                const count= rating.querySelector(".rateCount");
-                console.log(button);
-                //console.log(count);
-                button.addEventListener("click",async()=>{
-                    const likeOrDislike = likeRating === rating ? "like" : "dislike";
-			        const response = await fetch(`/postDetails/${postId}/${likeOrDislike}`);
-                });
-        });
-         });
-        */
-        
-        //end accumulator
+ 
 
         function toggleLikesAndDislikes(postId) {
             var likesAndDislikes = document.getElementById("ratings-likes-" + postId);
