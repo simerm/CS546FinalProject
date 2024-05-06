@@ -4,7 +4,11 @@
 
         <div class="profileDetails">
             <div class="left">
+                {{#if hasPicture}}
+                <img src="/public/{{picture}}.png" alt="Profile Picture" class="chosenPicture">
+                {{else}}
                 <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+                {{/if}}
                 <h3>{{username}}</h3>
             </div>
             <div class="right">
@@ -69,7 +73,15 @@
                                 <label for="favFig">Favorite Figurine:</label>
                                 <input class="form-control" type="text" id="favFig" name="favFig">
 
-
+                                <label for="picture">Profile Picture:</label>
+                                <select id = "picture" name="picture" class="custom-select">
+                                    <option value="None" selected>Select</option>
+                                    <option value="cat">Cat</option>
+                                    <option value="frog">Frog</option>
+                                    <option value="lion">Lion</option>
+                                    <option value="panda">Panda</option>
+                                    <option value="unicorn">Unicorn</option>
+                                </select>
 
                                 <button type="submit" class="btn btn-success" id="submitButton"
                                     name="submitButton">Submit Changes</button>
@@ -88,17 +100,17 @@
 
             </div>
             {{#if hasBadges}}
-                {{#each badges}}
-                    {{#if this}}
-                        <h5><span class="badge badge-info">{{@key}}</span></h5>
-                        {{#each this}}
-                            <span class="badge badge-pill badge-light text-dark">{{this}}</span>
-                        {{/each}}
-                        <h1></h1>
-                    {{/if}}
-                {{/each}}
+            {{#each badges}}
+            {{#if this}}
+            <h5><span class="badge badge-info">{{@key}}</span></h5>
+            {{#each this}}
+            <span class="badge badge-pill badge-light text-dark">{{this}}</span>
+            {{/each}}
+            <h1></h1>
+            {{/if}}
+            {{/each}}
             {{else}}
-                <p>You don't have any badges currently.</p>
+            <p>You don't have any badges currently.</p>
             {{/if}}
         </div>
 
@@ -118,7 +130,7 @@
             {{else}}
             <p>You don't have any wishes currently.</p>
             {{/if}}
-            
+
         </div>
 
     </div>

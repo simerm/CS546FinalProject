@@ -660,10 +660,9 @@ export const updateProfile = async (username, updateObject, role) => {
 
     }
     if (updateObject.hasOwnProperty("picture")) {
-
-      picture.favFig = picture.favFig.trim()
-
-
+      if (typeof updateObject.picture !== 'string') {
+        throw "must be a string"
+      }
     }
 
     if (updateObject.hasOwnProperty("first")) {

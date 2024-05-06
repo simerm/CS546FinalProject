@@ -799,12 +799,13 @@ if (document.getElementById('editProfile')) {
         let location = document.getElementById('location').value.trim();
         let bio = document.getElementById('bio').value.trim();
         let favFig = document.getElementById('favFig').value.trim();
+        let picture = document.getElementById('picture').value.trim();
         let error = document.getElementById('clientError');
         error.innerHTML = '';
 
         let valid = true;
 
-        if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0) {
+        if (first.length == 0 && last.length == 0 && location.length == 0 && bio.length == 0 && favFig.length == 0 && picture === "None") {
             let e = document.createElement("p");
             e.innerHTML = 'Must modify at least one value to submit changes'
             error.appendChild(e)

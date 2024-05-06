@@ -25,7 +25,11 @@
 
         <div class="profileDetails">
             <div class="left">
+                {{#if picture}}
+                <img src="/public/{{picture}}.png" alt="Profile Picture" class = "chosenPicture" >
+                {{else}}
                 <img src="/public/profile.png" alt="Profile Picture" class="profile-picture">
+                {{/if}}
                 <h3 id="username">{{username}}</h3>
             </div>
             <div class="right">
