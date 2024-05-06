@@ -351,7 +351,7 @@ router
       res.render('businessRegister')
     })
     .post(async (req, res) => {
-      let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword } = req.body;
+      let { name, phoneNumber, id, streetAddress, city, state, zipcode, username, password, confirmPassword} = req.body;
       name = xss(name);
       streetAddress = xss(streetAddress);
       city = xss(city);
@@ -773,6 +773,7 @@ router
       try {
         const user = await loginUser(username, password)
         let val = false 
+        
         if (user) {
           //val = true
           if (user.role == 'business') {
@@ -787,6 +788,7 @@ router
               username: user.username,
               figurineStock: user.figurineStock,
               role: user.role,
+              bio: user.bio
               //auth: val
             }
           }
@@ -868,7 +870,8 @@ router
             role: req.session.user.role,
             figurineStock: req.session.user.figurineStock,
             figList,
-            auth: val
+            auth: val,
+            bio: req.session.user.bio
           })
       } catch (e) {
         res.status(500).json({ error: 'Error while rendering business profile' })
@@ -876,12 +879,15 @@ router
 
     })
     .post(async (req, res) => { //to edit the profile info
+      let username; 
       if (req.session.user) {
         username = req.session.user.username
       }
       if (!username || typeof username !== 'string' || !isNaN(username)) {
-        return res.status(400).render('userProfile', { error: "Invalid User" });
+        return res.status(400).render('businessProfile', { error: "Invalid User" });
       } //these if statements check if the user is logged in/valid
+      let storeName = req.session.user.storeName;
+      let bio = req.session.user.bio;
 
       let update = {}
       if (storeName.length == 0 && bio.length == 0) {
@@ -889,14 +895,14 @@ router
       }
       else {
         if (storeName.length != 0 && storeName.length < 2 || storeName.length > 25) {
-          return res.status(400).render('businessProfile', { error: "Invalid name" });
+          return res.status(400).render('businessProfile', { error: "Invalid Store Name" });
         }
         if (storeName.length != 0) {
           update.storeName = storeName
           req.session.user.storeName = storeName
         }
         if (bio.length != 0 && bio.length < 5 || bio.length > 50) {
-          return res.status(400).render('businessProfile', { error: "Invalid about us" });
+          return res.status(400).render('businessProfile', { error: "Invalid About Us" });
         }
         else if (bio.length != 0) {
           update.bio = bio

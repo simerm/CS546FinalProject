@@ -45,12 +45,12 @@
                         <p class="alert alert-danger">{{error}}</p>
                         {{/if}}
                         <div class="alert alert-danger" style="display: none" id="clientError"></div>
-                        <form id="editProfile" action="/profile" method="POST">
+                        <form id="editBusinessProfile" action="/businessProfile" method="POST">
                             <div class="form-group">
-                                <label for="name">Name:</label>
-                                <input class="form-control" type="text" id="first" name="first">
+                                <label for="name">Store Name:</label>
+                                <input class="form-control" type="text" id="storeName" name="storeName">
 
-                                <label for="bio">Bio:</label>
+                                <label for="bio">About Us:</label>
                                 <textarea class="form-control" rows="5" id="bio" name="bio"></textarea>
 
                                 <button type="submit" class="btn btn-success" id="submitButton"

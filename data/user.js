@@ -473,7 +473,8 @@ export const registerBusiness = async (
     username: username,
     password: hash,
     role: role,
-    figurineStock: []
+    figurineStock: [],
+    bio: ""
   }
 
   const newInsertInformation = await storeCollection.insertOne(newUser);
@@ -580,25 +581,16 @@ export const updateProfile = async (username, updateObject, role) => {
   if (username.trim().length === 0)
     throw 'username cannot be an empty string or just spaces';
   username = username.trim();
-
-  // const userCollection = await users() <-- I COMMENTED THIS OUT 
-  // const oldUser = await userCollection.findOne(
-  //   { 'username': username },
-  // )
-  // if (oldUser === null) throw 'No review with that id';
-  // let theUser = null;
+  const userCollection = await users()
+  const oldUser = await userCollection.findOne(
+    { 'username': username },
+  )
+  if (oldUser === null) throw 'No review with that id';
+  let theUser = null;
   
 
   if (role === 'business') {
-    const storeCollection = await store()
-    const oldStore = await storeCollection.findOne(
-      { 'username': username },
-    )
-    if (oldStore === null) throw 'No review with that id';
-
-    let theStore = null;
-
-    if (updateObject.hasOwnProperty("storeName")) { //store name
+    if (updateObject.hasOwnProperty("storeName")) {
       if (typeof updateObject.storeName !== 'string') {
         throw "must be a string"
       }
