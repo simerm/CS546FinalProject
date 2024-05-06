@@ -223,7 +223,8 @@ router
       if (currentUser) { //if user is logged in
         currentUsername = currentUser.username;
       }
-      let { postId, newCaption } = req.body;
+      let { newCaption, postId } = req.body;
+      console.log(req.body);
       newCaption = xss(newCaption);
       postId = new ObjectId(postId);
     
