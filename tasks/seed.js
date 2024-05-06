@@ -29,6 +29,32 @@ try { //create a 2nd normal user
     console.log(e);
 }
 
+try { //create an admin
+    const user = await registerUser("Simerjeet", 
+    "Mudhar",  
+    "simmer_m", 
+    "Hello!123",
+    "admin");
+
+    console.log(user);
+} catch(e){
+    console.log(e);
+}
+
+try { //create a 2nd admin
+    const user = await registerUser("Danica", 
+    "Lacuesta",  
+    "ms_fast", 
+    "pagenT%24",
+    "admin");
+
+    console.log(user);
+} catch(e){
+    console.log(e);
+}
+
+
+
 try {
     const post = await createPost(
         "jfaustin",
