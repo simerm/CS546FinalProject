@@ -178,6 +178,7 @@ app.use("/collections", redirectFromCollections);
 app.use("/login", redirectAuthenticated);
 app.use("/register", redirectAuthenticatedForRegister);
 app.use("/profile", requireAuthentication);
+app.use("/viewUser", requireAuthentication);
 app.use("/business", requireAdminAuthorization);
 app.use("/logout", requireLogout);
 
