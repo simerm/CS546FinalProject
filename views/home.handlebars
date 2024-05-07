@@ -1,25 +1,17 @@
-<div>
-    <form id="searchUser" action="/searchUser" method="POST">
-        <div class="input-group">
-            <input name="username" id="user" type="text" class="form-control" placeholder="Search for a username">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+    <div>
+        <form id="searchUser" action="/searchUser" method="POST">
+            <div class="input-group">
+                <input name="username" id="user" type="text" class="form-control" placeholder="Search for a username">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                </div>
             </div>
-        </div>
-    </form>
-    {{#if error}}
-    <p class="alert alert-danger">{{error}}</p>
-    {{/if}}  
-</div>
-    <title>Feed</title>
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
-    <div class="body">
+        </form>
+        {{#if error}}
+        <p class="alert alert-danger">{{error}}</p>
+        {{/if}}
         <h1>Feed</h1>
-        <div class="clientError" id="clientError"></div>
+        <div class="c" id="c"></div>
         <form id="createpost" action="/createpost" method="GET">
             <button type="submit">Create Post</button>
         </form>
@@ -36,10 +28,10 @@
                 <div class="postDetails">
                     <p class="name"><b>{{name}}</b>
                         {{#if isAdminPost}}
-                        <img src="/public/verified.png" class="adminCheck">
+                        <img src="/public/verified.png" class="adminCheck" alt="alt">
                         {{/if}}
                         {{#if isBusinessPost}}
-                        <img src="/public/business icon.png" class="businessIcon">
+                        <img src="/public/business icon.png" class="businessIcon" alt="alt">
                         {{/if}}
                     </p>
                     <h2><b>{{title}}</b></h2>
@@ -58,7 +50,7 @@
                         {{/if}}
                         {{#if isImage}}
                         <div class="image-container">
-                            <img src="/public/{{encodeURIComponent file.name}}" class="postPicture">
+                            <img src="/public/{{encodeURIComponent file.name}}" class="postPicture" alt="alt">
                         </div>
                         {{/if}}
                         {{#if isAudio}}
@@ -80,8 +72,8 @@
                         </div>
                     </form>
                     <form id="ratings-dislikes-{{_id}}" action="/ratings" method="POST">
-                    <input type="hidden" name="rating" value="dislike">
-                    <input type="hidden" name="postId" value="{{_id}}">
+                        <input type="hidden" name="rating" value="dislike">
+                        <input type="hidden" name="postId" value="{{_id}}">
                         <div class="countRatings">
                             <button type="submit" class="thumbIcon">👎</button>
                             <span class="rateCount">{{whoDisliked.length}}</span>
@@ -89,16 +81,15 @@
                     </form>
                     <button onclick="toggleLikesAndDislikes('{{_id}}')" class="hide-btn">Hide/Show Likes and Dislikes</button>
                     {{#if isRsvp}}
-                    <form  action="/rsvps" method="POST">
+                    <form action="/rsvps" method="POST">
                         <input type="hidden" name="rsvpMe" value="yes">
                         <input type="hidden" name="postId" value="{{_id}}">
                         <div class="countRsvp">
                             <button type="submit" class="rsvpButton">RSVP to This Event</button>
                             <label><b>RSVP Count: </b></label>
-                        <span class="rsvpCount">{{whoRSVP.length}}</span>
-                    </div>
+                            <span class="rsvpCount">{{whoRSVP.length}}</span>
+                        </div>
                     </form>
-                    
                     {{/if}}
                     <div class="previous-comments" id="comments-{{_id}}">
                         <p><b>Comments</b></p>
@@ -110,13 +101,10 @@
                     <div class="commentBox">
                         <form id="comments-form-{{_id}}" name="comments" action="/comments" method="POST">
                             <input type="hidden" name="postId" value="{{_id}}">
-                            <label for="commentInput">Add Comment:</label>
+                            <label>Add Comment:</label>
                             <input type="text" id="commentInput-{{_id}}" name="commentInput" data-post-id="{{_id}}">
                             <button class="add-comment-btn">Add</button>
                         </form>
-                        {{#if commentError}}
-                        <p class="error">{{commentError}}</p>
-                        {{/if}}
                         <div class="clientError" id="clientError"></div>
                     </div>
                     <button onclick="toggleComments('{{_id}}')" class="hide-btn">Hide/Show Comments</button>
@@ -132,25 +120,6 @@
                             <input type="hidden" name="postId" value="{{_id}}">
                             <button type="submit" class="user-post">Delete Your Post</button>
                         </form>
-                        <script>
-                            $(document).ready( function() {
-                                $("#deleteForm").submit(function(e) {
-                                    
-                                e.preventDefault();
-                        $.ajax ({
-                            type: 'POST',
-                            url: $(this).attr('action'), 
-                            data: $(this).serialize(),
-                            success: function(res) {
-                                console.log("SUCCESS: ", res)
-                            },
-                            error: function(_, status, error) {
-                                console.log("ERROR: ", status, error)
-                            }
-                        });
-                                })
-                            })
-                        </script>
                     </div>
                     {{/if}}
                 </div>
@@ -158,60 +127,53 @@
             {{/each}}
         </div>
     </div>
-</body>
 <script>
- 
+    function toggleLikesAndDislikes(postId) {
+        var likesAndDislikes = document.getElementById("ratings-likes-" + postId);
+        var likesAndDislikes2 = document.getElementById("ratings-dislikes-" + postId);
+        likesAndDislikes.classList.toggle("hidden");
+        likesAndDislikes2.classList.toggle("hidden");
+    }
 
-        function toggleLikesAndDislikes(postId) {
-            var likesAndDislikes = document.getElementById("ratings-likes-" + postId);
-            var likesAndDislikes2 = document.getElementById("ratings-dislikes-" + postId);
-            likesAndDislikes.classList.toggle("hidden");
-            likesAndDislikes2.classList.toggle("hidden");
-        }
+    function toggleComments(postId) {
+        var commentsSection = document.getElementById("comments-" + postId);
+        commentsSection.classList.toggle("hidden");
+    }
 
-        function toggleComments(postId) {
-            var commentsSection = document.getElementById("comments-" + postId);
-            commentsSection.classList.toggle("hidden");
-        }
+    function searchFriend() {
+        var searchInput = document.getElementById("searchfriend");
+        var searchValue = searchInput.value.toLowerCase();
+        var posts = document.querySelectorAll(".postDetails");
+        var seeAllButton = document.getElementById("seeAllButton");
 
-        function searchFriend() {
-            var searchInput = document.getElementById("searchfriend");
-            var searchValue = searchInput.value.toLowerCase();
-            var posts = document.querySelectorAll(".postDetails");
-            var seeAllButton = document.getElementById("seeAllButton");
+        var anyMatch = false;
 
-            var anyMatch = false;
-
-            posts.forEach(function(post) {
-                var name = post.querySelector(".name").innerText.toLowerCase();
-                if (name.includes(searchValue)) {
-                    post.style.display = "block";
-                    anyMatch = true;
-                } else {
-                    post.style.display = "none";
-                }
-            });
-
-            if (anyMatch) {
-                seeAllButton.style.display = "inline-block";
-            } else {
-                seeAllButton.style.display = "none";
-            }
-
-            searchInput.value = "";
-        }
-
-        function seeAllPosts() {
-            var posts = document.querySelectorAll(".postDetails");
-            var seeAllButton = document.getElementById("seeAllButton");
-
-            posts.forEach(function(post) {
+        posts.forEach(function(post) {
+            var name = post.querySelector(".name").innerText.toLowerCase();
+            if (name.includes(searchValue)) {
                 post.style.display = "block";
-            });
+                anyMatch = true;
+            } else {
+                post.style.display = "none";
+            }
+        });
+
+        if (anyMatch) {
+            seeAllButton.style.display = "inline-block";
+        } else {
             seeAllButton.style.display = "none";
         }
 
-    </script>
-</html>
+        searchInput.value = "";
+    }
 
+    function seeAllPosts() {
+        var posts = document.querySelectorAll(".postDetails");
+        var seeAllButton = document.getElementById("seeAllButton");
 
+        posts.forEach(function(post) {
+            post.style.display = "block";
+        });
+        seeAllButton.style.display = "none";
+    }
+</script>
