@@ -99,6 +99,70 @@ try { //create a 2nd normal user
     console.log(e);
 }
 
+// Adding to pat_hill's collection
+try {
+    // Adding full Series 1 series to pat_hill
+    await addCollection("pat_hill", "Smiski", "Series 1", "Hugging Knees");
+    await addCollection("pat_hill", "Smiski", "Series 1", "Sitting");
+    await addCollection("pat_hill", "Smiski", "Series 1", "Looking Back");
+    await addCollection("pat_hill", "Smiski", "Series 1", "Lounging");
+    await addCollection("pat_hill", "Smiski", "Series 1", "Hiding");
+    await addCollection("pat_hill", "Smiski", "Series 1", "Peeking");
+    await addCollection("pat_hill", "Smiski", "Series 1", "Scream");
+
+    // Adding full Vegetable series to pat_hill
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Carrot");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Tomato");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Garlic");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Zucchini");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Onion");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Radish");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Green Pepper");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Eggplant");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Bok Choy");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Corn");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Cauliflower");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Cabbage");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Shiitake");
+    await addCollection("pat_hill", "Sonny Angel", "Vegetable", "Vegtable Robbie");
+
+    // Adding random figurines to pat_hill
+    await addCollection("pat_hill", "Sonny Angel", "Flower", "Tulip");
+    await addCollection("pat_hill", "Sonny Angel", "Marine", "Seahorse");
+    await addCollection("pat_hill", "Sonny Angel", "Flower", "Bee");
+
+} catch (e) {
+    console.log(e);
+}
+
+// Adding to pat_hill's wishlist
+try {
+    await addWishlist("pat_hill", "Sonny Angel", "Marine", "Shell");
+    await addWishlist("pat_hill", "Sonny Angel", "Marine", "Manta");
+    await addWishlist("pat_hill", "Sonny Angel", "Flower", "Acorn");
+
+    await addWishlist("pat_hill", "Smiski", "Museum", "Pearl Earring");
+    await addWishlist("pat_hill", "Smiski", "Museum", "The Source");
+    await addWishlist("pat_hill", "Smiski", "Bed", "At Sleep");
+
+} catch (e) {
+    console.log(e);
+}
+
+// Adding to pat_hill's trades
+try {
+    await addTrade("pat_hill", "Sonny Angel", "Vegetable", "Green Pepper");
+    await addTrade("pat_hill", "Sonny Angel", "Vegetable", "Eggplant");
+    await addTrade("pat_hill", "Sonny Angel", "Vegetable", "Bok Choy");
+    await addTrade("pat_hill", "Sonny Angel", "Vegetable", "Corn");
+
+    await addTrade("pat_hill", "Sonny Angel", "Flower", "Tulip");
+    await addTrade("pat_hill", "Smiski", "Series 1", "Peeking");
+
+} catch (e) {
+    console.log(e);
+}
+
 try { //create an admin
     const user = await registerUser("Simerjeet", 
     "Mudhar",  
