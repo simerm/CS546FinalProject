@@ -87,8 +87,8 @@ export const registerUser = async (
   }
 
 
-  if (role !== "business" && role !== "personal") {
-    throw "role can only be Business or Personal"
+  if (role !== "business" && role !== "personal" && role !== 'admin') {
+    throw "role can only be Business, Personal or Admin"
   }
 
 
@@ -96,26 +96,55 @@ export const registerUser = async (
   const hash = await bcrypt.hash(password, saltRounds);
   const currentDate = new Date();
 
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
-  const day = currentDate.getDate();
-  const date = `${year}/${month}/${day}`
-  let newUser = {
-    firstName: firstName,
-    lastName: lastName,
-    username: username,
-    password: hash,
-    role: role,
-    badges: [],
-    wishlist: [],
-    favoriteFigurine: "",
-    dateCreated: date,
-    friends: [],
-    figurineCollection: {},
-    bio: "N/A",
-    location: "",
-    picture: "",
-    tradingList: {}
+
+  let newUser; 
+  if(role === 'admin'){
+    let year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    const day = currentDate.getDate();
+    year = year - 3;
+    const date = `${year}/${month}/${day}`
+
+    newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      password: hash,
+      role: role,
+      badges: [],
+      wishlist: [],
+      favoriteFigurine: "",
+      dateCreated: date,
+      friends: [],
+      figurineCollection: {},
+      bio: "N/A",
+      location: "",
+      picture: "",
+      tradingList: {}
+    }
+  } else {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    const day = currentDate.getDate();
+    const date = `${year}/${month}/${day}`
+
+    newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      password: hash,
+      role: role,
+      badges: [],
+      wishlist: [],
+      favoriteFigurine: "",
+      dateCreated: date,
+      friends: [],
+      figurineCollection: {},
+      bio: "N/A",
+      location: "",
+      picture: "",
+      tradingList: {}
+    }
 
   }
 
