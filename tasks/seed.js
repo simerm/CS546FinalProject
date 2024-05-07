@@ -132,7 +132,7 @@ try { //create a business account
     "Hoboken",
     "NJ",
     "07030",
-    "sit_official",
+    "sit_uni",
     "#Ilovefigurines27");
 
     console.log(user);
