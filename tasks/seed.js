@@ -277,18 +277,11 @@ try {
         "jfaustin",
         "Joey's Event",
         null,
-        "At 3pm I am trading Smiskis at Mitsuwa",
-        [],
-        [],
-        [],
-        true,
-        [],
+        "Yes",
         false,
         false,
         false,
-        false,
-        false,
-        "2024-05-06T21:46:37.350+00:00"
+        "Come to my event yay!"
     )
     console.log(post);
 } catch (e) {
@@ -298,21 +291,14 @@ try {
 //business post(rsvp)
 try {
     const post = await createPost(
-        "sit_official",
+        "sit_uni",
         "Sony angel X Stevens",
         null,
-        "Reserve your spot for free Smiski or Sony Angel",
-        [],
-        [],
-        [],
-        true,
-        [],
-        false,
-        true,
+        "No",
         false,
         false,
         false,
-        "2023-05-06T21:46:37.350+00:00"
+        "Buy 1 get 1 free!",
     )
     console.log(post);
 } catch (e) {
@@ -325,18 +311,11 @@ try {
         "ms_fast",
         "Favorite Smiski",
         null,
-        "I went to Japan, look at my smiski",
-        [],
-        [],
-        [],
-        false,
-        [],
-        true,
+        "No",
         false,
         false,
         false,
-        false,
-        "2024-05-04T23:17:38.759+00:00"
+        "My favorite smiski!!!!",
     )
     console.log(post);
 } catch (e) {
