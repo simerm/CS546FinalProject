@@ -10,14 +10,14 @@ Figurine Finder is a web application that allows users to search for and discove
 4. Run the program ```npm start```
 5. Register or Login (using the info below)
    - As a personal user?
-     - username:
-     - password:
+     - username: ```jfaustin```
+     - password: ```Dajoma141!!!```
    - As an admin?
-     - username:
-     - password:       
+     - username: ```ms_fast```
+     - password: ```pagenT%24```       
    - As a business?
-     - username:
-     - password: 
+     - username: ```sit_uni```
+     - password: ```Ilovefigurines27```
 
 # Team 6 Members
 - [Lauren Espineli](https://github.com/lauren-espi)
