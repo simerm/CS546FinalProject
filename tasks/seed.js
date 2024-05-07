@@ -175,6 +175,36 @@ try { //create an admin
     console.log(e);
 }
 
+try {
+    await addCollection("simmer_m", "Smiski", "Series 1", "Hugging Knees");
+    await addCollection("simmer_m", "Smiski", "Series 1", "Sitting");
+    await addCollection("simmer_m", "Smiski", "Museum", "Bacchus");
+    await addCollection("simmer_m", "Smiski", "Museum", "The Source");
+    await addCollection("simmer_m", "Smiski", "Museum", "Dali");
+    await addCollection("simmer_m", "Smiski", "Museum", "Tutankhamen");
+
+    await addCollection("simmer_m", "Sonny Angel", "Vegetable", "Carrot");
+    await addCollection("simmer_m", "Sonny Angel", "Vegetable", "Tomato");
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    await addWishlist("simmer_m", "Sonny Angel", "Marine", "Blowfish");
+    await addWishlist("simmer_m", "Smiski", "Series 1", "Peeking");
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    await addTrade("simmer_m", "Sonny Angel", "Vegetable", "Carrot");
+    await addTrade("simmer_m", "Sonny Angel", "Vegetable", "Tomato");
+    await addCollection("simmer_m", "Smiski", "Series 1", "Sitting");
+    await addCollection("simmer_m", "Smiski", "Museum", "Bacchus");
+} catch (e) {
+    console.log(e);
+}
+
 try { //create a 2nd admin
     const user = await registerUser("Danica", 
     "Lacuesta",  
