@@ -125,7 +125,7 @@ try { //create a 2nd admin
 
 
 try { //create a business account
-    const user = await registerBusiness("Stevens Institute",  
+    const user = await registerBusiness("Stevens Uni",  
     "+17328483904", 
     "12-3456789",
     "1 Castle Point Terrace",
