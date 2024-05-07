@@ -1,19 +1,17 @@
-<div class="display">
-    <h1>Edit Post</h1>
-    {{!--{{#if error}}
-    <p class = "alert alert-danger">{{error}}</p>
+ <div class="display">
+ <h1>Edit Post</h1>
+    {{#if error}}
+    <p class="alert alert-danger">{{error}}</p>
     {{/if}}
-    <div class="alert alert-danger" style="display: none" id="clientError"></div>--}}
+    <div class="alert alert-danger" style="display: none;" id="clientError"></div>
 
     <form id="edit-{{postId}}" action="/edit" method="POST">
         <input type="hidden" name="postId" value="{{postId}}">
         <label for="newCaption">New Caption:</label>
         <input type="text" id="newCaption" name="newCaption" data-post-id="{{postId}}">
-        <button class="add-comment-btn">Submit</button>
-        </form>
-        {{#if error}}
-            <p class="error">{{error}}</p>
-        {{/if}}
-        <div class="clientError" id="clientError"></div>
-    <form id="createpost" action="/" method="GET"><button id="createpost">Go Back to Posts</button></form>
+        <button type="submit" class="add-comment-btn">Submit</button>
+    </form>
+    <form action="/" method="GET">
+        <button type="submit">Go Back to Posts</button>
+    </form>
 </div>
