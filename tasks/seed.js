@@ -123,8 +123,9 @@ try { //create a 2nd admin
     console.log(e);
 }
 
+
 try { //create a business account
-    const user = await registerBusiness("Stevens Institute of Technology",  
+    const user = await registerBusiness("Stevens Institute",  
     "+17328483904", 
     "12-3456789",
     "1 Castle Point Terrace",
