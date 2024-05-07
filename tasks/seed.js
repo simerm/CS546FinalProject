@@ -1,5 +1,5 @@
 import {dbConnection, closeConnection} from '../config/mongoConnection.js';
-import { loginUser, registerUser, registerBusiness, addCollection, addWishlist, addTrade } from '../data/user.js';
+import { loginUser, registerUser, registerBusiness, addCollection, addWishlist, addTrade, addFriend } from '../data/user.js';
 import { createPost, getAllPosts, createComment, deletePost } from '../data/createposts.js';
 
 const db = await dbConnection();
@@ -154,6 +154,27 @@ try { //create a 2nd business account
 } catch(e){
     console.log(e);
 }
+
+
+//adding friends 
+try {
+    let friends = await addFriend("ms_fast", "jfaustin")
+} catch(e){
+    console.log(e);
+}
+
+try {
+    let friends = await addFriend("jfaustin", "pat_hill")
+} catch(e){
+    console.log(e);
+}
+
+try {
+    let friends = await addFriend("simmer_m", "ms_fast")
+} catch(e){
+    console.log(e);
+}
+
 
 //personal post(rsvp)
 try {
