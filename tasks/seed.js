@@ -298,7 +298,7 @@ try {
 //business post(rsvp)
 try {
     const post = await createPost(
-        "sit_official",
+        "sit_uni",
         "Sony angel X Stevens",
         null,
         "Reserve your spot for free Smiski or Sony Angel",
