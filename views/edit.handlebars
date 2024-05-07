@@ -1,0 +1,17 @@
+ <div class="display">
+ <h1>Edit Post</h1>
+    {{#if error}}
+    <p class="alert alert-danger">{{error}}</p>
+    {{/if}}
+    <div class="alert alert-danger" style="display: none;" id="clientError"></div>
+
+    <form id="edit-{{postId}}" action="/edit" method="POST">
+        <input type="hidden" name="postId" value="{{postId}}">
+        <label for="newCaption">New Caption:</label>
+        <input type="text" id="newCaption" name="newCaption" data-post-id="{{postId}}">
+        <button type="submit" class="add-comment-btn">Submit</button>
+    </form>
+    <form action="/" method="GET">
+        <button type="submit">Go Back to Posts</button>
+    </form>
+</div>

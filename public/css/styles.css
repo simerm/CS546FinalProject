@@ -297,6 +297,13 @@ h1 {
     color: red;
 }
 
+.error {
+    color: rgb(253, 253, 253);
+    background-color: rgb(241, 67, 67);
+    padding: 10px;
+    border-radius: 5px;
+}
+
 
 
 .wishForm{
@@ -484,12 +491,6 @@ h1 {
     margin: 0; /* Removed margin-top to maintain consistent spacing */
 }
 
-.thumbsUp,
-.thumbsDown{
-    background-color: transparent;
-    border:none;
-    padding: 0;
-}
 .previous-comments h2{
     font-size:medium;
 }
@@ -499,6 +500,22 @@ h1 {
     border-top: 1px solid #ccc; /* Added border to separate comments */
     margin-top: 10px; /* Added margin for spacing */
     padding-top: 10px; /* Added padding for spacing */
+}
+
+.hide-btn {
+    /* Set a specific width */
+    width: 350px; /* Adjust the width as needed */
+    border-radius: 50px;
+    /* Or use max-width to limit the width */
+    /* max-width: 150px; */
+}
+
+.user-post {
+    /* Set a specific width */
+    width: 165px; /* Adjust the width as needed */
+    
+    /* Or use max-width to limit the width */
+    /* max-width: 150px; */
 }
 
 .comments-hidden #comments {
@@ -570,3 +587,53 @@ h1 {
 .custom-select{
     margin-bottom:20px;
 }
+.businessIcon{
+    width:20px;
+    height: auto;
+}
+
+.countRatings{
+	cursor: default;
+}
+
+.ratingSelected > .thumbIcon,
+.ratingSelected> .rateCount
+{
+   text-decoration: underline;
+}
+
+.thumbIcon{
+    background-color: transparent;
+    border:none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-block;
+    
+}
+
+.countRatings:not(.ratingSelected) > .thumbIcon:hover {
+	background-color:#a7c0cd;
+}
+
+.image-container {
+    text-align: center;
+    max-width: 500px;
+}
+
+.image-container img,
+.image-container video {
+    width: 450px; /* Ensure images don't exceed container width */
+    height: auto; /* Maintain aspect ratio */
+    display: inline-block; /* Ensure proper rendering */
+
+}
+
+.button-container {
+    display: flex; /* Set the container to flex to horizontally align items */
+    gap: 10px; /* Add spacing between the buttons */
+}
+
+.rsvpButton{
+    margin-top:10px;
+}
+
